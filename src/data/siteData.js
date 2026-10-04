@@ -23,9 +23,10 @@ export const about = {
     { name: 'Moho' },
     { name: 'Advanced Simulations' },
     { name: 'Unreal Engine', text: 'Real-time environments, interactive experiences.' }],
-  // short = tile text; add an `icon` path later to use your own logo images
-  software: [{ short: 'Bl', name: 'Blender', c: '#ea7600' }, { short: 'Ma', name: 'Maya', c: '#1a9a9a' }, { short: 'H', name: 'Harmony', c: '#222' },
-    { short: 'Ps', name: 'Photoshop', c: '#0b2a4a' }, { short: 'Ai', name: 'Illustrator', c: '#4a1d00' }, { short: 'Ae', name: 'After Effects', c: '#1a1a4a' }],
+  // Program icons live in public/assets/icons/<Name>.webp. (If an icon is missing, the tile falls back to `short` on the colour `c`.)
+  software: [{ name: 'Blender', icon: '/assets/icons/Blender.webp', short: 'Bl', c: '#ea7600' }, { name: 'Maya', icon: '/assets/icons/Maya.webp', short: 'Ma', c: '#1a9a9a' },
+    { name: 'Harmony', icon: '/assets/icons/Harmony.webp', short: 'H', c: '#222' }, { name: 'Unity', icon: '/assets/icons/Unity.webp', short: 'U', c: '#333' },
+    { name: 'MotionBuilder', icon: '/assets/icons/MotionBuilder.webp', short: 'Mb', c: '#2a5a2a' }, { name: 'After Effects', icon: '/assets/icons/AfterEffects.webp', short: 'Ae', c: '#1a1a4a' }],
   contact: { name: 'Maria del Mar Torrente', title: 'Engineer in Design for Digital Entertainment', email: 'estorrentee@gmail.com', phone: '+57 319 791 3866',
     linkedin: 'https://www.linkedin.com/in/martorrente/' },
   banner: "Have an idea, a weird problem, or a project that needs figuring out? \nLet's talk.",

@@ -75,7 +75,7 @@ video.layer{object-fit:cover}
 .ph svg{width:28px;opacity:.7}.ph small{font-size:10px;letter-spacing:.12em;color:var(--cr)}.ph em{font-size:8px;opacity:.45;font-style:normal;word-break:break-all;padding:0 8px}
 /* clickable project cards: obvious call-to-action */
 .card.clickable{cursor:pointer;border-color:#ff8c1877}.card.clickable:hover{box-shadow:0 0 0 1px var(--o2),0 14px 30px #000a,0 0 24px #ff8c1840}
-.card .sub{font-size:10px;letter-spacing:.06em;color:var(--y);opacity:1;margin:-2px 0 8px}
+.card .csub{font-size:10px;letter-spacing:.06em;color:var(--y);opacity:1;margin:-2px 0 8px}
 .cta{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 6px;font-size:9.5px;white-space:nowrap;font-weight:600;letter-spacing:.07em;color:var(--bg);background:linear-gradient(90deg,var(--o2),var(--y));transform:translateY(0);transition:padding .25s,filter .25s}
 .cta b{position:relative;flex:none;width:20px;height:20px;border-radius:50%;background:var(--bg);font-size:0;animation:pulse 1.8s ease-out infinite}
 .cta b::after,.play::after,.pv-slate b::after{content:'';position:absolute;left:50%;top:50%;width:36%;height:42%;background:var(--y);clip-path:polygon(0 0,100% 50%,0 100%);transform:translate(-36%,-50%)} /* optical centre: a triangle's middle sits left of its bounding box */
@@ -354,3 +354,51 @@ html.compact .snake-open,html.compact .skip{min-height:40px}
 .ring,.dot{will-change:transform}
 /* low-fps mode: lighten everything that's only decoration */
 .lowfps .win{transition:none}
+
+/* ===== v9: phones – slim top bar, fullscreen button, music popover, window fix, readable About, program icons ===== */
+/* program icons next to names (filters, card badges) */
+.swi{width:1.35em;height:1.35em;object-fit:contain;flex:none;vertical-align:-.3em;margin-right:.45em}
+.sub button .swi,.pills button .swi{width:1.5em;height:1.5em;vertical-align:-.45em}
+.badge{display:inline-flex;align-items:center;gap:.4em}.badge .swi{width:1.5em;height:1.5em;margin:-2px 0 -2px -4px;vertical-align:baseline;border-radius:3px}
+.pills button{display:inline-flex;align-items:center;gap:.5em}.pills .swi{margin:0}
+/* About → software tiles with the real program icons */
+.soft span.has-icon{aspect-ratio:auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:.25cqw;background:none;overflow:visible;color:var(--ink)}
+.soft span.has-icon img{width:100%;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 .25cqw .4cqw #0005);transition:transform .25s cubic-bezier(.2,1.4,.4,1)}.soft span.has-icon:hover img{transform:translateY(-.3cqw) scale(1.06)}
+.soft small{font:600 .72cqw/1.1 var(--mono);letter-spacing:.02em;text-align:center}.soft span:not(.has-icon) small{display:none}
+/* top-bar buttons (♪ and ⛶ are phone-only) */
+.clock{display:flex;align-items:center;gap:8px}
+.tb-btn{display:none}
+.eq{display:none;align-items:flex-end;gap:2px;height:12px;margin-right:5px}.eq i{width:2px;height:100%;background:currentColor;border-radius:1px;transform-origin:bottom;animation:eq 1s ease-in-out infinite}.eq i:nth-child(2){animation-delay:-.4s}.eq i:nth-child(3){animation-delay:-.75s}
+@keyframes eq{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.dock.tabbed .dock-tab{opacity:1;pointer-events:auto} /* desktop: the tab is always there while a window is open, and turns into ✕ when the player is out */
+html.compact .tb-btn{display:inline-grid;grid-auto-flow:column;place-items:center;min-width:38px;height:34px;padding:0 10px;border:1px solid #ff8c1888;border-radius:99px;font-size:16px;line-height:1;color:var(--cr2);background:#120b0866;transition:background .2s,color .2s}
+html.compact .tb-btn:active{transform:scale(.94)}html.compact .tb-btn.on,html.compact .tb-btn[aria-pressed=true]{background:var(--o2);color:var(--bg);border-color:var(--o2)}
+.fs-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+html.compact .dock-btn.playing .eq{display:inline-flex}html.compact .dock-btn.on .eq{display:none}
+/* slim top bar */
+html.compact .topbar{padding:max(5px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 5px max(10px,env(safe-area-inset-left));gap:8px;font-size:12px;letter-spacing:.12em}
+html.compact .topbar img{width:30px}html.compact .clock{gap:6px;font-size:12px;letter-spacing:.08em}
+html.compact .sfxbtn{min-height:34px;padding:0 10px;font-size:10px;letter-spacing:.1em}
+html.compact:not(.portrait) .icons{top:56%}
+/* music popover on phones: hidden until ♪, never over the buttons */
+html.compact .dock{left:max(10px,env(safe-area-inset-left));top:calc(48px + env(safe-area-inset-top));width:min(360px,calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)));transform:none;transition:opacity .25s,transform .25s,visibility .25s}
+html.compact .dock.mini,html.compact .dock.gone{opacity:0;visibility:hidden;transform:translateY(-8px);pointer-events:none}
+html.compact .dock-tab{display:none}
+/* the window: the full-size art is only for desktop – on phones it filled the screen with just a corner of it */
+html.compact .win{background-image:none!important;background-color:#150c08;filter:none;transition:none}
+html.compact .back-menu{display:none}
+html.compact .whead{align-items:center}
+/* About on phones: real, roomy cards (two columns in landscape, one in portrait) */
+html.compact .about{aspect-ratio:auto;background:none;container-type:normal}
+html.compact .ab-sheet{position:static;display:grid;grid-template-columns:1fr;gap:12px;font-size:14px;color:var(--ink)}
+html.compact:not(.portrait) .ab-sheet{grid-template-columns:repeat(2,minmax(0,1fr))}
+html.compact:not(.portrait) .ab-bio,html.compact:not(.portrait) .ab-ban{grid-column:1/-1}
+html.compact .ab-sheet>*{position:static!important;width:auto!important;height:auto!important;overflow:visible!important}
+html.compact .paper{padding:14px 16px;background:var(--cr);border-radius:6px;box-shadow:0 6px 14px #0008}
+html.compact .paper h3{font-size:12px;letter-spacing:.14em;margin-bottom:10px}
+html.compact .ab-bio p{font:15px/1.6 var(--body);margin-bottom:10px}
+html.compact .ab-sheet .tags span{font-size:11.5px;padding:4px 10px}
+html.compact .ab-int ul,html.compact .ab-con ul{gap:10px}html.compact .ab-int li b,html.compact .ab-con b{font-size:14px}html.compact .ab-int li span{font:13.5px/1.4 var(--body);margin-top:2px}html.compact .ab-con ul{font-size:13.5px}
+html.compact .ab-con a{display:inline-block;padding:3px 0;text-underline-offset:3px}
+html.compact .soft{grid-template-columns:repeat(3,1fr);gap:12px 10px}html.compact .soft span.has-icon{gap:5px}html.compact .soft span:not(.has-icon){font-size:20px;border-radius:12px}html.compact .soft small{font-size:11px}
+html.compact .ab-sheet .ab-ban{display:block}html.compact .ab-sheet .ab-ban .hand{font:700 24px/1.2 var(--hand);white-space:pre-line;text-align:center;margin:0;width:auto}

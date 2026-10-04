@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Media from '../components/Media';
 import MediaViewer from '../components/MediaViewer';
 import ProjectViewer from '../components/ProjectViewer';
+import SwIcon from '../components/SwIcon';
 import { asset, THUMB_AT } from '../utils/assets';
 import * as D from '../data/portfolioData';
 import { about } from '../data/siteData';
@@ -18,9 +19,9 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
   return (<><div className={'grid ' + cls} key={items.map((i) => i.id).join()}>{items.map((it, n) => (
     <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
       <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
-        <Media src={THUMB_AT[it.id] != null ? null : it.image} video={it.videos?.[0]?.src} at={THUMB_AT[it.id]} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
+        <Media src={THUMB_AT[it.id] != null ? null : it.image} video={it.videos?.[0]?.src} at={THUMB_AT[it.id]} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge"><SwIcon name={it.software} />{it.software}</em>}
         {rich(it) && <span className="cta"><b>▶</b>{ctaLabel(it)}</span>}</button>
-      <h3>{it.title}</h3>{it.subtitle && <p className="sub">{it.subtitle}</p>}{it.description && <p>{it.description}</p>}
+      <h3>{it.title}</h3>{it.subtitle && <p className="csub">{it.subtitle}</p>}{it.description && <p>{it.description}</p>}
       {it.role && <p className="meta">ROLE: {it.role}</p>}
       <Tags t={it.tags || it.technologies} />
       {rich(it) && <button className="more" onClick={(e) => { e.stopPropagation(); setV(n); }}>OPEN PROJECT <b>→</b></button>}
@@ -71,7 +72,7 @@ function About() { // positions are % regions of the 3840×2160 layout art — t
     <div className="ab-sheet">
       <section className="ab-bio paper"><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p}</p>)}</section>
       <section className="ab-skills paper"><h3>★ {A.skillsTitle}</h3><Tags t={A.skills} /></section>
-      <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} style={{ background: s.c }}>{s.icon ? <img src={asset(s.icon)} alt={s.name} /> : s.short}</span>)}</div></section>
+      <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} className={s.icon ? 'has-icon' : ''} style={s.icon ? undefined : { background: s.c }}>{s.icon ? <img src={asset(s.icon)} alt={s.name} onError={(e) => (e.currentTarget.style.display = 'none')} /> : s.short}<small>{s.name}</small></span>)}</div></section>
       <section className="ab-int paper"><h3>♥ {A.learnTitle}</h3><ul>{A.learn.map((x) => <li key={x.name}><b>{x.name}</b>{x.text && <span>{x.text}</span>}</li>)}</ul></section>
       <section className="ab-con paper"><h3>✉ CONTACT</h3><ul><li><b>{C.name}</b></li><li>{C.title}</li>
         <li><a href={`mailto:${C.email}`}>{C.email}</a></li><li><a href={`tel:${C.phone.replace(/\s/g, '')}`}>{C.phone}</a></li>

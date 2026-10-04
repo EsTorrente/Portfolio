@@ -9,9 +9,12 @@ import { initSfx, play } from './utils/sfx';
 import { preloadAll } from './utils/preload';
 import Intro from './components/Intro';
 import RotateHint from './components/RotateHint';
+import { canFullscreen, enterFullscreen } from './utils/fullscreen';
 import * as M from './utils/music';
 // If the browser blocks autoplay, the intro waits for ONE click/tap ("click to enter") so the music can start by itself afterwards. Set to false to never wait.
 const WAIT_FOR_CLICK_IF_MUSIC_BLOCKED = true;
+// Phones: the first tap puts the site into fullscreen (and locks landscape where the browser allows it). The ⛶ button in the top bar toggles it. Set to false to only use the button.
+const AUTO_FULLSCREEN_ON_PHONES = true;
 
 const fromHash = () => { const id = location.hash.replace(/^#\/?/, ''); return sections.some((s) => s.id === id) ? id : null; };
 
@@ -44,6 +47,8 @@ export default function App() {
   useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick) setPhase('reveal'); }, [phase, minTime, loaded, needClick]);
   useEffect(() => { const h = () => { setOpen(fromHash()); if (!fromHash()) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
   const compact = useLayoutClass();
+  useEffect(() => { if (!AUTO_FULLSCREEN_ON_PHONES || !compact || !canFullscreen() || !matchMedia('(pointer:coarse)').matches) return;
+    const go = () => { enterFullscreen(); off(); }, off = () => removeEventListener('pointerup', go, true); addEventListener('pointerup', go, true); return off; }, [compact]);
   useEffect(() => { document.documentElement.dataset.phase = phase; }, [phase]); // the FPS guard waits for 'done'
   useEffect(() => initSfx(), []);
   const openSec = useCallback((id, rect) => { if (rect) play('open'),  setOrigin(rect); location.hash = '/' + id; }, []);
@@ -52,7 +57,7 @@ export default function App() {
     <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro'} introDone={phase === 'done'} />
     {open && <PortfolioWindow key="win" id={open} origin={origin} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />}
     {phase !== 'done' && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} />}
-    <MusicDock collapsed={!!open || compact} />
+    <MusicDock open={!!open} compact={compact} />
     <RotateHint />
     <Cursor />
   </>);

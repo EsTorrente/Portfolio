@@ -4,6 +4,7 @@ import { asset } from '../utils/assets';
 import Section from '../sections';
 import { reducedMotion } from '../utils/assets';
 import { play } from '../utils/sfx';
+import SwIcon from './SwIcon';
 
 const Ico = ({ id }) => <img src={asset(`/assets/icons/${id}.webp`)} alt="" />;
 // Window grows from the clicked icon (FLIP: icon rect → window rect), overshoots slightly, then reveals content.
@@ -31,14 +32,14 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
         <button className="rail-back" onClick={close} aria-label="Back to menu" title="Back to menu">‹</button>
         {sections.map((s) => (<button key={s.id} className={s.id === id ? 'on' : ''} data-sfx="tick" onClick={() => (s.id === id ? setFilter('ALL') : onNav(s.id))} aria-label={s.label} title={s.label} aria-current={s.id === id ? 'page' : undefined}><Ico id={s.id} /></button>))}
       </nav>
-      {sec.filters && <div className="pills" role="group" aria-label={`${sec.label} categories`}>{sec.filters.map((f) => <button key={f} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}>{f}</button>)}</div>}
+      {sec.filters && <div className="pills" role="group" aria-label={`${sec.label} categories`}>{sec.filters.map((f) => <button key={f} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}><SwIcon name={f} />{f}</button>)}</div>}
       <header className="whead"><Ico id={id} /><div><h2>{sec.title}</h2>{sec.sub.map((l, i) => <p key={i}>{l}</p>)}</div></header>
       <div className="wmain">
         <nav className="side" aria-label="Sections">
           {sections.map((s) => { const here = s.id === id, open = here && shown; return (<div className="grp" key={s.id}>
             <button className={here ? 'on' : ''} onClick={() => (here ? setFilter('ALL') : onNav(s.id))} aria-current={here ? 'page' : undefined} aria-expanded={s.filters ? open : undefined}><Ico id={s.id} />{s.label.toUpperCase()}{s.filters && <i className="chev" />}</button>
             {s.filters && <div className={'sub' + (open ? ' open' : '')} aria-hidden={!open}><div className="subin" role="group" aria-label={`${s.label} categories`}>
-              {s.filters.map((f, k) => <button key={f} style={{ '--k': k }} tabIndex={open ? 0 : -1} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}>{f}</button>)}</div></div>}
+              {s.filters.map((f, k) => <button key={f} style={{ '--k': k }} tabIndex={open ? 0 : -1} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}><SwIcon name={f} />{f}</button>)}</div></div>}
           </div>); })}
         </nav>
         <div className="content"><Section id={id} filter={filter} /></div>
