@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Media from './Media';
+import Zoom from './Zoom';
 import { asset } from '../utils/assets';
 import { play } from '../utils/sfx';
 // Full-screen dark gallery overlay. Esc closes, ←/→ navigates. Never crops.
@@ -11,7 +12,7 @@ export default function MediaViewer({ items, index, onClose, onIndex }) {
     addEventListener('keydown', k, true); return () => { removeEventListener('keydown', k, true); prev.current?.focus?.(); }; }, [index, items.length]);
   return (<div className="viewer" role="dialog" aria-modal="true" aria-label={it.title} ref={ref} tabIndex={-1} onClick={onClose}>
     <div className="viewer-stage" onClick={(e) => e.stopPropagation()}>
-      {it.video ? <video src={asset(it.video)} poster={asset(it.image)} controls autoPlay loop playsInline /> : <Media src={it.image} alt={it.title} label={it.title} ratio={1.4} className="viewer-img" />}
+      {it.video ? <video src={asset(it.video)} poster={asset(it.image)} controls autoPlay loop playsInline /> : <Zoom resetKey={it.image}><Media src={it.image} alt={it.title} label={it.title} ratio={1.4} className="viewer-img" /></Zoom>}
       <div className="viewer-cap"><b>{it.title}</b>{it.description && <span>{it.description}</span>}</div>
     </div>
     <button className="vbtn vclose" aria-label="Close viewer" onClick={onClose}>✕</button>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Media from '../components/Media';
 import MediaViewer from '../components/MediaViewer';
 import ProjectViewer from '../components/ProjectViewer';
-import { asset } from '../utils/assets';
+import { asset, THUMB_AT } from '../utils/assets';
 import * as D from '../data/portfolioData';
 import { about } from '../data/siteData';
 
@@ -18,7 +18,7 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
   return (<><div className={'grid ' + cls} key={items.map((i) => i.id).join()}>{items.map((it, n) => (
     <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
       <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
-        <Media src={it.image} video={it.videos?.[0]?.src} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
+        <Media src={THUMB_AT[it.id] != null ? null : it.image} video={it.videos?.[0]?.src} at={THUMB_AT[it.id]} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
         {rich(it) && <span className="cta"><b>▶</b>{ctaLabel(it)}</span>}</button>
       <h3>{it.title}</h3>{it.subtitle && <p className="sub">{it.subtitle}</p>}{it.description && <p>{it.description}</p>}
       {it.role && <p className="meta">ROLE: {it.role}</p>}

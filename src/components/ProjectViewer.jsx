@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Media from './Media';
-import { asset } from '../utils/assets';
+import Zoom from './Zoom';
+import { asset, THUMB_AT } from '../utils/assets';
+import { duck, release } from '../utils/music';
 import { play } from '../utils/sfx';
 
 // Project pop-up: video player + video list on the left, full write-up on the right. Esc closes, ←/→ switch project.
@@ -23,16 +25,18 @@ function Player({ item, media, cur }) {
   useEffect(() => { const f = () => setFs(!!box.current && (document.fullscreenElement === box.current || document.webkitFullscreenElement === box.current));
     document.addEventListener('fullscreenchange', f); document.addEventListener('webkitfullscreenchange', f);
     return () => { document.removeEventListener('fullscreenchange', f); document.removeEventListener('webkitfullscreenchange', f); }; }, []);
-  const m = media[cur];
+  const m = media[cur], tok = useRef({});
+  useEffect(() => () => release(tok.current), [cur, item.id]); // video changed / popup closed → music comes back
   if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} — YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
-  if (m.kind === 'image') return <Media key={m.src} src={m.src} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" />;
+  if (m.kind === 'image') return <Zoom fill resetKey={m.src}><Media key={m.src} src={m.src} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" /></Zoom>;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
   const toggleFs = () => { const el = box.current;
     if (document.fullscreenElement || document.webkitFullscreenElement) return (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     const req = el.requestFullscreen || el.webkitRequestFullscreen; if (req) req.call(el); else vid.current?.webkitEnterFullscreen?.(); }; // iPhone only fullscreens the <video> itself
   return (<div className="pv-player" ref={box}>
-    <video ref={vid} key={m.src} className="pv-video" src={asset(m.src)} poster={asset(item.image)} controls controlsList="nofullscreen" autoPlay loop playsInline preload="metadata"
-      onLoadedData={() => setReady(true)} onError={() => setBad(true)} />
+    <video ref={vid} key={m.src} className="pv-video" src={asset(m.src)} poster={THUMB_AT[item.id] != null ? undefined : asset(item.image)} controls controlsList="nofullscreen" autoPlay loop playsInline preload="metadata"
+      onPlay={() => duck(tok.current)} onPause={() => release(tok.current)} onEnded={() => release(tok.current)}
+      onLoadedData={() => setReady(true)} onError={() => { setBad(true); release(tok.current); }} />
     {!ready && <div className="pv-loading" role="status"><i className="spin" /><span>LOADING VIDEO…</span></div>}
     <button className="pv-fs" data-sfx="tick" onClick={toggleFs} aria-label={fs ? 'Exit full screen' : 'Full screen'} title={fs ? 'Exit full screen' : 'Full screen'}>{fs ? '✕' : '⛶'}</button></div>);
 }
