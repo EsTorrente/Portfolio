@@ -14,7 +14,6 @@ export const about = {
   bio: [
     "I'm a 21-year-old Colombian Engineer in Design for Digital Entertainment, passionate about creating characters, animations, worlds, mechanics, and interactive experiences that can help solve real-world problems.",
     "I naturally tend to take on leadership roles. Through years of managing teams of 6\u201330 people in Scouts and university projects, I've developed strong skills in organization, communication, delegation, planning, and adapting to whatever a project needs.",
-    'Ultimately, I want to make things that are not only technically interesting, but meaningful, imaginative, and emotionally resonant.',
     'I believe art, kindness, and ethical technology can help build a more imaginative and empathetic world.'],
   skillsTitle: 'MAIN SKILLS',
   skills: ['Project Management', 'Rigging', '3D Animation', 'Experience Design', 'Emotional Storytelling', 'Creative Direction'],
