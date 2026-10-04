@@ -221,3 +221,18 @@ video.layer{object-fit:cover}
 .mp-mute{position:absolute;top:5px;right:8px;z-index:2;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#b3b3b3;transition:color .15s,background .15s}.mp-mute svg{width:16px;height:16px}.mp-mute:hover:not(:disabled){color:#fff;background:#ffffff1f}.mp-mute[aria-pressed=true]{color:var(--o2)}.mp-mute:disabled{opacity:.35;cursor:default}
 .intro-bar{width:min(46vmin,420px);height:3px;border-radius:2px;background:#ff8c1828;overflow:hidden}.intro-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--o),var(--y));transform-origin:left;transform:scaleX(0);transition:transform .35s ease}
 .intro p{min-height:1.2em;text-align:center}
+
+/* ===== v5: fullscreen cursor, story + snake on the loading screen ===== */
+.pv-player:fullscreen,.pv-player:fullscreen *{cursor:auto!important}.pv-player:-webkit-full-screen,.pv-player:-webkit-full-screen *{cursor:auto!important} /* the custom cursor can't show inside fullscreen, so use the real one */
+.intro{gap:clamp(10px,2.2vh,22px)}.intro img,.intro video{transition:width .5s ease}.intro.game img,.intro.game video{width:min(20vmin,190px)}
+.story{min-height:4.6em;display:grid;align-content:start;gap:.25em;text-align:center;max-width:min(88vw,560px);font:italic 400 clamp(15px,2vw,21px)/1.45 var(--body);color:var(--cr2)}
+.intro .story p{font:inherit;letter-spacing:.01em;color:inherit;opacity:0;animation:storyIn 1.1s ease forwards;animation-delay:calc(var(--l)*1.1s + .2s)}
+@keyframes storyIn{from{opacity:0;transform:translateY(8px);filter:blur(4px)}to{opacity:.95;transform:none;filter:none}}
+.intro-status{display:grid;gap:8px;justify-items:center}.intro .stat{font-size:11px;opacity:.75}
+.snake-open{font:400 11px var(--mono);letter-spacing:.2em;color:var(--y2);padding:9px 16px;border:1px dashed #ff8c18aa;border-radius:99px;opacity:.85;transition:.2s}.snake-open:hover{background:#ff8c1822;opacity:1}
+.snake{display:grid;gap:8px;justify-items:center}.snake-board{position:relative;width:min(70vw,34vh,300px);aspect-ratio:1;border:2px solid var(--o2);border-radius:8px;overflow:hidden;box-shadow:0 0 30px #ff7a0033;animation:fade .4s}
+.snake-board canvas{width:100%;height:100%;display:block;touch-action:none}
+.snake-msg{position:absolute;inset:0;display:grid;place-content:center;text-align:center;background:#120b08cc;font:400 10px/1.8 var(--mono);letter-spacing:.14em;color:var(--y2);pointer-events:none}
+.snake-score{font:400 10px var(--mono);letter-spacing:.2em;color:var(--cr);opacity:.75}
+.dpad{display:none;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px);gap:4px}.dpad button{border:1px solid #ff8c1888;border-radius:8px;color:var(--y2);font-size:15px}.dpad button:active{background:var(--o2);color:var(--bg)}
+@media (pointer:coarse){.dpad{display:grid}}
