@@ -408,3 +408,8 @@ html.compact .ab-sheet .ab-ban{display:block}html.compact .ab-sheet .ab-ban .han
 .ab-bio strong{font-weight:700;color:#3a1c08;background:linear-gradient(transparent 62%,#f6b94f88 62%)}
 html:not(.compact) .ab-ban{width:47%;padding-left:20%!important;padding-right:1cqw!important}
 html:not(.compact) .ab-sheet .ab-ban .hand{white-space:pre-line;font-size:1.45cqw;line-height:1.2}
+
+/* v11 · About: icons are now normalised in TrimmedIcon.jsx (no extra padding), banner text stays inside the paper */
+.soft span.has-icon img{padding:0}
+html:not(.compact) .ab-sheet .ab-ban{left:8.2%;top:73.4%;width:41.6%;height:23.6%;padding:0 3.2cqw 0 12.8cqw!important;overflow:hidden}
+html:not(.compact) .ab-sheet .ab-ban .hand{width:100%;min-width:0;max-width:100%;overflow-wrap:break-word;white-space:pre-line;font-size:1.5cqw;line-height:1.18}
