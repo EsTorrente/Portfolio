@@ -245,3 +245,4 @@ video.layer{object-fit:cover}
 /* ===== v7: darken the desktop behind an open window ===== */
 .desktop::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:#0a0604;opacity:0;transition:opacity .9s ease} /* change .65 below to taste: 0 = no dimming, 1 = black */
 .desktop.has-open::after{opacity:.65}
+.topbar{transition:filter .9s ease}.has-open .topbar{filter:brightness(.35)} /* logo + name + clock dim together with the background (keep in sync: brightness = 1 − overlay opacity above) */
