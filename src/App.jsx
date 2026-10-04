@@ -4,6 +4,8 @@ import PortfolioWindow from './components/PortfolioWindow';
 import { sections } from './data/navigationData';
 import { site } from './data/siteData';
 import { asset, reducedMotion } from './utils/assets';
+import MusicDock from './components/MusicDock';
+import { initSfx, play } from './utils/sfx';
 
 const fromHash = () => { const id = location.hash.replace(/^#\/?/, ''); return sections.some((s) => s.id === id) ? id : null; };
 
@@ -21,7 +23,8 @@ export default function App() {
   useEffect(() => { if (phase === 'intro') { const t = setTimeout(() => setPhase('reveal'), 3200); return () => clearTimeout(t); }
     if (phase === 'reveal') { const t = setTimeout(() => setPhase('done'), 1800); return () => clearTimeout(t); } }, [phase]);
   useEffect(() => { const h = () => { setOpen(fromHash()); if (!fromHash()) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
-  const openSec = useCallback((id, rect) => { if (rect) setOrigin(rect); location.hash = '/' + id; }, []);
+  useEffect(() => initSfx(), []);
+  const openSec = useCallback((id, rect) => { if (rect) play('open'),  setOrigin(rect); location.hash = '/' + id; }, []);
   const closed = useCallback(() => { history.pushState('', document.title, location.pathname + location.search); setOpen(null); setOrigin(null); }, []);
   return (<>
     <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro'} introDone={phase === 'done'} />
@@ -29,6 +32,7 @@ export default function App() {
     {phase !== 'done' && (<div className={'intro' + (phase === 'reveal' ? ' out' : '')} onClick={() => setPhase('reveal')} role="presentation">
       {site.logoVideo ? <video src={asset(site.logoVideo)} autoPlay muted playsInline /> : <img src={asset(site.logo)} alt={site.name} />}
       <p>INITIALIZING DREAM…</p><button className="skip">SKIP</button></div>)}
+    <MusicDock collapsed={!!open} />
     <Cursor />
   </>);
 }

@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
 import Media from './Media';
 import { asset } from '../utils/assets';
+import { play } from '../utils/sfx';
 // Full-screen dark gallery overlay. Esc closes, ←/→ navigates. Never crops.
 export default function MediaViewer({ items, index, onClose, onIndex }) {
   const it = items[index], ref = useRef(); const prev = useRef();
+  useEffect(() => { play('viewer'); }, []);
   useEffect(() => { prev.current = document.activeElement; ref.current?.focus();
     const k = (e) => { if (e.key === 'Escape') { e.stopPropagation(); onClose(); } if (e.key === 'ArrowRight') onIndex((index + 1) % items.length); if (e.key === 'ArrowLeft') onIndex((index - 1 + items.length) % items.length); };
     addEventListener('keydown', k, true); return () => { removeEventListener('keydown', k, true); prev.current?.focus?.(); }; }, [index, items.length]);

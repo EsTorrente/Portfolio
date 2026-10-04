@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Media from '../components/Media';
 import MediaViewer from '../components/MediaViewer';
 import ProjectViewer from '../components/ProjectViewer';
@@ -18,7 +18,7 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
   return (<><div className={'grid ' + cls} key={items.map((i) => i.id).join()}>{items.map((it, n) => (
     <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
       <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
-        <Media src={it.image} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
+        <Media src={it.image} video={it.videos?.[0]?.src} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
         {rich(it) && <span className="cta"><b>▶</b>{ctaLabel(it)}</span>}</button>
       <h3>{it.title}</h3>{it.subtitle && <p className="sub">{it.subtitle}</p>}{it.description && <p>{it.description}</p>}
       {it.role && <p className="meta">ROLE: {it.role}</p>}
@@ -30,10 +30,13 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
 }
 
 const RATIOS = [0.75, 1.3, 1, 1.6, 0.8, 1.2];
-function ArtPiece({ it, n }) { // image, or an animated webm (muted loop); a missing file shows the placeholder
-  const [bad, setBad] = useState(false);
-  if (it.video && !bad) return <video src={asset(it.video)} autoPlay loop muted playsInline onError={() => setBad(true)} aria-label={it.title} />;
-  return <Media src={it.video ? it.video : it.image} alt={it.title} label={it.title} ratio={RATIOS[n % RATIOS.length]} />;
+function ArtPiece({ it, n }) { // image, or an animated webm (muted loop). Loader until ready; videos only load once scrolled near.
+  const [bad, setBad] = useState(false), [ok, setOk] = useState(false), [vis, setVis] = useState(false), box = useRef(), ratio = RATIOS[n % RATIOS.length];
+  useEffect(() => { if (!it.video || !box.current) return; const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); o.disconnect(); } }, { rootMargin: '300px' }); o.observe(box.current); return () => o.disconnect(); }, [it.video]);
+  if (it.video && !bad) return (<div ref={box} className={'vbox' + (ok ? ' ok' : '')} style={ok ? undefined : { aspectRatio: ratio }}>
+    {!ok && <div className="ph ldr" role="status" aria-label="Loading"><i className="spin" /></div>}
+    {vis && <video src={asset(it.video)} autoPlay loop muted playsInline preload="auto" onLoadedData={() => setOk(true)} onError={() => setBad(true)} aria-label={it.title} />}</div>);
+  return <Media src={it.video ? it.video : it.image} alt={it.title} label={it.title} ratio={ratio} />;
 }
 function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio. "ALL" groups pieces by category, each with its intro.
   const cats = filter === 'ALL' ? Object.keys(D.illustrationIntro) : [filter]; const [v, setV] = useState(null);

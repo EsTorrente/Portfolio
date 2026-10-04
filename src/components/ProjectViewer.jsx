@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Media from './Media';
 import { asset } from '../utils/assets';
+import { play } from '../utils/sfx';
 
 // Project pop-up: video player + video list on the left, full write-up on the right. Esc closes, ←/→ switch project.
 // Content comes from `item.details` / `item.videos` in data/portfolioData.js.
@@ -17,13 +18,23 @@ const mediaOf = (it) => it.youtube ? [{ kind: 'yt', title: it.title, id: it.yout
   : [{ kind: 'image', title: it.title, src: it.images?.[0] || it.image }];
 
 function Player({ item, media, cur }) {
-  const [bad, setBad] = useState(false);
-  useEffect(() => setBad(false), [cur, item.id]);
+  const [bad, setBad] = useState(false), [ready, setReady] = useState(false), [fs, setFs] = useState(false), box = useRef(), vid = useRef();
+  useEffect(() => { setBad(false); setReady(false); }, [cur, item.id]);
+  useEffect(() => { const f = () => setFs(!!box.current && (document.fullscreenElement === box.current || document.webkitFullscreenElement === box.current));
+    document.addEventListener('fullscreenchange', f); document.addEventListener('webkitfullscreenchange', f);
+    return () => { document.removeEventListener('fullscreenchange', f); document.removeEventListener('webkitfullscreenchange', f); }; }, []);
   const m = media[cur];
   if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} — YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
   if (m.kind === 'image') return <Media key={m.src} src={m.src} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" />;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
-  return <video key={m.src} className="pv-video" src={asset(m.src)} poster={asset(item.image)} controls autoPlay loop playsInline onError={() => setBad(true)} />;
+  const toggleFs = () => { const el = box.current;
+    if (document.fullscreenElement || document.webkitFullscreenElement) return (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    const req = el.requestFullscreen || el.webkitRequestFullscreen; if (req) req.call(el); else vid.current?.webkitEnterFullscreen?.(); }; // iPhone only fullscreens the <video> itself
+  return (<div className="pv-player" ref={box}>
+    <video ref={vid} key={m.src} className="pv-video" src={asset(m.src)} poster={asset(item.image)} controls controlsList="nofullscreen" autoPlay loop playsInline preload="metadata"
+      onLoadedData={() => setReady(true)} onError={() => setBad(true)} />
+    {!ready && <div className="pv-loading" role="status"><i className="spin" /><span>LOADING VIDEO…</span></div>}
+    <button className="pv-fs" data-sfx="tick" onClick={toggleFs} aria-label={fs ? 'Exit full screen' : 'Full screen'} title={fs ? 'Exit full screen' : 'Full screen'}>{fs ? '✕' : '⛶'}</button></div>);
 }
 
 function Blocks({ blocks }) {
@@ -40,6 +51,7 @@ function Blocks({ blocks }) {
 export default function ProjectViewer({ items, index, onClose, onIndex }) {
   const it = items[index], d = it.details || {}, ref = useRef(), prev = useRef(), body = useRef();
   const [cur, setCur] = useState(0);
+  useEffect(() => { play('viewer'); }, []);
   useEffect(() => { setCur(0); body.current?.scrollTo(0, 0); }, [index]);
   useEffect(() => {
     prev.current = document.activeElement; ref.current?.focus();

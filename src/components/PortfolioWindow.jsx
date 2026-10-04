@@ -3,6 +3,7 @@ import { sections } from '../data/navigationData';
 import { asset } from '../utils/assets';
 import Section from '../sections';
 import { reducedMotion } from '../utils/assets';
+import { play } from '../utils/sfx';
 
 const Ico = ({ id }) => <img src={asset(`/assets/icons/${id}.webp`)} alt="" />;
 // Window grows from the clicked icon (FLIP: icon rect → window rect), overshoots slightly, then reveals content.
@@ -15,11 +16,10 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
       { duration: reverse ? 520 : 820, easing: reverse ? 'cubic-bezier(.6,0,.9,.4)' : 'cubic-bezier(.2,1.15,.3,1)', fill: 'both' }); a.onfinish = done; };
   useLayoutEffect(() => { flip(false, () => setShown(true)); }, []);
   useEffect(() => { setFilter('ALL'); el.current?.querySelector('.wbody')?.scrollTo(0, 0); }, [id]);
-  const close = () => { if (closing) return; setClosing(true); setShown(false); flip(true, onClosed); };
+  const close = () => { if (closing) return; play('close'); setClosing(true); setShown(false); flip(true, onClosed); };
   useEffect(() => { const k = (e) => e.key === 'Escape' && close(); addEventListener('keydown', k); return () => removeEventListener('keydown', k); });
   useEffect(() => { el.current.querySelector('.wclose').focus(); }, []);
   const ptr = (e) => { const w = el.current, r = w.getBoundingClientRect(); w.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3)); w.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3)); };
-  const filters = sec.filters;
   return (<div className={'wrap' + (closing ? ' closing' : '')}>
     <img className="deco deco-br" src={asset('/assets/ui/back-right.webp')} alt="" draggable="false" />
     <div className={'win' + (shown ? ' shown' : '')} ref={el} role="dialog" aria-modal="true" aria-label={sec.title} onPointerMove={ptr}
@@ -29,9 +29,12 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
     <div className="wbody">
       <header className="whead"><Ico id={id} /><div><h2>{sec.title}</h2>{sec.sub.map((l, i) => <p key={i}>{l}</p>)}</div></header>
       <div className="wmain">
-        <nav className="side" aria-label={filters ? 'Filters' : 'Sections'}>
-          {filters ? filters.map((f) => <button key={f} className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}>{f}</button>)
-            : sections.map((s) => <button key={s.id} className={s.id === id ? 'on' : ''} onClick={() => onNav(s.id)} aria-current={s.id === id}><Ico id={s.id} />{s.label.toUpperCase()}</button>)}
+        <nav className="side" aria-label="Sections">
+          {sections.map((s) => { const here = s.id === id, open = here && shown; return (<div className="grp" key={s.id}>
+            <button className={here ? 'on' : ''} onClick={() => (here ? setFilter('ALL') : onNav(s.id))} aria-current={here ? 'page' : undefined} aria-expanded={s.filters ? open : undefined}><Ico id={s.id} />{s.label.toUpperCase()}{s.filters && <i className="chev" />}</button>
+            {s.filters && <div className={'sub' + (open ? ' open' : '')} aria-hidden={!open}><div className="subin" role="group" aria-label={`${s.label} categories`}>
+              {s.filters.map((f, k) => <button key={f} style={{ '--k': k }} tabIndex={open ? 0 : -1} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}>{f}</button>)}</div></div>}
+          </div>); })}
         </nav>
         <div className="content"><Section id={id} filter={filter} /></div>
       </div>
