@@ -413,3 +413,7 @@ html:not(.compact) .ab-sheet .ab-ban .hand{white-space:pre-line;font-size:1.45cq
 .soft span.has-icon img{padding:0}
 html:not(.compact) .ab-sheet .ab-ban{left:8.2%;top:73.4%;width:41.6%;height:23.6%;padding:0 3.2cqw 0 12.8cqw!important;overflow:hidden}
 html:not(.compact) .ab-sheet .ab-ban .hand{width:100%;min-width:0;max-width:100%;overflow-wrap:break-word;white-space:pre-line;font-size:1.5cqw;line-height:1.18}
+
+/* v12 · About software grid: columns must NOT grow with their labels (long names like "MotionBuilder" were widening the middle column → bigger Maya/MotionBuilder icons) */
+html:not(.compact) .soft{grid-template-columns:repeat(3,minmax(0,1fr))}
+.soft span.has-icon{min-width:0}.soft span.has-icon img{width:100%;max-width:100%}
