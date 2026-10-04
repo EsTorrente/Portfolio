@@ -241,3 +241,7 @@ video.layer{object-fit:cover}
 .intro{isolation:isolate}
 .intro-bg{position:absolute;inset:0;z-index:-1;background:center/cover no-repeat;opacity:0;transition:opacity 1.2s ease}.intro-bg.on{opacity:1}
 .intro-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,#120b0833 0%,#120b0899 100%)} /* soft vignette keeps the story readable */
+
+/* ===== v7: darken the desktop behind an open window ===== */
+.desktop::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:#0a0604;opacity:0;transition:opacity .9s ease} /* change .65 below to taste: 0 = no dimming, 1 = black */
+.desktop.has-open::after{opacity:.65}
