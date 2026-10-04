@@ -12,8 +12,15 @@ export default function ParticleField({ dim = false }) {
     const ps = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), l: Math.random() * 200 }));
     const size = () => { W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; };
     const ang = (x, y) => Math.sin(x * 3.1 + t * 0.2) + Math.cos(y * 2.7 - t * 0.17) + Math.sin((x + y) * 5 + t * 0.1) * 0.5;
+    // FPS guard: once the desktop is showing, measure the real frame rate. Three slow checks in a row (≈5 s) → stop the particles for good (html gets .lowfps).
+    let last = performance.now(), frames = 0, strikes = 0, since = last, dead = false;
+    const watch = (now) => { if (document.documentElement.dataset.phase !== 'done' || document.hidden) { since = now; frames = 0; return; } frames++;
+      if (now - since < 1700) return; const fps = (frames * 1000) / (now - since); since = now; frames = 0; strikes = fps < 30 ? strikes + 1 : Math.max(0, strikes - 1);
+      if (strikes >= 3) { dead = true; cancelAnimationFrame(raf); ctx.clearRect(0, 0, W, H); cv.style.display = 'none'; document.documentElement.classList.add('lowfps'); } };
     const frame = () => {
-      raf = requestAnimationFrame(frame); if (!running) return; t += 0.016;
+      raf = requestAnimationFrame(frame); if (!running || dead) return; const now = performance.now(); watch(now); if (dead) return; last = now;
+      if (dimRef.current && document.documentElement.classList.contains('compact')) return; // phone: a window covers the whole screen, so don't draw behind it
+      t += 0.016;
       ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = 'rgba(0,0,0,0.06)'; ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = 'lighter'; const op = dimRef.current ? 0.25 : 1;
       for (const p of ps) {

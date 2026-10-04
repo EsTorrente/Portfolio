@@ -36,5 +36,8 @@ export default function MusicDock({ collapsed }) {
         <input type="range" min="0" max={s.dur || 0} step="0.1" value={Math.min(s.time, s.dur || 0)} disabled={!has || !s.dur} onChange={(e) => M.seek(+e.target.value)} aria-label="Seek" aria-valuetext={`${fmt(s.time)} of ${fmt(s.dur)}`} />
         <span className="mp-time">{fmt(s.time)} / {fmt(s.dur)}</span></div>
     </div>
+    <div className="mp-vol"><div className="mp-vol-pill">
+      <button data-sfx="tick" onClick={() => M.setMuted(!s.muted)} aria-label={s.muted ? 'Unmute music' : 'Mute music'} tabIndex={-1}>{s.muted || s.volume === 0 ? '🔇\uFE0E' : '🔊\uFE0E'}</button>
+      <input type="range" min="0" max="1" step="0.01" value={s.muted ? 0 : s.volume} style={{ '--v': (s.muted ? 0 : s.volume) * 100 + '%' }} onChange={(e) => M.setVolume(+e.target.value)} aria-label="Music volume" aria-valuetext={`${Math.round((s.muted ? 0 : s.volume) * 100)}%`} /></div></div>
     <button className="dock-tab" data-sfx="tick" aria-label={peek ? 'Hide music player' : 'Show music player'} aria-expanded={!(collapsed && !peek)} onClick={() => setPeek((p) => !p)}>♪</button></aside>);
 }

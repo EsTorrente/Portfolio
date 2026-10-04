@@ -246,3 +246,111 @@ video.layer{object-fit:cover}
 .desktop::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:#0a0604;opacity:0;transition:opacity .9s ease} /* change .65 below to taste: 0 = no dimming, 1 = black */
 .desktop.has-open::after{opacity:.65}
 .topbar{transition:filter .9s ease}.has-open .topbar{filter:brightness(.35)} /* logo + name + clock dim together with the background (keep in sync: brightness = 1 − overlay opacity above) */
+
+/* ===== v8: phone layout. Phone rules above (max-width:760px) re-applied via html.compact so LANDSCAPE phones get them too ===== */
+html.compact .deco{display:none}
+html.compact .icons{grid-template-columns:repeat(2,1fr);top:46%;gap:14px}
+html.compact .icon{font-size:13px}
+html.compact .icon img{width:92px}
+html.compact .smallwin{display:none}
+html.compact .foot{font-size:9px}
+html.compact .win{width:96vw;height:94dvh;aspect-ratio:auto;background:var(--bg2);border:3px solid var(--o2);border-radius:14px;container-type:normal;transform:none!important;overflow:hidden}
+html.compact .wtab{left:14px;top:0;height:40px;font-size:12px}
+html.compact .wctl{top:6px;right:8px}
+html.compact .wctl button{width:34px;height:30px;font-size:15px}
+html.compact .wctl button:nth-child(2){display:none}
+html.compact .wbody{inset:44px 0 0;padding:14px}
+html.compact .wmain{grid-template-columns:1fr}
+html.compact .side{flex-direction:row;overflow-x:auto;position:static;padding-bottom:6px}
+html.compact .side button{white-space:nowrap;min-height:44px;border:1px solid #ff8c1855}
+html.compact .side img{display:none}
+html.compact .whead h2{font-size:26px}
+html.compact .whead img{width:46px}
+html.compact .whead p{font-size:10px}
+html.compact .about{aspect-ratio:auto;background:none}
+html.compact .ab-sheet{position:static;display:grid;gap:14px;font-size:13px}
+html.compact .ab-sheet>*{position:static!important;width:auto!important;height:auto!important}
+html.compact .paper,html.compact .ab-pol{background:var(--cr);border-radius:4px;box-shadow:0 6px 12px #0008}
+html.compact .paper h3,html.compact .paper p,html.compact .ab-int ul,html.compact .ab-con ul,html.compact .ab-sheet .tags span{font-size:13px}
+html.compact .hand{font-size:28px}
+html.compact .ab-portrait{max-height:70vh}
+html.compact .ab-pol .ph,html.compact .ab-pol img{height:auto}
+html.compact .soft span{font-size:18px}
+html.compact .ab-portrait figcaption{display:grid}
+html.compact .award .atext{font-size:inherit}
+html.compact .masonry{columns:2 140px;column-gap:12px}
+html.compact .ab-ban{padding-left:1.8cqw!important}
+html.compact .ab-bio p{font-size:14px}
+html.compact .ab-int li b{font-size:14px}
+html.compact .ab-int li span{font-size:13px}
+html.compact .ab-con ul,html.compact .ab-con b{font-size:13px}
+html.compact .ab-sheet .ab-ban .hand{font-size:26px}
+html.compact .side{max-height:none;overflow-y:visible}
+html.compact .grp{display:contents}
+html.compact .grp>button{width:auto}
+html.compact .chev{display:none}
+html.compact .sub{display:none}
+html.compact .sub.open{display:contents}
+html.compact .subin{display:contents}
+html.compact .subin button{white-space:nowrap;min-height:44px;border:1px dashed #ff8c18aa;font-size:11px;animation:subIn .4s both}
+html.compact .dock{left:12px;top:calc(clamp(52px,5.4vw,84px) + 30px)}
+
+/* ===== v8: landscape phone layout (rail of section icons on the left, category pills on top, full-screen window) ===== */
+.rail,.pills,.back-menu,.mp-vol{display:none}
+html.compact .side{display:none!important}html.compact .esc{display:none}
+html.compact .wrap{place-items:stretch}
+html.compact .win{width:100%!important;height:100%!important;border:0;border-radius:0;background:linear-gradient(#1b100b,#120b08);box-shadow:inset 0 0 0 2px #ff8c1888;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+html.compact .wtab{left:calc(60px + env(safe-area-inset-left));top:0;height:30px;font-size:11px}html.compact .wtab img{height:20px}
+html.compact .wctl{top:3px;right:calc(8px + env(safe-area-inset-right))}html.compact .wctl button{width:40px;height:26px}html.compact .wctl button:nth-child(1){display:none}
+html.compact .wbody{inset:30px env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);padding:0;overflow:hidden;display:grid;grid-template-columns:54px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr)}
+html.compact .rail{grid-column:1;grid-row:1/-1;display:flex;flex-direction:column;gap:4px;padding:6px;overflow-y:auto;scrollbar-width:none;background:#0d0705;border-right:1px solid #ff8c1844}.rail::-webkit-scrollbar{display:none}
+.rail button{flex:none;display:grid;place-items:center;width:42px;height:clamp(34px,calc((100dvh - 56px)/9),44px);border-radius:8px;transition:.2s}.rail img{width:70%;height:70%;object-fit:contain}
+.rail button.on{background:var(--o2)}.rail button.on img{filter:brightness(.2) contrast(1.4)}.rail button:active{transform:scale(.9)}.rail-back{font-size:24px;color:var(--y2);line-height:1;border:1px solid #ff8c1855}
+html.compact .whead{grid-column:2;grid-row:1;margin:0;padding:6px 14px 4px;gap:10px;border-bottom:0}html.compact .whead img{display:none}html.compact .whead h2{font-size:22px}html.compact .whead p{font-size:10px;margin:2px 0 0}html.compact .whead p:nth-of-type(n+2){display:none}
+html.compact .pills{grid-column:2;grid-row:2;display:flex;gap:8px;overflow-x:auto;padding:4px 14px 8px;scrollbar-width:none}.pills::-webkit-scrollbar{display:none}
+.pills button{flex:none;min-height:38px;padding:0 16px;border:1px solid #ff8c1877;border-radius:99px;font-size:11px;letter-spacing:.08em;transition:.2s}.pills button.on{background:var(--o2);color:var(--bg);border-color:var(--o2);font-weight:600}.pills button:active{transform:scale(.94)}
+html.compact .wmain{grid-column:2;grid-row:3;display:block;overflow:auto;min-height:0;padding:4px 14px 52px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--o) transparent}
+html.compact .back-menu{display:block;position:absolute;left:62px;bottom:6px;z-index:3;font-size:11px;letter-spacing:.1em;color:var(--y2);opacity:.8;padding:6px 8px}
+/* cards / awards become a sideways carousel */
+html.compact:not(.portrait) .grid,html.compact:not(.portrait) .awards{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 12px;scroll-snap-type:x proximity;scrollbar-width:none}
+html.compact:not(.portrait) .grid::-webkit-scrollbar,html.compact:not(.portrait) .awards::-webkit-scrollbar{display:none}
+html.compact:not(.portrait) .grid>.card{flex:0 0 clamp(200px,30vw,250px);scroll-snap-align:start}
+html.compact:not(.portrait) .grid.wide>.card,html.compact:not(.portrait) .grid.big>.card{flex-basis:clamp(240px,38vw,320px)}
+html.compact:not(.portrait) .award{flex:0 0 clamp(170px,26vw,220px);scroll-snap-align:start}
+html.compact .card p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}html.compact .card .more{min-height:40px}
+html.compact .card:hover,html.compact .award:hover{transform:none}
+.aopen{position:absolute;inset:0;z-index:1;cursor:pointer;border-radius:4px}.aopen span{position:absolute;right:7%;bottom:3.5%;font:700 3.6cqw var(--mono);letter-spacing:.14em;color:var(--ink);opacity:0;transition:.25s}.award:hover .aopen span,.aopen:focus-visible span{opacity:.85}.aopen:focus-visible{outline:2px dashed var(--ink);outline-offset:-6px}.award .ext{z-index:2}
+html.compact .aopen span{opacity:.7}
+.pv-cert{display:inline-block;margin-top:18px;padding:10px 16px;border:1px solid var(--o2);border-radius:99px;font-size:11px;letter-spacing:.12em;color:var(--y2)}.pv-cert:hover{background:var(--o2);color:var(--bg)}
+/* pop-ups on a landscape phone: video/image left, text right (instead of stacked) */
+html.compact:not(.portrait) .pv-panel{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);width:calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right));height:calc(100dvh - 16px);border-radius:8px}
+html.compact:not(.portrait) .pv-media{border-right:1px solid #ff8c1855;border-bottom:0}html.compact:not(.portrait) .pv-text{padding:14px 16px}html.compact .pv-text h3{font-size:24px;margin-bottom:10px}
+html.compact .vbtn{width:44px;height:44px}html.compact:not(.portrait) .pv .vprev,html.compact:not(.portrait) .pv .vnext{top:50%;bottom:auto}
+/* desktop (icons) on a landscape phone */
+html.compact:not(.portrait) .icons{grid-template-columns:repeat(4,1fr);top:53%;width:min(80vw,680px);gap:min(3vh,18px) 8px}html.compact:not(.portrait) .icon img{width:clamp(46px,17vh,84px)}html.compact:not(.portrait) .icon{font-size:11px}
+html.compact .smallwin,html.compact .foot{display:none}
+html.compact .topbar{padding:max(8px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-left))}html.compact .topbar img{width:44px}html.compact .topbar{font-size:15px}html.compact .sfxbtn{min-height:34px;padding:0 12px}
+/* mobile music: tucked away; ♪ opens it */
+html.compact .dock{left:max(10px,env(safe-area-inset-left));top:62px;width:min(340px,calc(100vw - 100px))}html.compact .dock-tab{width:44px;height:44px}
+/* intro snake in landscape */
+html.compact:not(.portrait) .intro.game .story{display:none}
+html.compact:not(.portrait) .snake{grid-template-columns:auto auto;grid-template-areas:"b d" "s d";align-items:center;gap:6px 22px}html.compact:not(.portrait) .snake-board{grid-area:b;width:min(46vh,240px)}html.compact:not(.portrait) .snake-score{grid-area:s}html.compact:not(.portrait) .dpad{grid-area:d}
+html.compact .snake-open,html.compact .skip{min-height:40px}
+/* rotate-your-phone notice */
+.rotate{position:fixed;inset:0;z-index:300;display:grid;place-content:center;justify-items:center;gap:14px;padding:28px;text-align:center;background:radial-gradient(circle at 50% 40%,#2a1a12,#120b08 75%);color:var(--cr2)}
+.rotate-phone{width:84px;color:var(--o2);animation:rot 2.6s ease-in-out infinite}@keyframes rot{0%,25%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+.rotate h2{font-size:26px}.rotate p{font-size:12px;line-height:1.7;opacity:.85;max-width:28em}.rotate button{margin-top:10px;min-height:46px;padding:0 22px;border:1px dashed #ff8c18aa;border-radius:99px;font-size:11px;letter-spacing:.2em;color:var(--y2)}
+/* ===== v8: volume slider (appears under the player on hover / focus; always visible on touch) ===== */
+.mp-vol{display:block;position:absolute;right:0;top:100%;padding-top:6px;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .2s,transform .2s}
+.dock:hover .mp-vol,.dock:focus-within .mp-vol{opacity:1;pointer-events:auto;transform:none}
+@media (hover:none){.mp-vol{opacity:1;pointer-events:auto;transform:none}}
+.mp-vol-pill{display:flex;align-items:center;gap:8px;padding:4px 14px 4px 8px;border-radius:99px;background:#150c08f2;border:1px solid #ff8c1855;box-shadow:0 6px 16px #0009}
+.mp-vol-pill button{width:28px;height:28px;font-size:14px;color:#b3b3b3}.mp-vol-pill button:hover{color:#fff}
+.mp-vol input{-webkit-appearance:none;appearance:none;width:120px;height:4px;border-radius:2px;background:linear-gradient(90deg,#fff var(--v,30%),#ffffff33 var(--v,30%));outline:0;cursor:pointer}
+.mp-vol input::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #ffffff00;transition:box-shadow .15s}.mp-vol input:hover::-webkit-slider-thumb,.mp-vol input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 5px #ffffff33}
+.mp-vol input::-moz-range-thumb{width:12px;height:12px;border:0;border-radius:50%;background:#fff}
+@media (hover:none){.mp-vol input{height:6px;width:150px}.mp-vol input::-webkit-slider-thumb{width:20px;height:20px}}
+/* cursor ring: follows the pointer exactly */
+.ring,.dot{will-change:transform}
+/* low-fps mode: lighten everything that's only decoration */
+.lowfps .win{transition:none}

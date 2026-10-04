@@ -17,7 +17,7 @@ function Slate({ n, title }) { // shown when a video file doesn't exist yet
 const mediaOf = (it) => it.youtube ? [{ kind: 'yt', title: it.title, id: it.youtube }]
   : it.videos?.length ? it.videos.map((v) => ({ kind: 'video', ...v }))
   : it.images?.length > 1 ? it.images.map((src, i) => ({ kind: 'image', title: `Image ${String(i + 1).padStart(2, '0')}`, src }))
-  : [{ kind: 'image', title: it.title, src: it.images?.[0] || it.image }];
+  : [{ kind: 'image', title: it.title, src: it.images?.[0] || it.image, fallback: it.fallback }];
 
 function Player({ item, media, cur }) {
   const [bad, setBad] = useState(false), [ready, setReady] = useState(false), [fs, setFs] = useState(false), box = useRef(), vid = useRef();
@@ -28,7 +28,7 @@ function Player({ item, media, cur }) {
   const m = media[cur], tok = useRef({});
   useEffect(() => () => release(tok.current), [cur, item.id]); // video changed / popup closed → music comes back
   if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} — YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
-  if (m.kind === 'image') return <Zoom fill resetKey={m.src}><Media key={m.src} src={m.src} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" /></Zoom>;
+  if (m.kind === 'image') return <Zoom fill resetKey={m.src}><Media key={m.src} src={m.src} fallback={m.fallback} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" /></Zoom>;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
   const toggleFs = () => { const el = box.current;
     if (document.fullscreenElement || document.webkitFullscreenElement) return (document.exitFullscreen || document.webkitExitFullscreen).call(document);
@@ -83,6 +83,7 @@ export default function ProjectViewer({ items, index, onClose, onIndex }) {
         {(d.intro || (it.description ? [it.description] : [])).map((p, i) => <p key={i} className="pv-intro">{p}</p>)}
         {d.blocks && <Blocks blocks={d.blocks} />}
         {d.note && <p className="pv-note"><b>Note</b> {d.note}</p>}
+        {it.certificate && <a className="pv-cert" href={asset(it.certificate)} target="_blank" rel="noreferrer">VIEW CERTIFICATE ↗</a>}
         {it.tags && <div className="tags">{it.tags.map((t) => <span key={t}>{t}</span>)}</div>}
       </div>
     </div>

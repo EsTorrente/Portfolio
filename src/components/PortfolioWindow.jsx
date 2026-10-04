@@ -27,6 +27,11 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
     <div className="wtab"><Ico id={id} /><b>{sec.label.toUpperCase()}</b></div>
     <div className="wctl"><button aria-label="Minimise (closes)" onClick={close}>–</button><button aria-label="Maximise" tabIndex={-1}>▢</button><button className="wclose" aria-label="Close window and return to desktop" onClick={close}>✕</button></div>
     <div className="wbody">
+      <nav className="rail" aria-label="Sections">
+        <button className="rail-back" onClick={close} aria-label="Back to menu" title="Back to menu">‹</button>
+        {sections.map((s) => (<button key={s.id} className={s.id === id ? 'on' : ''} data-sfx="tick" onClick={() => (s.id === id ? setFilter('ALL') : onNav(s.id))} aria-label={s.label} title={s.label} aria-current={s.id === id ? 'page' : undefined}><Ico id={s.id} /></button>))}
+      </nav>
+      {sec.filters && <div className="pills" role="group" aria-label={`${sec.label} categories`}>{sec.filters.map((f) => <button key={f} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}>{f}</button>)}</div>}
       <header className="whead"><Ico id={id} /><div><h2>{sec.title}</h2>{sec.sub.map((l, i) => <p key={i}>{l}</p>)}</div></header>
       <div className="wmain">
         <nav className="side" aria-label="Sections">
@@ -39,6 +44,7 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
         <div className="content"><Section id={id} filter={filter} /></div>
       </div>
       <button className="esc" onClick={close}>‹ ESC / CLOSE</button>
+      <button className="back-menu" onClick={close}>‹ Back to menu</button>
     </div></div>
     <img className="deco deco-fl" src={asset('/assets/ui/front-left.webp')} alt="" draggable="false" />
   </div>);

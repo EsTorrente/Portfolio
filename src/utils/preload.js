@@ -20,10 +20,10 @@ const pool = async (items, n, fn) => { let i = 0; await Promise.all(Array.from({
 export async function preloadAll(onProgress) {
   const urls = new Set(STATIC.map((u) => u)); urls.add(site.logo); sections.forEach((s) => urls.add(`/assets/icons/${s.id}.webp`)); walk(D, urls); walk(about, urls);
   await M.init(); const songs = M.getState().tracks.map((t) => t.url);
-  const save = navigator.connection?.saveData; // respect "data saver": images only
-  const imgs = [...urls].filter((u) => !VID.test(u)), vids = save ? [] : [...urls].filter((u) => VID.test(u)).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
-  const total = imgs.length + vids.length + (save ? 0 : songs.length) || 1, frac = new Map(); let t = 0;
+  const save = navigator.connection?.saveData, phone = matchMedia('(pointer:coarse)').matches; // data saver: images only · phones: images + background videos only (the big project videos stream when opened)
+  const imgs = [...urls].filter((u) => !VID.test(u)), vids = save ? [] : [...urls].filter((u) => VID.test(u) && (!phone || /backgrounds/.test(u))).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
+  const total = imgs.length + vids.length + (save || phone ? 0 : songs.length) || 1, frac = new Map(); let t = 0;
   const rep = (u) => (f) => { frac.set(u, f); const n = performance.now(); if (n - t > 90 || f === 1) { t = n; onProgress?.([...frac.values()].reduce((a, b) => a + b, 0) / total); } };
-  const run = Promise.all([pool(imgs, 8, (u) => imgTask(u, rep(u))), pool([...vids, ...(save ? [] : songs)], 3, (u) => streamTask(u, rep(u)))]);
+  const run = Promise.all([pool(imgs, 8, (u) => imgTask(u, rep(u))), pool([...vids, ...(save || phone ? [] : songs)], 3, (u) => streamTask(u, rep(u)))]);
   await Promise.race([run, new Promise((r) => setTimeout(r, TIMEOUT_MS))]); onProgress?.(1);
 }

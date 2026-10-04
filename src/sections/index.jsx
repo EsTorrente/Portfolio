@@ -50,14 +50,19 @@ function Gallery({ filter }) { // masonry, no crop, objects keep their own aspec
     {v !== null && <MediaViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
-function Awards() { // collectible paper cards over your drawn base (/assets/ui/award-card.webp)
-  return (<div className="awards">{D.awards.map((a, n) => (
+function Awards() { // collectible paper cards over your drawn base. Click one → the big pop-up with the full text (same as projects).
+  const [v, setV] = useState(null);
+  const items = D.awards.map((a) => ({ ...a, subtitle: `${a.year} · ${a.organization}`, tags: [a.badge], fallback: '/assets/ui/award-card.webp', images: [a.image] })); // pop-up art = your award image, or the card drawing if there isn't one
+  return (<><div className="awards">{D.awards.map((a, n) => (
     <article key={a.id} className="award" style={{ '--n': n, '--r': ((n * 41) % 5) - 2 + 'deg', backgroundImage: `url(${asset('/assets/ui/award-card.webp')})` }}>
       <div className="aslot"><Media src={a.image} alt={a.title} label="" ratio={1.4} quiet /></div>
       <span className="year">{a.year}</span>
       <div className="atext"><h3>{a.title}</h3><small>{a.organization}</small><p>{a.description}</p></div>
-      <span className="stamp">{a.badge}</span>{a.certificate && <a className="ext" href={asset(a.certificate)} target="_blank" rel="noreferrer">↗</a>}
-    </article>))}</div>);
+      <span className="stamp">{a.badge}</span>
+      <button className="aopen" onClick={() => setV(n)} aria-label={`Read award: ${a.title}`}><span>READ ✦</span></button>
+      {a.certificate && <a className="ext" href={asset(a.certificate)} target="_blank" rel="noreferrer" aria-label="Open certificate">↗</a>}
+    </article>))}</div>
+    {v !== null && <ProjectViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
 function About() { // positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*). Portrait/polaroids are painted into the art.
