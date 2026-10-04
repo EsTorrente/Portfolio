@@ -157,7 +157,7 @@ export const awards = [
   ['2026', 'Best DEX Project — 2026\u201101', `${UPB} · May 2026`, 'BEST DEX', 'Awarded to the best project in the Degree in Digital Entertainment Experience (DEX) during the 2026-1 semester, for the animated short Platillo.'],
   ['2026', 'Outstanding Student — IDED 2026', `${UPB} · 2026`, 'OUTSTANDING', 'Awarded to the most outstanding student in the Ingeniería en Diseño de Entretenimiento Digital (IDED) program during 2026.'],
 ].map(([year, title, org, badge, desc], i) => ({ id: `award-${i + 1}`, year, title, organization: org, badge, description: i === 6 ? desc : `${desc} Issued by: ${ISSUER}.`,
-  image: `/assets/awards/award-0${i + 1}.webp` /* optional art in the picture slot; if missing the card's base drawing shows */, certificate: null }));
+  image: `/assets/awards/award-0${i + 1}.webp` /* optional art in the picture slot; if missing the card's base drawing shows */, certificate: null })).reverse(); // most recent first (ids/images stay tied to each award)
 
 // ---- PROJECTS -------------------------------------------------------------------------------------------
 // `youtube` = video id; it plays inside the pop-up. Card thumbnail defaults to the YouTube thumbnail (set `image` to use your own art instead).

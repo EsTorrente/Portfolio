@@ -117,7 +117,7 @@ video.layer{object-fit:cover}
 .award{position:relative;aspect-ratio:841/974;background:0 0/100% 100% no-repeat;color:var(--ink);transform:rotate(var(--r));transition:transform .4s cubic-bezier(.2,1.3,.4,1);animation:rise .7s both;animation-delay:calc(var(--n)*70ms);filter:drop-shadow(0 8px 14px #000a);container-type:inline-size}
 .award:hover{transform:rotate(0) translateY(-6px) scale(1.03);z-index:2}
 .aslot{position:absolute;left:9%;right:8%;top:8%;height:50%;overflow:hidden}.aslot img{width:100%;height:100%;object-fit:contain}
-.year{position:absolute;left:3%;top:2%;font-size:6cqw;letter-spacing:.1em;color:var(--ink);transform:rotate(-4deg)}
+.year{position:absolute;left:5%;top:7%;font-size:6cqw;letter-spacing:.1em;color:var(--ink);transform:rotate(-4deg)}
 .atext{position:absolute;left:9%;right:9%;top:62%;bottom:15%;overflow:auto;scrollbar-width:none}.atext h3{font:800 5.4cqw/1.1 var(--disp);margin-bottom:1.2cqw}.atext small{font-size:4cqw;opacity:.8;display:block}.atext p{font-size:3.8cqw;line-height:1.4;margin-top:1.6cqw;opacity:.85}
 .stamp{position:absolute;left:8%;bottom:4%;font-size:4cqw;padding:1cqw 3cqw;background:#e8b36a;border:1px solid #9b5a22;transform:rotate(-2deg);color:var(--ink);font-weight:600}.award .ext{right:8%;bottom:5%;font-size:7cqw;color:var(--ink)}
 /* about: layout art 3840x2160, regions in % */
