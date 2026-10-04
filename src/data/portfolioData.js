@@ -140,10 +140,13 @@ export const illustrationIntro = {
   'SPLASH ART': { n: 4, text: 'Dynamic illustrations created to communicate a character, world, or moment through composition and atmosphere.', unit: 'animated pieces', video: true },
   'OTHER': { n: 5, text: "A collection of drawings, experiments, studies, and ideas that don't quite fit anywhere else.", unit: 'drawings' },
 };
+// Splash Art pieces that are an (animated) .webp instead of a .webm: list their numbers, e.g. [3] makes splash-art-03.webp
+const SPLASH_AS_IMAGE = [];
 const titleCase = (c) => c.toLowerCase().replace(/(^|[ -])(\w)/g, (m, a, b) => a + b.toUpperCase());
 export const illustration = Object.entries(illustrationIntro).flatMap(([c, o]) => Array.from({ length: o.n }, (_, i) => {
   const k = String(i + 1).padStart(2, '0'), f = `/assets/illustration/${slug(c)}/${slug(c)}-${k}`;
-  return { id: `${slug(c)}-${k}`, title: `${titleCase(c)} ${k}`, category: c, tags: [c], image: o.video ? null : `${f}.webp`, video: o.video ? `${f}.webm` : null };
+  const asVideo = o.video && !SPLASH_AS_IMAGE.includes(i + 1); // Splash Art is .webm unless the piece number is listed in SPLASH_AS_IMAGE
+  return { id: `${slug(c)}-${k}`, title: `${titleCase(c)} ${k}`, category: c, tags: [c], image: asVideo ? null : `${f}.webp`, video: asVideo ? `${f}.webm` : null };
 }));
 
 const ISSUER = 'Álvaro Enrique Ospina Sanjuan', UPB = 'Universidad Pontificia Bolivariana';
