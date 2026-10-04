@@ -20,7 +20,7 @@ const blender = [
     details: {
       intro: ['Eridan is an original character and my first complete rigging project built entirely from scratch.',
         'Rather than relying on an autorig, I designed the entire system myself, from the underlying controls and deformation setup to the custom tools and animation workflows. The rig includes standard IK/FK workflows, snapping, isolation controls, facial animation, procedural animation, clothing systems, and several custom animator-friendly tools.',
-        'The character was originally developed for Platillo, and is currently being rebuilt from scratch with the experience I gained from the first version, with a stronger focus on topology, performance, and a more efficient animation workflow.'],
+        'It\u2019s currently being rebuilt from scratch with the experience I gained from the first version, with a stronger focus on topology, performance, and a more efficient animation workflow.'],
       blocks: [
         { h: 'Rigging & deformation', ul: ['Full IK/FK switching and snapping', 'Custom tweak controls', 'Independent isolation for the arms, legs, neck, and head', 'IK shoulder automation', 'Optional foot collision with the root for easier walk cycles', 'Custom finger controller', 'Squash and stretch synchronized with blinks and eyebrow movement', 'Ear controls synchronized with the eyebrows'] },
         { h: 'Facial system', p: 'The facial rig combines bone-driven controls, shape keys, and Bendy Bones. The mouth includes specialized controls for fast facial animation, including automatically generated M, E, A, O, and P lip-sync shapes. Additional facial controls include:',
@@ -35,8 +35,7 @@ const blender = [
         { h: 'Clothing & accessories', p: 'The character includes a complete set of interchangeable, rigged clothing and accessories:', ul: ['Cape', 'Goggles', 'Shirt', 'Pants', 'Boots', 'Waist cloth', 'Belt accessories', 'Gloves'],
           after: 'The clothing can be toggled on and off and is designed to work with physics bones.' },
         { h: 'Goggles', p: 'The goggles use a custom space-switching system that allows them to follow either hand. They can also stretch toward the hands while remaining children of the head, allowing the visor-pulling animation to be created without manually repositioning the entire object.' },
-        { h: 'Additional effects', p: "The character's skin uses a Geometry Nodes transformation that can create a bulging and glowing effect while also modifying the character's textures." }],
-      note: 'Currently being rebuilt from scratch with improved topology, performance, and workflow based on what I learned from the original rig.' } },
+        { h: 'Additional effects', p: "The character's skin uses a Geometry Nodes transformation that can create a bulging and glowing effect while also modifying the character's textures." }] } },
 
   { id: 'blender-02', title: 'Golub', subtitle: 'Custom character rig · Blender',  software: 'BLENDER',
     description: 'A fully custom rig for Golub, an original pigeon character created for Platillo, featuring automated flight controls, squash and stretch, procedural locomotion, and expressive secondary animation.',
@@ -58,19 +57,94 @@ const blender = [
       blocks: [{ h: 'The system includes', ul: ['Anti-clipping deformation', 'Individual rotation controls', 'Tweak controls', 'Animation-friendly deformation', 'Export compatibility for Unity'] }] } },
 ];
 
-export const rigging = [...blender, ...rig('maya', 4), ...rig('harmony', 1)];
+const maya = [
+  { id: 'maya-01', title: 'Biped Character', subtitle: 'Maya · Autorig', software: 'MAYA',
+    description: "A university rigging exercise focused on building a biped character with Maya's autorig system and achieving clean deformation through careful weight painting.",
+    image: '/assets/rigging/maya/maya-01.webp', tags: ['Maya', 'Autorig', 'Weight Painting', 'Character Rigging'],
+    videos: vids('/assets/rigging/maya/biped', ['Biped Deformation']), brief: ['Character moving through several poses that show the quality of the weight painting'],
+    details: { intro: ["A university rigging exercise using Maya's autorig workflow.", 'The base mesh was provided, allowing the focus to remain on:'],
+      blocks: [{ ul: ['Character setup', 'Autorig workflow', 'Weight painting', 'Deformation quality', 'Corrective adjustments'] }] } },
+  { id: 'maya-02', title: 'Dragon', subtitle: 'Maya · Autorig · Driven Keys', software: 'MAYA',
+    description: 'A customizable dragon autorig created for a university course, featuring adjustable proportions and driven-key animation systems.',
+    image: '/assets/rigging/maya/maya-02.webp', tags: ['Maya', 'Autorig', 'Driven Keys', 'Character Rigging'],
+    videos: vids('/assets/rigging/maya/dragon', ['Dragon Rig']), brief: ['Customizable setup, then the driven-key wing controls'],
+    details: { intro: ["A dragon rigging exercise built with Maya's autorig workflow."],
+      blocks: [{ p: 'The setup was designed to accommodate different dragon proportions, including adjustable:', ul: ['Tail length', 'Wing size', 'Other character dimensions'] },
+        { p: 'The rig also uses driven keys to automate:', ul: ['Wing flapping', 'Wing stretching', 'Forward/backward wing movement'] }] } },
+  { id: 'maya-03', title: 'Excavator', subtitle: 'Maya · Mechanical Rigging', software: 'MAYA',
+    description: 'A university rigging exercise focused on making an excavator feel like a toy vehicle, including procedural wheel-track animation.',
+    image: '/assets/rigging/maya/maya-03.webp', tags: ['Maya', 'Mechanical Rigging', 'Procedural Animation'],
+    videos: vids('/assets/rigging/maya/excavator', ['Excavator Rig']), brief: ['Excavator being "driven" with the automated track movement'],
+    details: { intro: ['The goal of this assignment was to create a mechanical rig that felt intuitive and playful to operate.', 'The excavator was designed around a toy-car-like driving experience, with procedural animation for its wheel tracks.'] } },
+  { id: 'maya-04', title: 'Hand', subtitle: 'Maya · Driven Keys · Weight Painting', software: 'MAYA',
+    description: 'A rigging exercise focused on weight painting and driven-key workflows, with the entire hand controlled through attributes on the root.',
+    image: '/assets/rigging/maya/maya-04.webp', tags: ['Maya', 'Weight Painting', 'Driven Keys', 'Rigging'],
+    videos: vids('/assets/rigging/maya/hand', ['Hand Controls']), brief: ['Root attributes controlling the different finger movements'],
+    details: { intro: ["The objective was to explore Maya's weight-painting and driven-key systems by building a hand that could be fully controlled through attributes placed on the root."] } },
+];
 
-export const animation = mk(4, (k) => ({ id: `animation-${k}`, title: `ANIMATION ${k}`, software: 'SOFTWARE', description: 'Description placeholder.',
-  image: `/assets/animation/animation-${k}.webp`, video: null /* `/assets/animation/animation-${k}.webm` */, model: null, tags: ['ANIMATION'] }));
+const harmony = [
+  { id: 'harmony-01', title: 'Aria', subtitle: 'Harmony · Character Rigging', software: 'HARMONY',
+    description: 'A Harmony character rig developed as part of my 2D animation work.',
+    image: '/assets/rigging/harmony/harmony-01.webp', tags: ['Harmony', 'Character Rigging', '2D Animation'],
+    videos: vids('/assets/rigging/harmony/aria', ['Aria Rig']),
+    details: { intro: ['A Harmony character rig developed as part of my 2D animation work.'] } },
+];
 
-export const modelling = mk(6, (k) => ({ id: `model-${k}`, title: `3D MODEL ${k}`, software: 'BLENDER', description: 'Description placeholder.',
-  image: `/assets/modelling/model-${k}.webp`, video: null, model: null /* `/assets/modelling/model-${k}.glb` */, tags: ['3D MODELLING'] }));
+export const rigging = [...blender, ...maya, ...harmony];
 
-const cats = ['SEMI-REALISTIC', 'ENVIRONMENT', 'CHARACTER DESIGN', 'SPLASH ART', 'OTHER'];
+// ---- ANIMATION ------------------------------------------------------------------------------------------
+// One video slot each: /assets/animation/animation-01.webm … (card thumbnail: animation-01.webp)
+const anim = (n, o) => ({ id: `animation-${n}`, image: `/assets/animation/animation-${n}.webp`, videos: [{ title: o.title, src: `/assets/animation/animation-${n}.webm` }], ...o });
+export const animation = [
+  anim('01', { title: 'Platillo — Intro', subtitle: '3D Animation · Direction · Production',
+    description: 'The opening sequence of Platillo, a 13-minute interactive animated mystery experience that I produced and directed.',
+    tags: ['3D Animation', 'Rigging', 'Modelling', 'Visual Direction'],
+    details: { intro: ['The intro sequence for Platillo.', "I modelled, rigged, and animated the characters used in the scene, while also contributing to the project's overall visual direction and production pipeline."],
+      blocks: [{ p: 'My responsibilities included:', ul: ['Character modelling', 'Character rigging', 'Character animation', 'Animation polish', 'Visual direction', 'Production coordination'] }] } }),
+  anim('02', { title: 'Platillo — Evidence 4: Hugo', subtitle: 'Character Animation',
+    description: 'A character animation sequence from Platillo, featuring a character modelled, rigged, and animated by me.',
+    tags: ['3D Animation', 'Character Animation', 'Rigging', 'Blender'],
+    details: { intro: ['This sequence focuses on Hugo, one of the characters from Platillo.'], blocks: [{ p: "I was responsible for the character's:", ul: ['Modelling', 'Rigging', 'Animation'] }] } }),
+  anim('03', { title: 'Akali vs Gru', subtitle: 'Animation Study · Blocking',
+    description: 'An animation study created using Agora community rigs, recreating the blocking of a scene from Despicable Me.',
+    tags: ['Animation', 'Blocking', 'Posing', 'Timing'],
+    details: { intro: ['This exercise focused on studying animation timing, posing, staging, and blocking.', 'I used community rigs from Agora to recreate the blocking of a scene from Despicable Me, focusing on understanding the underlying animation choices rather than producing a final polished sequence.'] } }),
+  anim('04', { title: 'Void', subtitle: 'Animation', description: '', tags: ['Animation'] }), // TODO: description / responsibilities not written yet
+];
+
+// ---- 3D MODELLING ---------------------------------------------------------------------------------------
+// `images` = the gallery inside the pop-up; the first one is also the card thumbnail.
+const mdl = (slug, o) => { const images = Array.from({ length: o.n }, (_, i) => `/assets/modelling/${slug}-${String(i + 1).padStart(2, '0')}.webp`); return { id: `model-${slug}`, software: 'BLENDER', images, image: images[0], ...o }; };
+export const modelling = [
+  mdl('granny', { n: 2, title: 'Granny', subtitle: 'Character Modelling', description: 'A character modelling exercise based on a real person, transformed into a fictional character through costume and design.',
+    tags: ['3D Modelling', 'Character Design', 'Blender'], details: { intro: ['For this assignment, I started by box modelling a real person, then transformed the character into a fictional interpretation through costume and styling.'] } }),
+  mdl('aragorn', { n: 3, title: 'Aragorn', subtitle: 'Character Sculpt', description: 'A character sculpt created completely from scratch without using a base mesh.',
+    tags: ['Sculpting', 'Character Modelling', 'Blender'], details: { intro: ['A character sculpting exercise focused on building the entire model from the ground up.', 'No base mesh was used.'] } }),
+  mdl('astronaut', { n: 2, title: 'Low-Poly Astronaut', subtitle: 'Game & VR Modelling', description: 'A lightweight astronaut character designed for use in VR.',
+    tags: ['Low-Poly Modelling', 'VR', 'Blender', 'Optimization'], details: { intro: ['A low-poly character created with real-time performance in mind, designed for a VR environment.'] } }),
+  mdl('eri', { n: 1, title: 'Eri — Base Mesh', subtitle: 'Character Topology', description: 'A clean character base mesh designed as a flexible starting point for future character work.',
+    tags: ['Character Modelling', 'Topology', 'Blender'], details: { intro: ['A character base mesh focused on clean topology and a reusable structure for further sculpting, modelling, rigging, and animation.'] } }),
+  mdl('steampunk-cat', { n: 2, title: 'Steampunk Cat', subtitle: 'Character Modelling', description: 'A stylized steampunk-inspired cat character combining organic forms with mechanical design elements.',
+    tags: ['Character Modelling', 'Stylized Design', 'Blender'], details: { intro: ['A character modelling project exploring stylized shapes, mechanical accessories, and visual storytelling through costume design.'] } }),
+];
+
+// ---- ILLUSTRATION ---------------------------------------------------------------------------------------
+// Galleries: each category has a short intro (shown when that filter is selected) and `n` pieces. Any aspect ratio works (never cropped).
+// Files: /assets/illustration/<slug>/<slug>-01.webp … ; splash art uses .webm (animated).
 const slug = (c) => c.toLowerCase().replace(/ /g, '-');
-// 2 placeholder slots per category. Add as many as you want — any aspect ratio works (never cropped).
-export const illustration = cats.flatMap((c) => mk(2, (k) => ({ id: `${slug(c)}-${k}`, title: `${c} ${k}`, category: c,
-  description: 'Description placeholder.', image: `/assets/illustration/${slug(c)}/${slug(c)}-${k}.webp`, tags: [c] })));
+export const illustrationIntro = {
+  'SEMI-REALISTIC': { n: 4, text: 'Character-focused illustrations exploring anatomy, expression, lighting, and painterly rendering.', unit: 'illustrations' },
+  'ENVIRONMENT': { n: 4, text: 'Imagined places, landscapes, and atmospheric scenes built around light, color, scale, and storytelling.', unit: 'illustrations' },
+  'CHARACTER DESIGN': { n: 8, text: 'Original characters developed through shape language, costume, expression, and visual personality.', unit: 'illustrations' },
+  'SPLASH ART': { n: 4, text: 'Dynamic illustrations created to communicate a character, world, or moment through composition and atmosphere.', unit: 'animated pieces', video: true },
+  'OTHER': { n: 5, text: "A collection of drawings, experiments, studies, and ideas that don't quite fit anywhere else.", unit: 'drawings' },
+};
+const titleCase = (c) => c.toLowerCase().replace(/(^|[ -])(\w)/g, (m, a, b) => a + b.toUpperCase());
+export const illustration = Object.entries(illustrationIntro).flatMap(([c, o]) => Array.from({ length: o.n }, (_, i) => {
+  const k = String(i + 1).padStart(2, '0'), f = `/assets/illustration/${slug(c)}/${slug(c)}-${k}`;
+  return { id: `${slug(c)}-${k}`, title: `${titleCase(c)} ${k}`, category: c, tags: [c], image: o.video ? null : `${f}.webp`, video: o.video ? `${f}.webm` : null };
+}));
 
 const ISSUER = 'Álvaro Enrique Ospina Sanjuan', UPB = 'Universidad Pontificia Bolivariana';
 // [year (big number on the card), title, organization line, stamp, description]
@@ -85,7 +159,43 @@ export const awards = [
 ].map(([year, title, org, badge, desc], i) => ({ id: `award-${i + 1}`, year, title, organization: org, badge, description: i === 6 ? desc : `${desc} Issued by: ${ISSUER}.`,
   image: `/assets/awards/award-0${i + 1}.webp` /* optional art in the picture slot; if missing the card's base drawing shows */, certificate: null }));
 
-export const projects = mk(4, (k) => ({ id: `project-${k}`, title: `PROJECT ${k}`, description: 'Short description placeholder.', role: 'ROLE', technologies: ['TECH', 'TECH'],
-  image: `/assets/projects/project-${k}.webp`, video: null, model: null, gallery: [], link: null }));
+// ---- PROJECTS -------------------------------------------------------------------------------------------
+// `youtube` = video id; it plays inside the pop-up. Card thumbnail defaults to the YouTube thumbnail (set `image` to use your own art instead).
+const yt = (id) => ({ youtube: id, image: `https://img.youtube.com/vi/${id}/hqdefault.jpg` });
+export const projects = [
+  { id: 'project-platillo', title: 'Platillo', subtitle: '13-minute interactive animated mystery · Producer & Visual Director', ...yt('fdkMMAWzWsQ'),
+    description: 'A 13-minute interactive animated mystery experience where six short films reveal different perspectives of the same crime.',
+    tags: ['Project Management', 'Creative Direction', 'Rigging', 'Time Management', '3D Animation', 'Texture Painting'],
+    details: {
+      intro: ['Platillo is a 13-minute interactive animated mystery experience developed alongside Carolina García, Juan Manuel Arcila, Sara Ruiz, and Miguel Valencia, where each episode reveals a different perspective of the same crime.',
+        'Inspired by productions such as Arcane, Spider-Verse, and Valorant, we developed a semi-realistic, hand-painted visual style built around high saturation, strong contrast, and expressive color composition.',
+        "The experience is divided into six animated shorts unlocked through puzzle-solving mechanics. Each episode explores the story through a different family member's distorted perspective, with every short adopting its own cinematic genre."],
+      blocks: [
+        { h: 'Synopsis', p: "On Eri's 20th birthday, the last slice of cake mysteriously disappears. What begins as a family celebration quickly spirals into a chaotic interrogation where everyone becomes a suspect… and everyone has something to hide." },
+        { h: 'My role', p: ['I worked as Producer and Visual Director, overseeing both the creative direction and production pipeline.', 'My responsibilities included:'],
+          ul: ['Producing and coordinating the project pipeline and schedule', 'Leading a junior team through a four-month production cycle', 'Modelling, rigging, and texturing all five main characters', 'Developing procedural animation systems for the main rigs', 'Creating custom rigging tools and UI workflows', 'Developing proxy systems for smoother animation', 'Designing and developing a custom NPR shader pipeline inspired by Arcane', 'Creating a lighting workflow with independent control over ambient occlusion, shadows, rim lighting, and color channels', "Directing the project's soundtrack and overall visual aesthetic", 'Supervising animation polish and providing feedback across all six shorts', 'Animating the 1st and 5th shorts', 'Video editing and final compositing'] },
+        { h: 'Recognition', p: 'Platillo received three awards during the university showcase:', ul: ['Most Original Visual Style', 'Excellence in Visual Design', 'Best DEX Project — 2026‑01'] }] } },
+
+  { id: 'project-starblitz', title: 'StarBlitz', subtitle: 'Educational Virtual World · Project Manager', ...yt('xijbo6FrxBQ'),
+    description: 'An educational virtual world designed to help children recognize inappropriate interactions and grooming signals in digital environments.',
+    tags: ['Rigging', '3D Animation', 'Blender', 'Project Management'],
+    details: {
+      intro: ['StarBlitz is an educational virtual world designed to help children recognize and respond to inappropriate interactions and signs of grooming in digital environments.',
+        'Through narrative missions and guided scenarios, players learn to identify suspicious behavior, establish boundaries, and report unsafe situations — all within a gamified experience rather than through traditional instruction.',
+        'I worked as Project Manager for a multidisciplinary team of six, coordinating the development pipeline while ensuring that the project met both its technical and educational goals.'],
+      blocks: [
+        { h: 'My contributions', ul: ['Game design and systems design for adaptive risk scenarios', 'Programming gameplay mechanics and interactions', '2D/3D art production, including characters, models, rigging, and animation', 'Accessible UI/UX design for children', 'Extensive research into digital safety, grooming, and vulnerability factors', 'Team leadership, planning, delegation, and documentation'] },
+        { h: 'Goal', p: ['The project aims to empower children by reinforcing safe digital habits through positive reinforcement.', 'Players are rewarded for recognizing grooming signals, rejecting inappropriate requests, and reporting unsafe situations.', "Rather than simply restricting children's access to the internet, StarBlitz explores how interactive experiences can teach them to navigate digital spaces more safely."] }] } },
+
+  { id: 'project-regret', title: 'Regret', subtitle: '2D Animated Short · Solo Production', ...yt('fDQSp0BcJGo'),
+    description: 'A 9-minute 2D animated short created entirely by me at age 17, inspired by the QSMP and produced through the complete animation pipeline.',
+    tags: ['2D Animation', 'Visual Storytelling', 'After Effects', 'Rigging'],
+    details: {
+      intro: ['Regret is a 9-minute 2D animated short inspired by the QSMP, created entirely by me when I was 17.',
+        'I handled the project from concept through final delivery, managing the complete production pipeline independently.',
+        'The project became my most successful animation project, accumulating more than one million views on YouTube.',
+        'I also developed several additional animated shorts inspired by the same universe, using them to experiment with expressive animation, visual storytelling, and rapid production workflows.'],
+      blocks: [{ h: 'What I developed', ul: ['Concept and visual development', '2D character animation', 'Visual storytelling', 'Rigging', 'Compositing', 'Editing', 'Full project production'] }] } },
+];
 
 export const opinions = mk(5, (k) => ({ id: `op-${k}`, name: 'PERSON NAME', role: 'ROLE', quote: 'PLACEHOLDER QUOTE — not a real testimonial.', image: `/assets/opinions/person-${k}.webp` }));

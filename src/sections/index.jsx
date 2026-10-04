@@ -8,16 +8,19 @@ import { about } from '../data/siteData';
 
 const Tags = ({ t = [] }) => <div className="tags">{t.map((x, i) => <span key={i}>{x}</span>)}</div>;
 
+const n = (k, one, many) => `${k} ${k > 1 ? many : one}`;
+const ctaLabel = (it) => 'VIEW PROJECT' + (it.youtube ? ' · WATCH' : it.videos?.length ? ' · ' + n(it.videos.length, 'VIDEO', 'VIDEOS') : it.images?.length > 1 ? ' · ' + n(it.images.length, 'IMAGE', 'IMAGES') : '');
+
 function Grid({ items, cls = '' }) { // cards used by rigging / animation / modelling / projects
   const [v, setV] = useState(null);
-  const rich = (it) => !!(it.details || it.videos?.length); // cards with a write-up open the project pop-up
+  const rich = (it) => !!(it.details || it.videos?.length || it.youtube || it.images?.length); // cards with a write-up open the project pop-up
   const View = v !== null && rich(items[v]) ? ProjectViewer : MediaViewer;
   return (<><div className={'grid ' + cls} key={items.map((i) => i.id).join()}>{items.map((it, n) => (
     <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
       <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
         <Media src={it.image} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
-        {rich(it) && <span className="cta"><b>▶</b>VIEW PROJECT{it.videos?.length ? ` · ${it.videos.length} VIDEO${it.videos.length > 1 ? 'S' : ''}` : ''}</span>}</button>
-      <h3>{it.title}</h3>{it.subtitle && <p className="sub">{it.subtitle}</p>}<p>{it.description}</p>
+        {rich(it) && <span className="cta"><b>▶</b>{ctaLabel(it)}</span>}</button>
+      <h3>{it.title}</h3>{it.subtitle && <p className="sub">{it.subtitle}</p>}{it.description && <p>{it.description}</p>}
       {it.role && <p className="meta">ROLE: {it.role}</p>}
       <Tags t={it.tags || it.technologies} />
       {rich(it) && <button className="more" onClick={(e) => { e.stopPropagation(); setV(n); }}>OPEN PROJECT <b>→</b></button>}
@@ -27,11 +30,20 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
 }
 
 const RATIOS = [0.75, 1.3, 1, 1.6, 0.8, 1.2];
-function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio
-  const all = D.illustration, items = filter === 'ALL' ? all : all.filter((i) => i.category === filter); const [v, setV] = useState(null);
-  return (<><div className="masonry" key={filter}>{items.map((it, n) => (
-    <button key={it.id} className="art" style={{ '--n': n, '--r': ((n * 53) % 5) - 2 + 'deg' }} onClick={() => setV(n)} aria-label={`View ${it.title}`}>
-      <Media src={it.image} alt={it.title} label={it.title} ratio={RATIOS[n % RATIOS.length]} /></button>))}</div>
+function ArtPiece({ it, n }) { // image, or an animated webm (muted loop); a missing file shows the placeholder
+  const [bad, setBad] = useState(false);
+  if (it.video && !bad) return <video src={asset(it.video)} autoPlay loop muted playsInline onError={() => setBad(true)} aria-label={it.title} />;
+  return <Media src={it.video ? it.video : it.image} alt={it.title} label={it.title} ratio={RATIOS[n % RATIOS.length]} />;
+}
+function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio. "ALL" groups pieces by category, each with its intro.
+  const cats = filter === 'ALL' ? Object.keys(D.illustrationIntro) : [filter]; const [v, setV] = useState(null);
+  const items = cats.flatMap((c) => D.illustration.filter((i) => i.category === c)); let off = 0;
+  return (<><div className="gallery" key={filter}>{cats.map((c) => { const intro = D.illustrationIntro[c], list = D.illustration.filter((i) => i.category === c), base = off; off += list.length;
+    return (<section key={c} className="gcat">
+      <header><h3>{c}</h3><p>{intro.text}</p><small>{intro.n} {intro.unit}</small></header>
+      <div className="masonry">{list.map((it, k) => (
+        <button key={it.id} className="art" style={{ '--n': k, '--r': (((base + k) * 53) % 5) - 2 + 'deg' }} onClick={() => setV(base + k)} aria-label={`View ${it.title}`}>
+          <ArtPiece it={it} n={k} /></button>))}</div></section>); })}</div>
     {v !== null && <MediaViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
@@ -45,15 +57,17 @@ function Awards() { // collectible paper cards over your drawn base (/assets/ui/
     </article>))}</div>);
 }
 
-function About() { // positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*)
-  const A = about; // portrait + polaroids are painted into about-layout.webp now, so no image slots here
-  return (<div className="about" style={{ '--bg': `url(${asset('/assets/ui/about-layout.webp')})` }}>
+function About() { // positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*). Portrait/polaroids are painted into the art.
+  const A = about, C = A.contact;
+  return (<div className="about" style={{ '--bg': `url(${new URL(asset('/assets/ui/about-layout.webp'), document.baseURI).href})` }}>
     <div className="ab-sheet">
       <section className="ab-bio paper"><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p}</p>)}</section>
       <section className="ab-skills paper"><h3>★ SKILLS</h3><Tags t={A.skills} /></section>
       <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} style={{ background: s.c }}>{s.icon ? <img src={asset(s.icon)} alt={s.name} /> : s.short}</span>)}</div></section>
-      <section className="ab-int paper"><h3>♥ INTERESTS</h3><ul>{A.interests.map((x) => <li key={x}>{x}</li>)}</ul></section>
-      <section className="ab-con paper"><h3>✉ CONTACT</h3><ul><li>{A.contact.email}</li><li>{A.contact.handle}</li><li>{A.contact.location}</li></ul></section>
+      <section className="ab-int paper"><h3>♥ {A.learnTitle}</h3><ul>{A.learn.map((x) => <li key={x.name}><b>{x.name}</b><span>{x.text}</span></li>)}</ul></section>
+      <section className="ab-con paper"><h3>✉ CONTACT</h3><ul><li><b>{C.name}</b></li><li>{C.title}</li>
+        <li><a href={`mailto:${C.email}`}>{C.email}</a></li><li><a href={`tel:${C.phone.replace(/\s/g, '')}`}>{C.phone}</a></li>
+        <li><a href={C.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a></li></ul></section>
       <section className="ab-ban paper"><p className="hand">{A.banner}</p></section>
     </div></div>);
 }

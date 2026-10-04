@@ -28,10 +28,21 @@ export default function ParallaxBackground({ dim = false }) {
     return () => { removeEventListener('pointermove', mv); cancelAnimationFrame(raf); };
   }, []);
 
-  const play = !reducedMotion(); // reduced motion: show the first frame only
+  // The loop IS the background, so it always plays (even with "reduce motion" on – only the parallax is switched off there).
+  // React doesn't reliably set the `muted` attribute, and browsers refuse unmuted autoplay – so mute + play() by hand and retry on first input.
+  useEffect(() => {
+    const vs = [bg.current, fg.current];
+    const go = () => vs.forEach((v) => { v.muted = true; v.defaultMuted = true; if (v.paused) v.play().catch(() => {}); });
+    const again = (v) => () => { v.currentTime = 0; v.play().catch(() => {}); }; // safety net if `loop` is ignored
+    const offs = vs.map((v) => { const f = again(v); v.addEventListener('ended', f); return () => v.removeEventListener('ended', f); });
+    go(); vs.forEach((v) => v.addEventListener('canplay', go));
+    const vis = () => !document.hidden && go();
+    addEventListener('pointerdown', go); addEventListener('keydown', go); document.addEventListener('visibilitychange', vis);
+    return () => { offs.forEach((f) => f()); vs.forEach((v) => v.removeEventListener('canplay', go)); removeEventListener('pointerdown', go); removeEventListener('keydown', go); document.removeEventListener('visibilitychange', vis); };
+  }, []);
   return (<>
-    <video ref={bg} className="layer layer-bg" src={asset('/assets/backgrounds/background.webm')} autoPlay={play} loop muted playsInline preload="auto" aria-hidden="true" />
+    <video ref={bg} className="layer layer-bg" src={asset('/assets/backgrounds/background.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" />
     <div ref={pf} className="layer layer-pf"><ParticleField dim={dim} /></div>
-    <video ref={fg} className="layer layer-fg" src={asset('/assets/backgrounds/foreground.webm')} autoPlay={play} loop muted playsInline preload="auto" aria-hidden="true" />
+    <video ref={fg} className="layer layer-fg" src={asset('/assets/backgrounds/foreground.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" />
   </>);
 }
