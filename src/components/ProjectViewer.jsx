@@ -23,7 +23,7 @@ function Player({ item, media, cur }) {
   if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} — YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
   if (m.kind === 'image') return <Media key={m.src} src={m.src} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" />;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
-  return <video key={m.src} className="pv-video" src={asset(m.src)} poster={asset(item.image)} controls autoPlay loop muted playsInline onError={() => setBad(true)} />;
+  return <video key={m.src} className="pv-video" src={asset(m.src)} poster={asset(item.image)} controls autoPlay loop playsInline onError={() => setBad(true)} />;
 }
 
 function Blocks({ blocks }) {
@@ -48,12 +48,18 @@ export default function ProjectViewer({ items, index, onClose, onIndex }) {
       if (e.key === 'ArrowLeft' && items.length > 1) onIndex((index - 1 + items.length) % items.length); };
     addEventListener('keydown', k, true); return () => { removeEventListener('keydown', k, true); prev.current?.focus?.(); };
   }, [index, items.length]);
-  const media = mediaOf(it);
+  const media = mediaOf(it), strip = useRef();
+  useEffect(() => { // mouse wheel scrolls the thumbnail strip sideways (needs a non-passive listener)
+    const el = strip.current; if (!el) return;
+    const w = (e) => { if (el.scrollWidth <= el.clientWidth) return; e.preventDefault(); el.scrollLeft += e.deltaY + e.deltaX; };
+    el.addEventListener('wheel', w, { passive: false }); return () => el.removeEventListener('wheel', w);
+  }, [index, media.length]);
+  useEffect(() => { strip.current?.querySelector('.on')?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' }); }, [cur, index]);
   return (<div className="viewer pv" role="dialog" aria-modal="true" aria-label={it.title} ref={ref} tabIndex={-1} onClick={onClose}>
     <div className="pv-panel" onClick={(e) => e.stopPropagation()}>
       <div className="pv-media">
         <div className="pv-stage"><Player item={it} media={media} cur={cur} /></div>
-        {media.length > 1 && (<ol className="pv-list" aria-label={media[0].kind === 'image' ? 'Images' : 'Videos'}>{media.map((v, i) => (
+        {media.length > 1 && (<ol className="pv-list" ref={strip} aria-label={media[0].kind === 'image' ? 'Images' : 'Videos'}>{media.map((v, i) => (
           <li key={v.src || v.id}><button className={i === cur ? 'on' : ''} onClick={() => setCur(i)} aria-current={i === cur}>{media[0].kind === 'image' ? <img src={asset(v.src)} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} /> : null}<span>{String(i + 1).padStart(2, '0')}</span>{media[0].kind === 'image' ? '' : v.title}</button></li>))}</ol>)}
       </div>
       <div className="pv-text" ref={body}>

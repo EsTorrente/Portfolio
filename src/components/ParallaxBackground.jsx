@@ -5,7 +5,7 @@ import ParticleField from './ParticleField';
 // Layer order (back → front):  Background.webm  →  particles  →  Foreground.webm (alpha)
 // All three drift slightly against the mouse, the nearer the layer the more it moves.
 // Tweak the feel here: `amp` = travel as a fraction of screen width at the screen edge.
-const LAYERS = { bg: { amp: 0.008 }, pf: { amp: 0.014 }, fg: { amp: 0.026 } };
+const LAYERS = { bg: { amp: 0.0035 }, pf: { amp: 0.006 }, fg: { amp: 0.011 } };
 
 export default function ParallaxBackground({ dim = false }) {
   const bg = useRef(), pf = useRef(), fg = useRef();

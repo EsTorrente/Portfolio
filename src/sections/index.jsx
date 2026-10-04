@@ -62,9 +62,9 @@ function About() { // positions are % regions of the 3840×2160 layout art — t
   return (<div className="about" style={{ '--bg': `url(${new URL(asset('/assets/ui/about-layout.webp'), document.baseURI).href})` }}>
     <div className="ab-sheet">
       <section className="ab-bio paper"><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p}</p>)}</section>
-      <section className="ab-skills paper"><h3>★ SKILLS</h3><Tags t={A.skills} /></section>
+      <section className="ab-skills paper"><h3>★ {A.skillsTitle}</h3><Tags t={A.skills} /></section>
       <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} style={{ background: s.c }}>{s.icon ? <img src={asset(s.icon)} alt={s.name} /> : s.short}</span>)}</div></section>
-      <section className="ab-int paper"><h3>♥ {A.learnTitle}</h3><ul>{A.learn.map((x) => <li key={x.name}><b>{x.name}</b><span>{x.text}</span></li>)}</ul></section>
+      <section className="ab-int paper"><h3>♥ {A.learnTitle}</h3><ul>{A.learn.map((x) => <li key={x.name}><b>{x.name}</b>{x.text && <span>{x.text}</span>}</li>)}</ul></section>
       <section className="ab-con paper"><h3>✉ CONTACT</h3><ul><li><b>{C.name}</b></li><li>{C.title}</li>
         <li><a href={`mailto:${C.email}`}>{C.email}</a></li><li><a href={`tel:${C.phone.replace(/\s/g, '')}`}>{C.phone}</a></li>
         <li><a href={C.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a></li></ul></section>
