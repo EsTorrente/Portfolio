@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Component, useEffect, useRef, useState } from 'react';
 import Media from './Media';
 import Zoom from './Zoom';
 import { asset, THUMB_AT } from '../utils/assets';
@@ -19,7 +19,8 @@ const mediaOf = (it) => it.youtube ? [{ kind: 'yt', title: it.title, id: it.yout
   : it.images?.length > 1 ? it.images.map((src, i) => ({ kind: 'image', title: `Image ${String(i + 1).padStart(2, '0')}`, src }))
   : [{ kind: 'image', title: it.title, src: it.images?.[0] || it.image, fallback: it.fallback }];
 
-function Player({ item, media, cur }) {
+function Player({ item, media, cur: want }) {
+  const cur = want < media.length ? want : 0; // never index past the list
   const [bad, setBad] = useState(false), [ready, setReady] = useState(false), [fs, setFs] = useState(false), box = useRef(), vid = useRef();
   useEffect(() => { setBad(false); setReady(false); }, [cur, item.id]);
   useEffect(() => { const f = () => setFs(!!box.current && (document.fullscreenElement === box.current || document.webkitFullscreenElement === box.current));
@@ -52,7 +53,7 @@ function Blocks({ blocks }) {
   </section>));
 }
 
-export default function ProjectViewer({ items, index, onClose, onIndex }) {
+function Viewer({ items, index, onClose, onIndex }) {
   const it = items[index], d = it.details || {}, ref = useRef(), prev = useRef(), body = useRef();
   const [cur, setCur] = useState(0);
   useEffect(() => { play('viewer'); }, []);
@@ -65,6 +66,7 @@ export default function ProjectViewer({ items, index, onClose, onIndex }) {
     addEventListener('keydown', k, true); return () => { removeEventListener('keydown', k, true); prev.current?.focus?.(); };
   }, [index, items.length]);
   const media = mediaOf(it), strip = useRef();
+  const c = cur < media.length ? cur : 0; // FIX: `cur` is reset in an effect, so for one render it can point past the new project's media list (e.g. Eridan video 6 → Skirt has 1) → crash
   useEffect(() => { // mouse wheel scrolls the thumbnail strip sideways (needs a non-passive listener)
     const el = strip.current; if (!el) return;
     const w = (e) => { if (el.scrollWidth <= el.clientWidth) return; e.preventDefault(); el.scrollLeft += e.deltaY + e.deltaX; };
@@ -74,9 +76,9 @@ export default function ProjectViewer({ items, index, onClose, onIndex }) {
   return (<div className="viewer pv" role="dialog" aria-modal="true" aria-label={it.title} ref={ref} tabIndex={-1} onClick={onClose}>
     <div className="pv-panel" onClick={(e) => e.stopPropagation()}>
       <div className="pv-media">
-        <div className="pv-stage"><Player item={it} media={media} cur={cur} /></div>
+        <div className="pv-stage"><Player item={it} media={media} cur={c} /></div>
         {media.length > 1 && (<ol className="pv-list" ref={strip} aria-label={media[0].kind === 'image' ? 'Images' : 'Videos'}>{media.map((v, i) => (
-          <li key={v.src || v.id}><button className={i === cur ? 'on' : ''} onClick={() => setCur(i)} aria-current={i === cur}>{media[0].kind === 'image' ? <img src={asset(v.src)} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} /> : null}<span>{String(i + 1).padStart(2, '0')}</span>{media[0].kind === 'image' ? '' : v.title}</button></li>))}</ol>)}
+          <li key={v.src || v.id}><button className={i === c ? 'on' : ''} onClick={() => setCur(i)} aria-current={i === c}>{media[0].kind === 'image' ? <img src={asset(v.src)} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} /> : null}<span>{String(i + 1).padStart(2, '0')}</span>{media[0].kind === 'image' ? '' : v.title}</button></li>))}</ol>)}
       </div>
       <div className="pv-text" ref={body}>
         <header><small>{it.subtitle}</small><h3>{it.title}</h3></header>
@@ -92,3 +94,12 @@ export default function ProjectViewer({ items, index, onClose, onIndex }) {
       <button className="vbtn vnext" aria-label="Next project" onClick={(e) => { e.stopPropagation(); onIndex((index + 1) % items.length); }}>›</button></>}
   </div>);
 }
+
+// Safety net: if anything in the pop-up ever throws, close it instead of leaving a blank screen.
+class Boundary extends Component {
+  state = { err: false };
+  static getDerivedStateFromError() { return { err: true }; }
+  componentDidCatch(e) { console.error('ProjectViewer crashed:', e); this.props.onClose(); }
+  render() { return this.state.err ? null : this.props.children; }
+}
+export default function ProjectViewer(props) { return <Boundary key={props.index} onClose={props.onClose}><Viewer {...props} /></Boundary>; }
