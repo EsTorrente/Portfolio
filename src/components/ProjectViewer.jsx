@@ -35,7 +35,7 @@ function Player({ item, media, cur }) {
     const req = el.requestFullscreen || el.webkitRequestFullscreen; if (req) req.call(el); else vid.current?.webkitEnterFullscreen?.(); }; // iPhone only fullscreens the <video> itself
   return (<div className="pv-player" ref={box}>
     <video ref={vid} key={m.src} className="pv-video" src={asset(m.src)} poster={THUMB_AT[item.id] != null ? undefined : asset(item.image)} controls controlsList="nofullscreen" autoPlay loop playsInline preload="metadata"
-      onPlay={() => duck(tok.current)} onPause={() => release(tok.current)} onEnded={() => release(tok.current)}
+      onPlay={() => { if (m.sound !== false) duck(tok.current); }} onPause={() => release(tok.current)} onEnded={() => release(tok.current)}
       onLoadedData={() => setReady(true)} onError={() => { setBad(true); release(tok.current); }} />
     {!ready && <div className="pv-loading" role="status"><i className="spin" /><span>LOADING VIDEO…</span></div>}
     <button className="pv-fs" data-sfx="tick" onClick={toggleFs} aria-label={fs ? 'Exit full screen' : 'Full screen'} title={fs ? 'Exit full screen' : 'Full screen'}>{fs ? '✕' : '⛶'}</button></div>);

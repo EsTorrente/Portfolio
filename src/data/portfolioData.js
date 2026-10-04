@@ -10,7 +10,7 @@ const rig = (sw, n) => mk(n, (k) => ({ id: `${sw}-${k}`, title: `RIGGING PROJECT
 // A block is { h: 'Heading', p: 'paragraph', ul: ['bullet', ...] } (any combination, rendered in that order).
 // `videos` = [{ title, src }]. Drop files at those paths; a missing file shows a "coming soon" slate instead of breaking.
 // `brief` is only a reminder to yourself of what to film — it is never shown on the site.
-const vids = (base, titles) => titles.map((t, i) => ({ title: t, src: `${base}-${String(i + 1).padStart(2, '0')}.webm` }));
+const vids = (base, titles) => titles.map((t, i) => ({ title: t, src: `${base}-${String(i + 1).padStart(2, '0')}.webm`, sound: false })); // sound:false = silent video → the site music keeps playing. Use sound:true (or delete it) on a video that HAS audio so the music fades out while it plays.
 
 const blender = [
   { id: 'blender-01', title: 'Eridan', subtitle: 'Custom character rig · Blender', software: 'BLENDER',
