@@ -236,3 +236,8 @@ video.layer{object-fit:cover}
 .snake-score{font:400 10px var(--mono);letter-spacing:.2em;color:var(--cr);opacity:.75}
 .dpad{display:none;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px);gap:4px}.dpad button{border:1px solid #ff8c1888;border-radius:8px;color:var(--y2);font-size:15px}.dpad button:active{background:var(--o2);color:var(--bg)}
 @media (pointer:coarse){.dpad{display:grid}}
+
+/* ===== v6: loading-screen background ===== */
+.intro{isolation:isolate}
+.intro-bg{position:absolute;inset:0;z-index:-1;background:center/cover no-repeat;opacity:0;transition:opacity 1.2s ease}.intro-bg.on{opacity:1}
+.intro-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,#120b0833 0%,#120b0899 100%)} /* soft vignette keeps the story readable */

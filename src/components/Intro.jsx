@@ -3,6 +3,7 @@ import { site } from '../data/siteData';
 import { STORY, STORY_STEP_SECONDS } from '../data/introStory';
 import { asset } from '../utils/assets';
 
+const BG = '/assets/ui/LoadingBG.webp'; // ✏️ loading-screen background
 const N = 15, C = 20; // board is N×N cells
 const KEYS = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0], W: [0, -1], S: [0, 1], A: [-1, 0], D: [1, 0] };
 
@@ -54,10 +55,12 @@ function Snake({ onPlay }) {
 
 // Loading screen: logo, a little story (new page every few seconds), progress bar, and an optional snake game.
 export default function Intro({ out, loaded, pct, needClick, onEnter, onPlay }) {
-  const [game, setGame] = useState(false), [page, setPage] = useState(0);
+  const [game, setGame] = useState(false), [page, setPage] = useState(0), [bg, setBg] = useState(false);
+  useEffect(() => { const i = new Image(); i.onload = () => setBg(true); i.src = asset(BG); }, []); // background fades in once it has loaded (no pop-in)
   useEffect(() => { const t0 = performance.now(), i = setInterval(() => setPage(Math.min(STORY.length - 1, Math.floor((performance.now() - t0) / (STORY_STEP_SECONDS * 1000)))), 500); return () => clearInterval(i); }, []);
   const status = !loaded ? `LOADING ASSETS… ${Math.round(pct * 100)}%` : needClick ? 'READY · CLICK ANYWHERE TO ENTER ♪' : 'INITIALIZING DREAM…';
   return (<div className={'intro' + (out ? ' out' : '') + (game ? ' game' : '')} onClick={onEnter} role="presentation">
+    <div className={'intro-bg' + (bg ? ' on' : '')} style={{ backgroundImage: `url(${asset(BG)})` }} aria-hidden="true" />
     {site.logoVideo ? <video src={asset(site.logoVideo)} autoPlay muted playsInline /> : <img src={asset(site.logo)} alt={site.name} />}
     <div className="story" key={page} aria-live="polite">{STORY[page].map((l, i) => <p key={i} style={{ '--l': i }}>{l}</p>)}</div>
     <div className="intro-status"><p className="stat" role="status">{status}</p><div className="intro-bar" aria-hidden="true"><i style={{ transform: `scaleX(${loaded ? 1 : pct})` }} /></div></div>
