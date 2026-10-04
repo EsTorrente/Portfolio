@@ -20,7 +20,9 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
   useEffect(() => { el.current.querySelector('.wclose').focus(); }, []);
   const ptr = (e) => { const w = el.current, r = w.getBoundingClientRect(); w.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3)); w.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3)); };
   const filters = sec.filters;
-  return (<div className="wrap"><div className={'win' + (shown ? ' shown' : '')} ref={el} role="dialog" aria-modal="true" aria-label={sec.title} onPointerMove={ptr}
+  return (<div className={'wrap' + (closing ? ' closing' : '')}>
+    <img className="deco deco-br" src={asset('/assets/ui/back-right.webp')} alt="" draggable="false" />
+    <div className={'win' + (shown ? ' shown' : '')} ref={el} role="dialog" aria-modal="true" aria-label={sec.title} onPointerMove={ptr}
     style={{ backgroundImage: `url(${asset('/assets/ui/main-window.webp')})` }}>
     <div className="wtab"><Ico id={id} /><b>{sec.label.toUpperCase()}</b></div>
     <div className="wctl"><button aria-label="Minimise (closes)" onClick={close}>–</button><button aria-label="Maximise" tabIndex={-1}>▢</button><button className="wclose" aria-label="Close window and return to desktop" onClick={close}>✕</button></div>
@@ -34,5 +36,7 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
         <div className="content"><Section id={id} filter={filter} /></div>
       </div>
       <button className="esc" onClick={close}>‹ ESC / CLOSE</button>
-    </div></div></div>);
+    </div></div>
+    <img className="deco deco-fl" src={asset('/assets/ui/front-left.webp')} alt="" draggable="false" />
+  </div>);
 }

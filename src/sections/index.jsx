@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Media from '../components/Media';
 import MediaViewer from '../components/MediaViewer';
+import ProjectViewer from '../components/ProjectViewer';
 import { asset } from '../utils/assets';
 import * as D from '../data/portfolioData';
 import { about } from '../data/siteData';
@@ -9,15 +10,20 @@ const Tags = ({ t = [] }) => <div className="tags">{t.map((x, i) => <span key={i
 
 function Grid({ items, cls = '' }) { // cards used by rigging / animation / modelling / projects
   const [v, setV] = useState(null);
+  const rich = (it) => !!(it.details || it.videos?.length); // cards with a write-up open the project pop-up
+  const View = v !== null && rich(items[v]) ? ProjectViewer : MediaViewer;
   return (<><div className={'grid ' + cls} key={items.map((i) => i.id).join()}>{items.map((it, n) => (
-    <article key={it.id} className="card" style={{ '--n': n }}>
-      <button className="thumb" onClick={() => setV(n)} aria-label={`View ${it.title}`}>
-        <Media src={it.image} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}</button>
-      <h3>{it.title}</h3><p>{it.description}</p>
+    <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
+      <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
+        <Media src={it.image} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge">{it.software}</em>}
+        {rich(it) && <span className="cta"><b>▶</b>VIEW PROJECT{it.videos?.length ? ` · ${it.videos.length} VIDEO${it.videos.length > 1 ? 'S' : ''}` : ''}</span>}</button>
+      <h3>{it.title}</h3>{it.subtitle && <p className="sub">{it.subtitle}</p>}<p>{it.description}</p>
       {it.role && <p className="meta">ROLE: {it.role}</p>}
-      <Tags t={it.tags || it.technologies} />{it.link && <a className="ext" href={it.link} target="_blank" rel="noreferrer">↗</a>}
+      <Tags t={it.tags || it.technologies} />
+      {rich(it) && <button className="more" onClick={(e) => { e.stopPropagation(); setV(n); }}>OPEN PROJECT <b>→</b></button>}
+      {it.link && <a className="ext" href={it.link} target="_blank" rel="noreferrer">↗</a>}
     </article>))}</div>
-    {v !== null && <MediaViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
+    {v !== null && <View items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
 const RATIOS = [0.75, 1.3, 1, 1.6, 0.8, 1.2];
@@ -40,18 +46,15 @@ function Awards() { // collectible paper cards over your drawn base (/assets/ui/
 }
 
 function About() { // positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*)
-  const A = about; const [hov, setHov] = useState(false);
+  const A = about; // portrait + polaroids are painted into about-layout.webp now, so no image slots here
   return (<div className="about" style={{ '--bg': `url(${asset('/assets/ui/about-layout.webp')})` }}>
     <div className="ab-sheet">
-      <figure className="ab-portrait" onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
-        <Media src={A.portrait} alt="Portrait" label="portrait" ratio={0.7} /><figcaption>{A.portraitNote.map((l, i) => <span key={i}>{l}</span>)}</figcaption></figure>
       <section className="ab-bio paper"><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p}</p>)}</section>
       <section className="ab-skills paper"><h3>★ SKILLS</h3><Tags t={A.skills} /></section>
       <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} style={{ background: s.c }}>{s.icon ? <img src={asset(s.icon)} alt={s.name} /> : s.short}</span>)}</div></section>
       <section className="ab-int paper"><h3>♥ INTERESTS</h3><ul>{A.interests.map((x) => <li key={x}>{x}</li>)}</ul></section>
       <section className="ab-con paper"><h3>✉ CONTACT</h3><ul><li>{A.contact.email}</li><li>{A.contact.handle}</li><li>{A.contact.location}</li></ul></section>
       <section className="ab-ban paper"><p className="hand">{A.banner}</p></section>
-      {A.polaroids.map((p, i) => <div key={i} className={'ab-pol p' + (i + 1)}><Media src={p} alt="" label="" ratio={1.2} /></div>)}
     </div></div>);
 }
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { sections } from '../data/navigationData';
 import { site } from '../data/siteData';
 import { asset } from '../utils/assets';
-import ParticleField from './ParticleField';
+import ParallaxBackground from './ParallaxBackground';
 
 function Clock() { const f = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }); const [t, s] = useState(f);
   useEffect(() => { const i = setInterval(() => s(f()), 20000); return () => clearInterval(i); }, []); return <span>{t}</span>; }
@@ -17,7 +17,7 @@ function TypeBox({ lines, run }) { // typewriter in the small window
 export default function Desktop({ openId, onOpen, ready, introDone }) {
   const [hover, setHover] = useState(null);
   return (<main className={'desktop' + (openId ? ' has-open' : '') + (ready ? ' ready' : '')} style={{ backgroundImage: `url(${asset('/assets/backgrounds/background.jpg')})` }}>
-    <div className="vignette" /><ParticleField dim={!!openId} />
+    <ParallaxBackground dim={!!openId} /><div className="vignette" />
     <header className="topbar"><img src={asset('/assets/intro/color-logo.webp')} alt="" /><span>{site.name}</span><span className="clock"><Clock /></span></header>
     <nav className="icons" aria-label="Portfolio sections">
       {sections.map((s, i) => (<button key={s.id} className={'icon' + (openId === s.id ? ' active' : '') + (hover === s.id ? ' hov' : '')} data-id={s.id}
