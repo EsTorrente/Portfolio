@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 // 3) scales it so every icon covers about the same painted area on a fixed square canvas.
 // A square tile (Maya) therefore ends up smaller than a spiky/round logo (Blender) of the same visual weight.
 // Tweak WEIGHT to make ALL icons bigger/smaller together (0.55 – 0.75), CAP is the max fraction of the box any icon may fill.
-const S = 192, WEIGHT = 0.62, CAP = 0.94;
+const S = 192, WEIGHT = 0.74, CAP = 0.98;
 
 export default function TrimmedIcon({ src, alt = '' }) {
   const [url, setUrl] = useState(src), [bad, setBad] = useState(false);
