@@ -5,9 +5,12 @@ import { asset } from './assets';
 const FILES = ['song-01', 'song-02', 'song-03', 'song-04'], EXTS = ['mp3', 'm4a', 'ogg', 'wav'];
 export const FADE_OUT_MS = 1800, FADE_IN_MS = 2200;
 const audio = typeof Audio !== 'undefined' ? new Audio() : null; if (audio) audio.preload = 'auto';
-let tracks = [], idx = 0, want = false, wasPlaying = false, raf = 0, started = false; const ducks = new Set(), subs = new Set();
+let initP = null, muted = false, tracks = [], idx = 0, want = false, wasPlaying = false, raf = 0, started = false; const ducks = new Set(), subs = new Set();
 
-export const getState = () => ({ tracks, idx, playing: !!audio && !audio.paused, time: audio?.currentTime || 0, dur: audio?.duration || 0 });
+try { muted = localStorage.getItem('mar-music') === 'off'; } catch {}
+if (audio) audio.muted = muted;
+export const setMuted = (m) => { muted = m; if (audio) audio.muted = m; try { localStorage.setItem('mar-music', m ? 'off' : 'on'); } catch {} emit(); };
+export const getState = () => ({ muted, tracks, idx, playing: !!audio && !audio.paused, time: audio?.currentTime || 0, dur: audio?.duration || 0 });
 const emit = () => { const s = getState(); subs.forEach((f) => f(s)); };
 export const subscribe = (f) => { subs.add(f); return () => subs.delete(f); };
 
@@ -19,7 +22,8 @@ const fade = (to, ms, done) => { cancelAnimationFrame(raf); const from = audio.v
 const load = (i, autoplay) => { if (!tracks.length) return; idx = (i + tracks.length) % tracks.length; audio.src = asset(tracks[idx].url); audio.load(); emit(); if (autoplay) go(); };
 const go = () => { if (ducks.size) { wasPlaying = true; return; } audio.play().then(emit).catch(() => {}); };
 
-export async function init() { if (started || !audio) return; started = true;
+export const init = () => (initP ||= _init());
+async function _init() { if (!audio) return; want = true; // try to autoplay right away (allowed when muted, or when the browser trusts the site; otherwise the first click/tap/key starts it)
   for (const f of FILES) for (const ext of EXTS) { const url = `/assets/audio/${f}.${ext}`;
     try { const r = await fetch(asset(url), { method: 'HEAD' }); if (r.ok && !/html/.test(r.headers.get('content-type') || '')) { tracks.push({ file: f, url }); break; } } catch {} }
   if (!tracks.length) { emit(); return; } load(0, want); }

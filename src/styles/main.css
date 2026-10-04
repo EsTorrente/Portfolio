@@ -213,3 +213,11 @@ video.layer{object-fit:cover}
 .zoom-ui{position:absolute;right:10px;bottom:10px;z-index:3;display:flex;gap:2px;padding:3px;border-radius:99px;background:#120b08d9;border:1px solid #ff8c1888;opacity:.55;transition:opacity .2s}.zoom:hover .zoom-ui,.zoom-ui:focus-within{opacity:1}
 .zoom-ui button{min-width:32px;height:32px;padding:0 8px;border-radius:99px;font:600 13px var(--mono);color:var(--cr2)}.zoom-ui button:hover:not(:disabled){background:var(--o2);color:var(--bg)}.zoom-ui button:disabled{opacity:.35;cursor:default}
 .viewer .zoom{max-width:92vw}.viewer .zoom-view{max-height:80vh}
+
+/* ===== v4: player tweaks (mute button, longer names), intro progress ===== */
+.dock{width:min(380px,calc(100vw - 48px))}
+.mp-meta{padding-top:6px}.mp-meta b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mp-ctl{padding-top:16px}
+.mp-mute{position:absolute;top:5px;right:8px;z-index:2;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#b3b3b3;transition:color .15s,background .15s}.mp-mute svg{width:16px;height:16px}.mp-mute:hover:not(:disabled){color:#fff;background:#ffffff1f}.mp-mute[aria-pressed=true]{color:var(--o2)}.mp-mute:disabled{opacity:.35;cursor:default}
+.intro-bar{width:min(46vmin,420px);height:3px;border-radius:2px;background:#ff8c1828;overflow:hidden}.intro-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--o),var(--y));transform-origin:left;transform:scaleX(0);transition:transform .35s ease}
+.intro p{min-height:1.2em;text-align:center}

@@ -3,4 +3,4 @@ export const asset = (p) => (p ? (p.startsWith('http') ? p : import.meta.env.BAS
 export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const isMobile = () => window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
 // ✏️ Animation cards whose first seconds are black: card thumbnail = the video frame at this second (instead of the .webp). Change the numbers to pick another frame.
-export const THUMB_AT = { 'animation-01': 5, 'animation-02': 5 };
+export const THUMB_AT = { 'animation-01': 70, 'animation-02': 119, 'animation-03': 13 }; // seconds (1:10 · 1:59 · 0:13)
