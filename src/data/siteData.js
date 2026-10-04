@@ -4,7 +4,7 @@ export const site = {
   logo: '/assets/intro/white-logo.webp', // intro logo (swap for an animated .webp/.webm later)
   logoVideo: null, // e.g. '/assets/intro/intro-logo.webm'
   clockLabel: true,
-  tagline: 'A LITTLE CAT. A LOT OF DREAMS',
+  tagline: 'CAN YOU TELL I LIKE ORANGE AND YELLOW?',
   // Lines typed in the small window (bottom-right of the desktop)
   welcome: ['> Welcome to my', '  digital portfolio.', '', '> Click on an icon', '  to explore.'],
 };
