@@ -28,5 +28,5 @@ export const about = {
     { short: 'Ps', name: 'Photoshop', c: '#0b2a4a' }, { short: 'Ai', name: 'Illustrator', c: '#4a1d00' }, { short: 'Ae', name: 'After Effects', c: '#1a1a4a' }],
   contact: { name: 'Maria del Mar Torrente', title: 'Engineer in Design for Digital Entertainment', email: 'estorrentee@gmail.com', phone: '+57 319 791 3866',
     linkedin: 'https://www.linkedin.com/in/martorrente/' },
-  banner: "Have an idea, a weird problem, or a project that needs figuring out? Let's talk.",
+  banner: "Have an idea, a weird problem, or a project that needs figuring out? \nLet's talk.",
 };
