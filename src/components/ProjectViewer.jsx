@@ -1,4 +1,5 @@
 import { Component, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Media from './Media';
 import Zoom from './Zoom';
 import { asset, THUMB_AT } from '../utils/assets';
@@ -104,4 +105,5 @@ class Boundary extends Component {
   componentDidCatch(e) { console.error('ProjectViewer crashed:', e); this.props.onClose(); }
   render() { return this.state.err ? null : this.props.children; }
 }
-export default function ProjectViewer(props) { return <Boundary key={props.index} onClose={props.onClose}><Viewer {...props} /></Boundary>; }
+// Rendered through a portal into <body>: the desktop window (.win) is tilted/filtered/container-sized, and any of those would turn this "fixed" overlay into one that sits inside (and tilts with) the window instead of covering the screen.
+export default function ProjectViewer(props) { return createPortal(<Boundary key={props.index} onClose={props.onClose}><Viewer {...props} /></Boundary>, document.body); }

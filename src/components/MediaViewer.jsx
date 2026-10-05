@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import Media from './Media';
 import Zoom from './Zoom';
 import { asset } from '../utils/assets';
 import { play } from '../utils/sfx';
 // Full-screen dark gallery overlay. Esc closes, ←/→ navigates. Never crops.
-export default function MediaViewer({ items, index, onClose, onIndex }) {
+function MediaViewerInner({ items, index, onClose, onIndex }) {
   const it = items[index], ref = useRef(); const prev = useRef();
   useEffect(() => { play('viewer'); }, []);
   useEffect(() => { prev.current = document.activeElement; ref.current?.focus();
@@ -20,3 +21,6 @@ export default function MediaViewer({ items, index, onClose, onIndex }) {
       <button className="vbtn vnext" aria-label="Next" onClick={(e) => { e.stopPropagation(); onIndex((index + 1) % items.length); }}>›</button></>}
   </div>);
 }
+
+// Portal into <body> so the overlay covers the whole screen on desktop (the window it opens from is tilted + filtered, which would otherwise trap a "fixed" element inside it).
+export default function MediaViewer(props) { return createPortal(<MediaViewerInner {...props} />, document.body); }

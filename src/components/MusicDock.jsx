@@ -24,10 +24,14 @@ export function DockButton() {
     {open ? '✕' : <><span className="eq" aria-hidden="true"><i /><i /><i /></span>♪</>}</button>);
 }
 // open = a portfolio window is open · compact = phone layout.
-// Desktop: the player tucks away while a window is open; the ♪ tab beside it brings it back (and becomes ✕ to hide it again).
+// Desktop: the ♪/✕ tab beside the player always shows or hides it (on the home screen the choice is remembered between visits, so it can never sit on top of an icon).
+// While a window is open the player tucks away by itself and the same tab brings it back temporarily.
 // Phone: hidden until you tap ♪ in the top bar; tap ✕, tap outside, or open a section and it goes away (so it never covers buttons).
 export default function MusicDock({ open = false, compact = false }) {
   const [s, setS] = useState(M.getState()), [peek, setPeek] = useDockOpen(), collapsed = open || compact;
+  const [pinned, setPinned] = useState(() => { try { return localStorage.getItem('mar-dock') !== 'off'; } catch { return true; } }); // desktop home screen: visitor can hide the player for good (remembered)
+  const togglePin = () => setPinned((p) => { try { localStorage.setItem('mar-dock', p ? 'off' : 'on'); } catch {} return !p; });
+  const mini = collapsed ? !peek : !pinned; // mini = slid off-screen, only the ♪ tab shows
   useEffect(() => { const un = M.subscribe(setS); M.init();
     const go = () => { if (!M.getState().playing) M.play(); EV.forEach((t) => removeEventListener(t, go, true)); };
     EV.forEach((t) => addEventListener(t, go, { capture: true, passive: true }));
@@ -38,7 +42,7 @@ export default function MusicDock({ open = false, compact = false }) {
     addEventListener('pointerdown', out, true); addEventListener('keydown', esc);
     return () => { removeEventListener('pointerdown', out, true); removeEventListener('keydown', esc); }; }, [peek, collapsed]);
   const has = s.tracks.length > 0, info = INFO[parseInt((s.tracks[s.idx]?.file || '').slice(-2), 10) - 1] || {}, pct = s.dur ? (s.time / s.dur) * 100 : 0;
-  return (<aside className={'dock' + (collapsed && !peek ? ' mini' : '') + (collapsed ? ' tabbed' : '') + (compact && open ? ' gone' : '')} aria-label="Music player" aria-hidden={compact && !peek ? true : undefined}>
+  return (<aside className={'dock' + (mini ? ' mini' : '') + ' tabbed' + (compact && open ? ' gone' : '')} aria-label="Music player" aria-hidden={compact && !peek ? true : undefined}>
     <div className="mp">
       <img className="mp-cover" src={asset(info.cover || COVER)} alt="" draggable="false" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = asset(FALLBACK); }} />
       <div className="mp-meta"><b>{has ? info.title || s.tracks[s.idx].file : 'No songs yet'}</b><span>{has ? info.artist : 'add song-01.mp3 to assets/audio'}</span></div>
@@ -55,5 +59,5 @@ export default function MusicDock({ open = false, compact = false }) {
     <div className="mp-vol"><div className="mp-vol-pill">
       <button data-sfx="tick" onClick={() => M.setMuted(!s.muted)} aria-label={s.muted ? 'Unmute music' : 'Mute music'} tabIndex={-1}>{s.muted || s.volume === 0 ? '🔇\uFE0E' : '🔊\uFE0E'}</button>
       <input type="range" min="0" max="1" step="0.01" value={s.muted ? 0 : s.volume} style={{ '--v': (s.muted ? 0 : s.volume) * 100 + '%' }} onChange={(e) => M.setVolume(+e.target.value)} aria-label="Music volume" aria-valuetext={`${Math.round((s.muted ? 0 : s.volume) * 100)}%`} /></div></div>
-    <button className="dock-tab" data-sfx="tick" aria-label={peek ? 'Hide music player' : 'Show music player'} aria-expanded={!(collapsed && !peek)} onClick={() => setPeek((p) => !p)}>{peek ? '✕' : '♪'}</button></aside>);
+    <button className="dock-tab" data-sfx="tick" aria-label={mini ? 'Show music player' : 'Hide music player'} aria-expanded={!mini} onClick={() => (collapsed ? setPeek((p) => !p) : togglePin())}>{mini ? '♪' : '✕'}</button></aside>);
 }
