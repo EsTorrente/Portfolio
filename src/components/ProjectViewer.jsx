@@ -28,6 +28,8 @@ function Player({ item, media, cur: want }) {
     return () => { document.removeEventListener('fullscreenchange', f); document.removeEventListener('webkitfullscreenchange', f); }; }, []);
   const m = media[cur], tok = useRef({});
   useEffect(() => () => release(tok.current), [cur, item.id]); // video changed / popup closed → music comes back
+  useEffect(() => { // browsers (esp. Safari) refuse autoplay for videos that have an audio track unless muted → if blocked, retry muted so it always starts
+    const v = vid.current; if (!v) return; const go = () => v.play()?.catch(() => { v.muted = true; v.play()?.catch(() => {}); }); go(); v.addEventListener('loadeddata', go, { once: true }); return () => v.removeEventListener('loadeddata', go); }, [m.src, bad]);
   if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} — YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
   if (m.kind === 'image') return <Zoom fill resetKey={m.src}><Media key={m.src} src={m.src} fallback={m.fallback} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" /></Zoom>;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
@@ -35,7 +37,7 @@ function Player({ item, media, cur: want }) {
     if (document.fullscreenElement || document.webkitFullscreenElement) return (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     const req = el.requestFullscreen || el.webkitRequestFullscreen; if (req) req.call(el); else vid.current?.webkitEnterFullscreen?.(); }; // iPhone only fullscreens the <video> itself
   return (<div className="pv-player" ref={box}>
-    <video ref={vid} key={m.src} className="pv-video" src={asset(m.src)} poster={THUMB_AT[item.id] != null ? undefined : asset(item.image)} controls controlsList="nofullscreen" autoPlay loop playsInline preload="metadata"
+    <video ref={vid} key={m.src} className="pv-video" src={asset(m.src)} poster={THUMB_AT[item.id] != null ? undefined : asset(item.image)} controls controlsList="nofullscreen" autoPlay muted={m.sound === false} loop playsInline preload="metadata"
       onPlay={() => { if (m.sound !== false) duck(tok.current); }} onPause={() => release(tok.current)} onEnded={() => release(tok.current)}
       onLoadedData={() => setReady(true)} onError={() => { setBad(true); release(tok.current); }} />
     {!ready && <div className="pv-loading" role="status"><i className="spin" /><span>LOADING VIDEO…</span></div>}
