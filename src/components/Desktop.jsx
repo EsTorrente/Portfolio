@@ -3,6 +3,7 @@ import { sections } from '../data/navigationData';
 import { site } from '../data/siteData';
 import { asset } from '../utils/assets';
 import ParallaxBackground from './ParallaxBackground';
+import Hotspots from './Hotspots';
 import { isMuted, setMuted, onMuteChange, play } from '../utils/sfx';
 import { DockButton } from './MusicDock';
 import { canFullscreen, isFullscreen, toggleFullscreen, onFullscreenChange } from '../utils/fullscreen';
@@ -29,6 +30,7 @@ export default function Desktop({ openId, onOpen, ready, introDone }) {
   const [hover, setHover] = useState(null);
   return (<main className={'desktop' + (openId ? ' has-open' : '') + (ready ? ' ready' : '')} style={{ backgroundImage: `url(${asset('/assets/backgrounds/background.jpg')})` }}>
     <ParallaxBackground dim={!!openId} /><div className="vignette" />
+    <Hotspots />
     <header className="topbar"><img src={asset('/assets/intro/color-logo.webp')} alt="" /><span>{site.name}</span><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>
     <nav className="icons" aria-label="Portfolio sections">
       {sections.map((s, i) => (<button key={s.id} className={'icon' + (openId === s.id ? ' active' : '') + (hover === s.id ? ' hov' : '')} data-id={s.id}
