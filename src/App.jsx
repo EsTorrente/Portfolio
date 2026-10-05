@@ -27,11 +27,15 @@ function Cursor() { // custom cursor on fine pointers only. Dot and ring move to
 
 // Adds <html class="compact"> on phones/small screens (and "portrait" when held upright) so the CSS can switch to the phone layout.
 function useLayoutClass() {
+  // phone  = small screen  → full-screen "compact" layout (rail + pills)
+  // tablet = touch device whose short side is ≥ 600px (iPad, Android tablets): held sideways it gets the framed desktop window with touch-sized controls (html.tablet);
+  //          held upright it gets the compact layout with bigger spacing (html.tablet.compact)
   const [compact, setCompact] = useState(false);
-  useEffect(() => { const root = document.documentElement, q = matchMedia('(max-width:760px), (pointer:coarse) and (max-height:520px)');
-    const f = () => { setCompact(q.matches); root.classList.toggle('compact', q.matches); root.classList.toggle('portrait', q.matches && innerHeight > innerWidth); };
-    f(); q.addEventListener('change', f); addEventListener('resize', f); addEventListener('orientationchange', f);
-    return () => { q.removeEventListener('change', f); removeEventListener('resize', f); removeEventListener('orientationchange', f); }; }, []);
+  useEffect(() => { const root = document.documentElement, ph = matchMedia('(max-width:760px), (pointer:coarse) and (max-height:520px)'), touch = matchMedia('(pointer:coarse)');
+    const f = () => { const portrait = innerHeight > innerWidth, tablet = !ph.matches && touch.matches && Math.min(innerWidth, innerHeight) >= 600, c = ph.matches || (tablet && portrait);
+      setCompact(c); root.classList.toggle('compact', c); root.classList.toggle('tablet', tablet); root.classList.toggle('portrait', c && portrait); };
+    f(); ph.addEventListener('change', f); touch.addEventListener('change', f); addEventListener('resize', f); addEventListener('orientationchange', f);
+    return () => { ph.removeEventListener('change', f); touch.removeEventListener('change', f); removeEventListener('resize', f); removeEventListener('orientationchange', f); }; }, []);
   return compact;
 }
 
@@ -47,7 +51,7 @@ export default function App() {
   useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick) setPhase('reveal'); }, [phase, minTime, loaded, needClick]);
   useEffect(() => { const h = () => { setOpen(fromHash()); if (!fromHash()) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
   const compact = useLayoutClass();
-  useEffect(() => { if (!AUTO_FULLSCREEN_ON_PHONES || !compact || !canFullscreen() || !matchMedia('(pointer:coarse)').matches) return;
+  useEffect(() => { if (!AUTO_FULLSCREEN_ON_PHONES || !compact || document.documentElement.classList.contains('tablet') || !canFullscreen() || !matchMedia('(pointer:coarse)').matches) return;
     const go = () => { enterFullscreen(); off(); }, off = () => removeEventListener('pointerup', go, true); addEventListener('pointerup', go, true); return off; }, [compact]);
   useEffect(() => { document.documentElement.dataset.phase = phase; }, [phase]); // the FPS guard waits for 'done'
   useEffect(() => initSfx(), []);

@@ -8,3 +8,11 @@ export const THUMB_AT = { 'animation-03': 13 }; // seconds (0:13). Animations 01
 // Program icons: public/assets/icons/<Name>.webp  →  Unity · Blender · Maya · MotionBuilder · Harmony · AfterEffects
 const SW = { UNITY: 'Unity', BLENDER: 'Blender', MAYA: 'Maya', MOTIONBUILDER: 'MotionBuilder', HARMONY: 'Harmony', AFTEREFFECTS: 'AfterEffects' };
 export const softwareIcon = (name) => { const k = SW[String(name || '').toUpperCase().replace(/[^A-Z]/g, '')]; return k ? asset(`/assets/icons/${k}.webp`) : null; };
+
+// Safari can play WebM but NOT its transparency (alpha shows as black). That affects every browser on iPhone/iPad (all use WebKit) and Safari on Mac.
+// Chrome / Firefox / Edge on Mac and everything on Windows / Android keep the transparent layers + parallax.
+// Test on any computer: add ?apple to the address (or ?apple=0 to force the normal version).
+const UA = navigator.userAgent, forced = /[?&]apple(=1|&|$)/.test(location.search), blocked = /[?&]apple=0/.test(location.search);
+const IOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS pretends to be a Mac
+const SAFARI_MAC = /safari/i.test(UA) && /Apple/.test(navigator.vendor || '') && !/chrome|chromium|crios|fxios|edg|opr|android/i.test(UA);
+export const appleVideo = () => !blocked && (forced || IOS || SAFARI_MAC);

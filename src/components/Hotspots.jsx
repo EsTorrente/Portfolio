@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { hotspots } from '../data/hotspots';
-import { reducedMotion, isMobile } from '../utils/assets';
+import { reducedMotion, isMobile, appleVideo } from '../utils/assets';
 import { play } from '../utils/sfx';
 const Arcade = lazy(() => import('./Arcade')); // games load only when first opened
 const COARSE = matchMedia('(pointer:coarse)').matches; // real phones/tablets: Type-a-Cat needs a physical keyboard
@@ -13,7 +13,7 @@ export default function Hotspots() {
     const fit = () => { const W = innerWidth, H = innerHeight, s = Math.max(W / 1920, H / 1080), a = art.current; // object-fit: cover
       Object.assign(a.style, { width: 1920 * s + 'px', height: 1080 * s + 'px', left: (W - 1920 * s) / 2 + 'px', top: (H - 1080 * s) / 2 + 'px' }); };
     fit(); addEventListener('resize', fit);
-    let tx = 0, ty = 0, x = 0, y = 0, raf; const still = reducedMotion() || isMobile(), amp = 0.011; // same numbers as the foreground layer in ParallaxBackground
+    let tx = 0, ty = 0, x = 0, y = 0, raf; const still = reducedMotion() || isMobile() || appleVideo(), amp = 0.011; // same numbers as the foreground layer in ParallaxBackground
     const mv = (e) => { tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1; };
     const loop = () => { raf = requestAnimationFrame(loop); x += (tx - x) * 0.06; y += (ty - y) * 0.06; const a = amp * innerWidth;
       wrap.current.style.transform = `translate3d(${(-x * a).toFixed(2)}px,${(-y * a).toFixed(2)}px,0) scale(${(1 + amp * 2 + 0.006).toFixed(4)})`; };

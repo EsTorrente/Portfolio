@@ -1,7 +1,7 @@
 import * as D from '../data/portfolioData';
 import { site, about } from '../data/siteData';
 import { sections } from '../data/navigationData';
-import { asset } from './assets';
+import { asset, appleVideo } from './assets';
 import * as M from './music';
 // Two-stage loading, so the loading screen stays short:
 //   1) CRITICAL (blocks the intro): backgrounds, UI, logo + section icons, every card thumbnail, and Eridan's first video.
@@ -12,7 +12,7 @@ import * as M from './music';
 const TIMEOUT_MS = 60000, BG_DELAY_MS = 2500, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
 const EAGER_VIDEO_OF = 'blender-01'; // ✏️ project whose FIRST video loads during the loading screen (Eridan). Everything else loads afterwards.
 const STATIC = ['/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp',
-  '/assets/ui/back-right.webp', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', '/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'];
+  '/assets/ui/back-right.webp', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', ...(appleVideo() ? ['/assets/backgrounds/backgroundApple.webm'] : ['/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'])];
 function walk(o, out, seen = new Set()) { if (typeof o === 'string') { if ((o.startsWith('/assets/') || o.startsWith('http')) && (IMG.test(o) || VID.test(o))) out.add(o); return; }
   if (!o || typeof o !== 'object' || seen.has(o)) return; seen.add(o); for (const v of Object.values(o)) walk(v, out, seen); }
 

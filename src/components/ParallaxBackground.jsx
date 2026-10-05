@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { asset, reducedMotion, isMobile } from '../utils/assets';
+import { useEffect, useRef, useState } from 'react';
+import { asset, reducedMotion, isMobile, appleVideo } from '../utils/assets';
 import ParticleField from './ParticleField';
 
 // Layer order (back → front):  Background.webm  →  particles  →  Foreground.webm (alpha)
@@ -11,9 +11,11 @@ const LAYERS = { bg: { amp: 0.0035 }, pf: { amp: 0.006 }, fg: { amp: 0.011 } };
 const NOUI = { disablePictureInPicture: true, disableRemotePlayback: true, controlsList: 'nodownload noplaybackrate noremoteplayback', tabIndex: -1, 'x-webkit-airplay': 'deny' };
 export default function ParallaxBackground({ dim = false }) {
   const bg = useRef(), pf = useRef(), fg = useRef();
+  // Apple devices: ONE opaque pre-rendered video (backgroundApple.webm, optional backgroundApple.mp4), no parallax. If it can't load, falls back to the normal layers.
+  const [apple, setApple] = useState(appleVideo);
 
   useEffect(() => {
-    if (reducedMotion() || isMobile()) return; // no parallax on touch / reduced motion
+    if (reducedMotion() || isMobile() || apple) return; // no parallax on touch / reduced motion / Apple video
     const els = { bg: bg.current, pf: pf.current, fg: fg.current };
     let tx = 0, ty = 0, x = 0, y = 0, raf;
     const mv = (e) => { tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1; };
@@ -28,12 +30,12 @@ export default function ParallaxBackground({ dim = false }) {
     };
     addEventListener('pointermove', mv); loop();
     return () => { removeEventListener('pointermove', mv); cancelAnimationFrame(raf); };
-  }, []);
+  }, [apple]);
 
   // The loop IS the background, so it always plays (even with "reduce motion" on – only the parallax is switched off there).
   // React doesn't reliably set the `muted` attribute, and browsers refuse unmuted autoplay – so mute + play() by hand and retry on first input.
   useEffect(() => {
-    const vs = [bg.current, fg.current];
+    const vs = [bg.current, fg.current].filter(Boolean);
     const go = () => vs.forEach((v) => { v.muted = true; v.defaultMuted = true; if (v.paused) v.play().catch(() => {}); });
     const again = (v) => () => { v.currentTime = 0; v.play().catch(() => {}); }; // safety net if `loop` is ignored
     const offs = vs.map((v) => { const f = again(v); v.addEventListener('ended', f); return () => v.removeEventListener('ended', f); });
@@ -41,7 +43,14 @@ export default function ParallaxBackground({ dim = false }) {
     const vis = () => !document.hidden && go();
     addEventListener('pointerdown', go); addEventListener('keydown', go); document.addEventListener('visibilitychange', vis);
     return () => { offs.forEach((f) => f()); vs.forEach((v) => v.removeEventListener('canplay', go)); removeEventListener('pointerdown', go); removeEventListener('keydown', go); document.removeEventListener('visibilitychange', vis); };
-  }, []);
+  }, [apple]);
+  if (apple) return (<>
+    <video ref={bg} className="layer layer-bg" autoPlay loop muted playsInline preload="auto" aria-hidden="true" {...NOUI}>
+      <source src={asset('/assets/backgrounds/backgroundApple.webm')} type="video/webm" />
+      <source src={asset('/assets/backgrounds/backgroundApple.mp4')} type="video/mp4" onError={() => setApple(false)} />
+    </video>
+    <div ref={pf} className="layer layer-pf"><ParticleField dim={dim} /></div>
+  </>);
   return (<>
     <video ref={bg} className="layer layer-bg" src={asset('/assets/backgrounds/background.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" {...NOUI} />
     <div ref={pf} className="layer layer-pf"><ParticleField dim={dim} /></div>
