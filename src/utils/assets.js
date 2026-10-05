@@ -3,7 +3,7 @@ export const asset = (p) => (p ? (p.startsWith('http') ? p : import.meta.env.BAS
 export const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const isMobile = () => window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
 // ✏️ Animation cards whose first seconds are black: card thumbnail = the video frame at this second (instead of the .webp). Change the numbers to pick another frame.
-export const THUMB_AT = { 'animation-01': 70, 'animation-02': 101, 'animation-03': 13 }; // seconds (1:10 · 1:41 · 0:13)
+export const THUMB_AT = { 'animation-03': 13 }; // seconds (0:13). Animations 01 + 02 now use their own .webp thumbnails (public/assets/animation/animation-01.webp and animation-02.webp). To go back to a video frame for one of them, add e.g. 'animation-01': 70 here.
 
 // Program icons: public/assets/icons/<Name>.webp  →  Unity · Blender · Maya · MotionBuilder · Harmony · AfterEffects
 const SW = { UNITY: 'Unity', BLENDER: 'Blender', MAYA: 'Maya', MOTIONBUILDER: 'MotionBuilder', HARMONY: 'Harmony', AFTEREFFECTS: 'AfterEffects' };
