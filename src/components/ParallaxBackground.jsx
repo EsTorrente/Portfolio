@@ -7,6 +7,8 @@ import ParticleField from './ParticleField';
 // Tweak the feel here: `amp` = travel as a fraction of screen width at the screen edge.
 const LAYERS = { bg: { amp: 0.0035 }, pf: { amp: 0.006 }, fg: { amp: 0.011 } };
 
+// Stops the browser from drawing its own hover buttons on top of the video (picture-in-picture, cast, download…).
+const NOUI = { disablePictureInPicture: true, disableRemotePlayback: true, controlsList: 'nodownload noplaybackrate noremoteplayback', tabIndex: -1, 'x-webkit-airplay': 'deny' };
 export default function ParallaxBackground({ dim = false }) {
   const bg = useRef(), pf = useRef(), fg = useRef();
 
@@ -41,8 +43,8 @@ export default function ParallaxBackground({ dim = false }) {
     return () => { offs.forEach((f) => f()); vs.forEach((v) => v.removeEventListener('canplay', go)); removeEventListener('pointerdown', go); removeEventListener('keydown', go); document.removeEventListener('visibilitychange', vis); };
   }, []);
   return (<>
-    <video ref={bg} className="layer layer-bg" src={asset('/assets/backgrounds/background.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" />
+    <video ref={bg} className="layer layer-bg" src={asset('/assets/backgrounds/background.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" {...NOUI} />
     <div ref={pf} className="layer layer-pf"><ParticleField dim={dim} /></div>
-    <video ref={fg} className="layer layer-fg" src={asset('/assets/backgrounds/foreground.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" />
+    <video ref={fg} className="layer layer-fg" src={asset('/assets/backgrounds/foreground.webm')} autoPlay loop muted playsInline preload="auto" aria-hidden="true" {...NOUI} />
   </>);
 }

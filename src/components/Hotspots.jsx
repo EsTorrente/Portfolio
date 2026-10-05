@@ -25,7 +25,7 @@ export default function Hotspots() {
           onMouseEnter={() => play('hover')} onClick={() => { play('open'); setGame(h); }}>
           <i className="hs-glow" />
           {h.sparks.map(([sx, sy, sz, d], i) => <span key={i} className="spark" style={{ left: sx + '%', top: sy + '%', '--z': sz + 'px', '--d': d + 's', '--t': 3.2 + ((i * 7) % 5) * 0.5 + 's' }}><b /></span>)}
-          <em className="hs-tag">▶ {h.label}</em>
+          <em className="hs-tag" style={h.tag ? { left: h.tag[0] + '%', top: h.tag[1] + '%' } : undefined}>▶ {h.label}</em>
         </button>))}
     </div></div>
     {game && <Suspense fallback={null}><Arcade game={game.game} onClose={() => setGame(null)} /></Suspense>}

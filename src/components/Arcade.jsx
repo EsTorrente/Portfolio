@@ -8,7 +8,8 @@ const GAMES = { // title shown in the little window's title bar
 // Shared retro window for the three mini-games. Esc / ✕ / clicking outside closes it.
 export default function Arcade({ game, onClose }) {
   const g = GAMES[game], box = useRef(), close = () => { play('close'); onClose(); };
-  useEffect(() => { const k = (e) => e.key === 'Escape' && close(); addEventListener('keydown', k); box.current?.focus(); return () => removeEventListener('keydown', k); });
+  const closeRef = useRef(close); closeRef.current = close;
+  useEffect(() => { const k = (e) => e.key === 'Escape' && closeRef.current(); addEventListener('keydown', k); const b = box.current; if (b && !b.contains(document.activeElement)) b.focus(); return () => removeEventListener('keydown', k); }, []); // focus only on open, so it never steals focus from a game's own input
   return (<div className="arc" role="dialog" aria-modal="true" aria-label={g.title} onPointerDown={(e) => e.target === e.currentTarget && close()}>
     <div className="arc-win" ref={box} tabIndex={-1}>
       <div className="arc-bar"><span>★ {g.title}</span><button onClick={close} aria-label="Close game" data-sfx="none">✕</button></div>
