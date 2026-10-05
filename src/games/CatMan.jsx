@@ -47,7 +47,7 @@ export default function CatMan() {
       pel.forEach((k) => { const [x, y] = k.split(',').map(Number); if (MAP[y][x] === 'o') { ctx.fillStyle = Math.floor(t / 280) % 2 ? '#ffd36a' : '#ff8c18'; ctx.fillRect(x * C + C / 2 - 2, y * C + 4, 4, C - 8); ctx.fillRect(x * C + 4, y * C + C / 2 - 2, C - 8, 4); ctx.fillRect(x * C + C / 2 - 5, y * C + C / 2 - 5, 10, 10); }
         else { ctx.fillStyle = '#f4e7d0'; ctx.fillRect(x * C + C / 2 - 2, y * C + C / 2 - 2, 4, 4); } });
       dogs.forEach((g) => { const [x, y] = pos(g), sc = scared > now, flash = sc && scared - now < 1800 && Math.floor(t / 200) % 2; ctx.drawImage(monsterSprite(g.c, 2, sc && !flash), x * C + 1, y * C + 3 + (g.bob || 0), C - 2, C - 5); });
-      const [x, y] = pos(cat), hop = status === 'dead' ? 0 : Math.sin(t / 90) * 0.8; if (status !== 'dead' || Math.floor(t / 120) % 2) ctx.drawImage(catSprite(0, 2), x * C + 1, y * C + 2 + hop, C - 2, C - 3); };
+      const [x, y] = pos(cat), hop = status === 'dead' ? 0 : Math.sin(t / 90) * 0.8; if (status !== 'dead' || Math.floor(t / 120) % 2) ctx.drawImage(catSprite(0, 2), x * C - 1, y * C + 3 + hop, C + 2, Math.round((C + 2) * 14 / 18)); };
     api.current.dir = (dx, dy) => { if (status === 'win' || status === 'over') return; if (status === 'ready') { status = 'play'; push(); }
       cat.wx = dx; cat.wy = dy; if (cat.moving && dx === -cat.dx && dy === -cat.dy) { [cat.x, cat.fx] = [cat.fx, cat.x]; cat.p = 1 - cat.p; cat.dx = dx; cat.dy = dy; } };
     api.current.restart = init;

@@ -475,3 +475,6 @@ html.compact:not(.portrait) .cm{grid-template-columns:auto auto;align-items:cent
 .lb-list li.me{border-color:var(--o2);background:#2a1409}.lb-empty{display:block!important;text-align:center;color:#a98a6a}
 .lb-note{text-align:center;color:#a98a6a;font-size:9px;margin-top:auto}
 .arc-msg .px-btn+.px-btn{margin-top:0}
+
+/* v12 · taller typing window so the result text fits */
+.tc-box{min-height:290px}.tc .arc-msg{padding:20px 14px;gap:12px}
