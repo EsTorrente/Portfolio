@@ -1,7 +1,7 @@
 import { asset } from './assets';
-// Sound effects. Drop your own files in public/assets/audio/ named: hover, click, tick, open, close, viewer  (.wav, .mp3 or .ogg).
+// Sound effects. Drop your own files in public/assets/audio/ named: hover, click, tick, open, close, viewer, ready  (.wav, .mp3 or .ogg).
 // Any file that is missing falls back to a soft built-in synthesized sound, so it works with zero files.
-const KEY = 'mar-sfx', NAMES = ['hover', 'click', 'tick', 'open', 'close', 'viewer'];
+const KEY = 'mar-sfx', NAMES = ['hover', 'click', 'tick', 'open', 'close', 'viewer', 'ready'];
 let ctx, master, muted = false, last = 0; const buffers = {}, subs = new Set();
 try { muted = localStorage.getItem(KEY) === 'off'; } catch {}
 export const isMuted = () => muted;
@@ -28,6 +28,7 @@ const synth = {
   tick: (c) => tone(c, { f: 680, f2: 880, d: 0.07, v: 0.08, type: 'square' }),
   open: (c) => { swoosh(c, {}); [392, 523, 659].forEach((f, i) => tone(c, { f, t: 0.1 + i * 0.07, d: 0.4, v: 0.09, type: 'triangle' })); },
   close: (c) => { swoosh(c, { d: 0.3, v: 0.05, f1: 2000, f2: 250 }); [659, 440].forEach((f, i) => tone(c, { f, t: i * 0.07, d: 0.25, v: 0.08, type: 'triangle' })); },
+  ready: (c) => { [523, 659, 784, 1047].forEach((f, i) => tone(c, { f, t: i * 0.09, d: 0.38, v: 0.11, type: 'triangle' })); tone(c, { f: 2093, t: 0.3, d: 0.5, v: 0.03 }); }, // loading finished: bright rising chime
   viewer: (c) => { tone(c, { f: 300, f2: 620, d: 0.18, v: 0.1 }); tone(c, { f: 920, t: 0.1, d: 0.2, v: 0.04 }); },
 };
 export function play(name) { if (muted) return; const c = ac(); if (!c) return; const b = buffers[name];

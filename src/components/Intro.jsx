@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { site } from '../data/siteData';
 import { STORY, STORY_STEP_SECONDS } from '../data/introStory';
 import { asset } from '../utils/assets';
+import { play } from '../utils/sfx';
 
 const BG = '/assets/ui/LoadingBG.webp'; // ✏️ loading-screen background
 const N = 15, C = 20; // board is N×N cells
@@ -53,17 +54,26 @@ function Snake({ onPlay }) {
       <button data-sfx="none" style={{ gridColumn: 2, gridRow: 2 }} aria-label="Down" onClick={() => t(0, 1)}>▼</button><button data-sfx="none" style={{ gridColumn: 3, gridRow: 2 }} aria-label="Right" onClick={() => t(1, 0)}>▶</button></div></div>);
 }
 
+// Tiny burst of sparks shown once when loading finishes (CSS-animated; positions are random per burst).
+const SPARKS = 22;
+function Burst() {
+  const sparks = useRef(Array.from({ length: SPARKS }, (_, i) => { const a = (i / SPARKS) * Math.PI * 2 + Math.random() * 0.5, r = 70 + Math.random() * 110;
+    return { '--dx': `${Math.cos(a) * r * 1.6}px`, '--dy': `${Math.sin(a) * r - 30}px`, '--s': 0.6 + Math.random() * 0.9, '--t': `${0.9 + Math.random() * 0.6}s`, '--hue': 28 + Math.random() * 24 }; }));
+  return <div className="burst" aria-hidden="true">{sparks.current.map((st, i) => <i key={i} style={st} />)}</div>;
+}
+
 // Loading screen: logo, a little story (new page every few seconds), progress bar, and an optional snake game.
 export default function Intro({ out, loaded, pct, needClick, onEnter, onPlay }) {
-  const [game, setGame] = useState(false), [page, setPage] = useState(0), [bg, setBg] = useState(false);
+  const [game, setGame] = useState(false), [page, setPage] = useState(0), [bg, setBg] = useState(false), [burst, setBurst] = useState(false);
   useEffect(() => { const i = new Image(); i.onload = () => setBg(true); i.src = asset(BG); }, []); // background fades in once it has loaded (no pop-in)
   useEffect(() => { const t0 = performance.now(), i = setInterval(() => setPage(Math.min(STORY.length - 1, Math.floor((performance.now() - t0) / (STORY_STEP_SECONDS * 1000)))), 500); return () => clearInterval(i); }, []);
+  useEffect(() => { if (!loaded) return; play('ready'); setBurst(true); const t = setTimeout(() => setBurst(false), 1800); return () => clearTimeout(t); }, [loaded]); // loading finished: chime + sparks, so a player mid-snake notices
   const status = !loaded ? `LOADING ASSETS… ${Math.round(pct * 100)}%` : needClick ? 'READY · CLICK ANYWHERE TO ENTER ♪' : 'INITIALIZING DREAM…';
   return (<div className={'intro' + (out ? ' out' : '') + (game ? ' game' : '')} onClick={onEnter} role="presentation">
     <div className={'intro-bg' + (bg ? ' on' : '')} style={{ backgroundImage: `url(${asset(BG)})` }} aria-hidden="true" />
     {site.logoVideo ? <video src={asset(site.logoVideo)} autoPlay muted playsInline /> : <img src={asset(site.logo)} alt={site.name} />}
     <div className="story" key={page} aria-live="polite">{STORY[page].map((l, i) => <p key={i} style={{ '--l': i }}>{l}</p>)}</div>
-    <div className="intro-status"><p className="stat" role="status">{status}</p><div className="intro-bar" aria-hidden="true"><i style={{ transform: `scaleX(${loaded ? 1 : pct})` }} /></div></div>
+    <div className={'intro-status' + (loaded ? ' done' : '')}>{burst && <Burst />}<p className="stat" role="status">{status}</p><div className="intro-bar" aria-hidden="true"><i style={{ transform: `scaleX(${loaded ? 1 : pct})` }} /></div></div>
     <div className="snake-wrap" onClick={(e) => e.stopPropagation()}>
       {game ? <Snake onPlay={onPlay} /> : <button className="snake-open" data-sfx="tick" onClick={() => setGame(true)}>◆ PLAY SNAKE WHILE YOU WAIT</button>}</div>
     <button className="skip">SKIP</button></div>);

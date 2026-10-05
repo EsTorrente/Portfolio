@@ -552,3 +552,13 @@ html.compact .desktop.has-open::after{opacity:.65}
 html.compact .layer-pf{z-index:2}
 html.compact .icon span{color:var(--cr2);text-shadow:0 1px 3px #000,0 0 10px #000,0 0 18px #000c}
 html.compact .icon img{filter:drop-shadow(0 4px 8px #000) drop-shadow(0 0 10px #0009)}
+
+/* loading finished: sparks + a little pulse on the status line and bar */
+.intro-status{position:relative}
+.burst{position:absolute;left:50%;top:60%;width:0;height:0;pointer-events:none;z-index:5}
+.burst i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:hsl(var(--hue),100%,62%);box-shadow:0 0 10px 2px hsl(var(--hue),100%,55%);opacity:0;animation:spark var(--t) cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes spark{0%{opacity:1;transform:translate(0,0) scale(var(--s))}70%{opacity:1}100%{opacity:0;transform:translate(var(--dx),calc(var(--dy) + 40px)) scale(0)}}
+.intro-status.done .stat{animation:readyPop .6s ease;opacity:1;color:#FFD36A}
+.intro-status.done .intro-bar{animation:readyGlow 1s ease}
+@keyframes readyPop{0%{transform:scale(.9)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes readyGlow{0%,100%{box-shadow:0 0 0 #ff7a0000}40%{box-shadow:0 0 18px 4px #ffb52eaa}}
