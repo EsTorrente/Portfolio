@@ -67,10 +67,10 @@ export default function CatMan() {
   const pad = (dx, dy) => ({ onPointerDown: (e) => { e.preventDefault(); e.stopPropagation(); dir(dx, dy); }, onClick: (e) => { if (e.detail === 0) dir(dx, dy); } }); // instant on touch, still works with keyboard focus
   return (<div className={'cm' + (lb ? ' lb-on' : '')} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
     <div className="arc-hud"><span>SCORE {String(hud.score).padStart(4, '0')}</span><span>{'♥'.repeat(Math.max(0, hud.lives))}</span><button className="lb-btn" onClick={() => setLb(true)} aria-label="Leaderboard" data-sfx="none">🏆</button></div>
-    <div className="cm-board"><canvas ref={cv} className="cm-cv" role="img" aria-label="Cat-Man game board" />
+    <div className="cm-row"><div className="cm-board"><canvas ref={cv} className="cm-cv" role="img" aria-label="Cat-Man game board" />
       {hud.status === 'ready' && <div className="arc-msg">EAT ALL THE FISH BITS<br />DODGE THE MONSTERS · GRAB ✦ CATNIP<br /><small>{TOUCH ? 'SWIPE OR USE THE ARROWS' : 'ARROWS / WASD / SWIPE TO START'}</small><button className="px-btn" onClick={() => dir(1, 0)}>▶ START</button></div>}
       {(hud.status === 'over' || hud.status === 'win') && <div className="arc-msg">{hud.status === 'win' ? 'PURRFECT! YOU WIN' : 'GAME OVER'}<br />SCORE {hud.score}<button className="px-btn" onClick={() => setLb(true)}>🏆 SAVE SCORE</button><button className="px-btn" onClick={() => api.current.restart()}>PLAY AGAIN</button></div>}</div>
     <div className="dpad" aria-label="Cat-Man controls"><button style={{ gridColumn: 2, gridRow: 1 }} aria-label="Up" {...pad(0, -1)}>▲</button><button style={{ gridColumn: 1, gridRow: 2 }} aria-label="Left" {...pad(-1, 0)}>◀</button>
-      <button style={{ gridColumn: 2, gridRow: 2 }} aria-label="Down" {...pad(0, 1)}>▼</button><button style={{ gridColumn: 3, gridRow: 2 }} aria-label="Right" {...pad(1, 0)}>▶</button></div>
+      <button style={{ gridColumn: 2, gridRow: 2 }} aria-label="Down" {...pad(0, 1)}>▼</button><button style={{ gridColumn: 3, gridRow: 2 }} aria-label="Right" {...pad(1, 0)}>▶</button></div></div>
     {lb && <Leaderboard game="catman" score={pend} onSaved={() => setPend(null)} onClose={() => setLb(false)} />}</div>);
 }

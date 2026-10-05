@@ -530,3 +530,25 @@ html.compact:not(.portrait) .mm{grid-template-columns:auto auto;justify-content:
 html.compact:not(.portrait) .mm-grid{--s:min(calc((var(--arc-h,100dvh) - 80px) / 4),120px)}
 html.compact:not(.portrait) .mm .arc-hud{flex-direction:column;width:auto;min-width:108px;gap:8px;align-items:stretch;text-align:center;font-size:12px}
 html.compact:not(.portrait) .mm .arc-hud span{border:2px solid #7a4524;background:#1b100b;padding:7px 8px}
+
+/* ===== v14 · phone fixes: Cat-Man layout, Type-a-Cat locked, darker background for legible icons ===== */
+html.compact .arc-body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+html.compact .cm,html.compact .tc,html.compact .mm{flex:1 1 auto;width:100%;min-height:0}
+/* Cat-Man: HUD on top, then [board][arrows] side by side, all centred in the window */
+html.compact .cm{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;touch-action:none}
+html.compact .cm .arc-hud{width:100%;grid-column:auto;grid-area:auto}
+html.compact .cm-row{display:flex;align-items:center;justify-content:center;gap:20px;width:100%}
+html.compact .cm .cm-board{grid-area:auto}html.compact .cm .dpad{grid-area:auto;flex:none}
+html.compact .cm .cm-cv{max-height:none!important;max-width:none!important;height:auto;aspect-ratio:17/15;width:min(calc((var(--arc-h,100dvh) - 108px) * 1.1333),calc(100vw - 260px))}
+html.compact.portrait .cm-row{flex-direction:column;gap:12px}
+html.compact.portrait .cm .cm-cv{width:min(94vw,calc((var(--arc-h,100dvh) - 330px) * 1.1333))}
+html.compact .mm{display:grid;align-content:center}
+/* Type-a-Cat is locked on phones */
+.hs-btn small{display:block;font-size:7px;letter-spacing:.1em;opacity:.8;margin-top:1px}
+.hs-btn:disabled,.hs-btn.off{opacity:.45;filter:grayscale(1);border-style:dashed;cursor:not-allowed;box-shadow:none}.hs-btn:disabled:active{transform:none;background:#150c08ee;color:var(--y2)}
+/* darker background on phones (touch still reaches the particles: overlays ignore pointer events). Particles are lifted above the overlay so they stay bright. */
+html.compact .desktop::after{opacity:.42}
+html.compact .desktop.has-open::after{opacity:.65}
+html.compact .layer-pf{z-index:2}
+html.compact .icon span{color:var(--cr2);text-shadow:0 1px 3px #000,0 0 10px #000,0 0 18px #000c}
+html.compact .icon img{filter:drop-shadow(0 4px 8px #000) drop-shadow(0 0 10px #0009)}
