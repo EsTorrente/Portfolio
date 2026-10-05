@@ -8,5 +8,6 @@ export default function RotateHint() {
   return (<div className="rotate" role="alertdialog" aria-labelledby="rot-t">
     <svg className="rotate-phone" viewBox="0 0 64 64" aria-hidden="true"><rect x="19" y="6" width="26" height="52" rx="6" fill="none" stroke="currentColor" strokeWidth="3" /><circle cx="32" cy="51" r="2" fill="currentColor" /><path d="M10 20a26 26 0 0 1 8-9M54 44a26 26 0 0 1-8 9" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
     <h2 id="rot-t">Turn your phone sideways</h2><p>This little world is made for landscape mode.<br />Rotate your phone (and unlock rotation if needed) for the best experience.</p>
+    <div className="rotate-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v12H3zM8 20h8M12 16v4" /></svg><span><b>Best enjoyed on a PC.</b> Some parts of this world (like the mini-games) are made for mouse and keyboard.</span></div>
     <button onClick={() => setSkip(true)} data-sfx="tick">CONTINUE ANYWAY</button></div>);
 }

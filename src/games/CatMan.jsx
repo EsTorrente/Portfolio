@@ -6,6 +6,7 @@ import Leaderboard from '../components/Leaderboard';
 const MAP = ['#################', '#o.............o#', '#.###.#.#.#.###.#', '#...............#', '#.##.#######.##.#', '#....#.....#....#', '####.#.###.#.####', '#...............#', '#.###.#...#.###.#', '#.....#.#.#.....#', '#.##.#######.##.#', '#.....#...#.....#', '#.###.#.#.#.###.#', '#o......#......o#', '#################'];
 const W = 17, H = 15, C = 24, DIRS = [[1, 0], [-1, 0], [0, 1], [0, -1]], CAT_SPEED = 5.2, DOG_SPEED = 4.3, SCARED_MS = 6500;
 const MONSTERS = [{ c: '#8f5bd6', kind: 0 }, { c: '#2fb8a6', kind: 1 }, { c: '#d8579a', kind: 2 }]; // chase / ambush / shy
+const TOUCH = matchMedia('(pointer:coarse)').matches;
 const free = (x, y) => MAP[y]?.[x] !== undefined && MAP[y][x] !== '#';
 const rnd = (a) => a[Math.floor(Math.random() * a.length)];
 
@@ -58,14 +59,18 @@ export default function CatMan() {
   }, []);
   useEffect(() => { api.current.pause = lb; }, [lb]);
   const sw = useRef(null), dir = (dx, dy) => api.current.dir?.(dx, dy);
-  const down = (e) => { sw.current = [e.clientX, e.clientY]; }, up = (e) => { const s = sw.current; sw.current = null; if (!s) return; const dx = e.clientX - s[0], dy = e.clientY - s[1];
-    if (Math.max(Math.abs(dx), Math.abs(dy)) > 18) Math.abs(dx) > Math.abs(dy) ? dir(Math.sign(dx), 0) : dir(0, Math.sign(dy)); };
-  return (<div className={'cm' + (lb ? ' lb-on' : '')}>
+  // swipe ANYWHERE in the window (not just on the board); it keeps steering while the finger stays down
+  const down = (e) => { if (e.target.closest('button,.lb')) return; sw.current = [e.clientX, e.clientY]; };
+  const move = (e) => { const s = sw.current; if (!s || lb) return; const dx = e.clientX - s[0], dy = e.clientY - s[1];
+    if (Math.max(Math.abs(dx), Math.abs(dy)) > 22) { Math.abs(dx) > Math.abs(dy) ? dir(Math.sign(dx), 0) : dir(0, Math.sign(dy)); sw.current = [e.clientX, e.clientY]; } };
+  const up = () => { sw.current = null; };
+  const pad = (dx, dy) => ({ onPointerDown: (e) => { e.preventDefault(); e.stopPropagation(); dir(dx, dy); }, onClick: (e) => { if (e.detail === 0) dir(dx, dy); } }); // instant on touch, still works with keyboard focus
+  return (<div className={'cm' + (lb ? ' lb-on' : '')} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
     <div className="arc-hud"><span>SCORE {String(hud.score).padStart(4, '0')}</span><span>{'♥'.repeat(Math.max(0, hud.lives))}</span><button className="lb-btn" onClick={() => setLb(true)} aria-label="Leaderboard" data-sfx="none">🏆</button></div>
-    <div className="cm-board" onPointerDown={down} onPointerUp={up}><canvas ref={cv} className="cm-cv" role="img" aria-label="Cat-Man game board" />
-      {hud.status === 'ready' && <div className="arc-msg">EAT ALL THE FISH BITS<br />DODGE THE MONSTERS · GRAB ✦ CATNIP<br /><small>ARROWS / WASD / SWIPE TO START</small></div>}
+    <div className="cm-board"><canvas ref={cv} className="cm-cv" role="img" aria-label="Cat-Man game board" />
+      {hud.status === 'ready' && <div className="arc-msg">EAT ALL THE FISH BITS<br />DODGE THE MONSTERS · GRAB ✦ CATNIP<br /><small>{TOUCH ? 'SWIPE OR USE THE ARROWS' : 'ARROWS / WASD / SWIPE TO START'}</small><button className="px-btn" onClick={() => dir(1, 0)}>▶ START</button></div>}
       {(hud.status === 'over' || hud.status === 'win') && <div className="arc-msg">{hud.status === 'win' ? 'PURRFECT! YOU WIN' : 'GAME OVER'}<br />SCORE {hud.score}<button className="px-btn" onClick={() => setLb(true)}>🏆 SAVE SCORE</button><button className="px-btn" onClick={() => api.current.restart()}>PLAY AGAIN</button></div>}</div>
-    <div className="dpad" aria-label="Cat-Man controls"><button style={{ gridColumn: 2, gridRow: 1 }} aria-label="Up" onClick={() => dir(0, -1)}>▲</button><button style={{ gridColumn: 1, gridRow: 2 }} aria-label="Left" onClick={() => dir(-1, 0)}>◀</button>
-      <button style={{ gridColumn: 2, gridRow: 2 }} aria-label="Down" onClick={() => dir(0, 1)}>▼</button><button style={{ gridColumn: 3, gridRow: 2 }} aria-label="Right" onClick={() => dir(1, 0)}>▶</button></div>
+    <div className="dpad" aria-label="Cat-Man controls"><button style={{ gridColumn: 2, gridRow: 1 }} aria-label="Up" {...pad(0, -1)}>▲</button><button style={{ gridColumn: 1, gridRow: 2 }} aria-label="Left" {...pad(-1, 0)}>◀</button>
+      <button style={{ gridColumn: 2, gridRow: 2 }} aria-label="Down" {...pad(0, 1)}>▼</button><button style={{ gridColumn: 3, gridRow: 2 }} aria-label="Right" {...pad(1, 0)}>▶</button></div>
     {lb && <Leaderboard game="catman" score={pend} onSaved={() => setPend(null)} onClose={() => setLb(false)} />}</div>);
 }

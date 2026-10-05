@@ -3,6 +3,7 @@ import { hotspots } from '../data/hotspots';
 import { reducedMotion, isMobile } from '../utils/assets';
 import { play } from '../utils/sfx';
 const Arcade = lazy(() => import('./Arcade')); // games load only when first opened
+const ICON = { pc: 'M3 4h18v12H3zM8 20h8M12 16v4', glasses: 'M5 3h14v15H7.5A2.5 2.5 0 0 0 5 20.5zM5 20.5V3M9 7h6', pillar: 'M6 3h12M8 3v14M16 3v14M5 20h14M6 17h12' }; // pc / book / pillar
 
 // Glowing stars + click areas laid over the foreground art. The layer reproduces the same "cover" crop and parallax as foreground.webm, so it always lines up.
 export default function Hotspots() {
@@ -28,6 +29,10 @@ export default function Hotspots() {
           <em className="hs-tag" style={h.tag ? { left: h.tag[0] + '%', top: h.tag[1] + '%' } : undefined}>▶ {h.label}</em>
         </button>))}
     </div></div>
+    {/* Phones: the three objects become buttons at the top-middle of the screen (the glowing stars above are hidden by CSS) */}
+    <nav className="hs-bar" aria-label="Mini-games">{hotspots.map((h) => (
+      <button key={h.id} className="hs-btn" data-sfx="none" aria-label={h.aria} onClick={() => { play('open'); setGame(h); }}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d={ICON[h.id]} /></svg><span>{h.label}</span></button>))}</nav>
     {game && <Suspense fallback={null}><Arcade game={game.game} onClose={() => setGame(null)} /></Suspense>}
   </>);
 }
