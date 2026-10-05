@@ -2,7 +2,7 @@
 // • LEADERBOARD_URL empty  → scores are kept on THIS device only (nothing to set up).
 // • LEADERBOARD_URL = your Cloudflare Worker address → everybody sees the same board, stored in leaderboard.json in your GitHub repo.
 //   Setup steps are at the top of worker/leaderboard-worker.js.
-export const LEADERBOARD_URL = 'mar-leaderboard.discordteamlatam.workers.dev';
+export const LEADERBOARD_URL = 'https://mar-leaderboard.discordteamlatam.workers.dev';
 
 export const EMOJI = ['🐱', '🦊', '🦌', '🐟', '🌙', '⭐', '🔥', '🌸', '🍄', '🎧', '🎮', '🪐', '🍓', '🐙', '🦋', '🌈', '🍩', '💜', '🧡', '💀', '👾', '🎨', '🪄', '🐸'];
 export const GAMES = { // low = lower is better
