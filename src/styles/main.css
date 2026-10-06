@@ -642,3 +642,7 @@ html.compact:not(.tablet) .masonry{--mg:20px}
 html.compact .wctl .wsnd{display:block}
 html.compact .wctl .wsnd[aria-expanded=true]{background:var(--o2)}
 html.compact .dock{z-index:30}
+
+/* phone + tablet: the music pop-over opens on the RIGHT, next to the thumb (and under the ♪ button in the window controls) */
+html.compact .dock{left:auto;right:max(10px,env(safe-area-inset-right))}
+html.tablet.compact .dock{right:max(20px,env(safe-area-inset-right))}
