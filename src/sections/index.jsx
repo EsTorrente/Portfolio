@@ -46,7 +46,7 @@ function ArtPiece({ it, n }) { // image, or an animated webm (muted loop). Loade
 function Masonry({ children }) {
   const ref = useRef(), [cols, setCols] = useState(3);
   useLayoutEffect(() => { const el = ref.current; if (!el) return;
-    const f = () => { const c = document.documentElement.classList, narrow = matchMedia('(max-width:760px)').matches, [max, min, gap] = c.contains('tablet') && c.contains('compact') ? [3, 190, 16] : c.contains('compact') || narrow ? [2, 140, 12] : [3, 200, 18];
+    const f = () => { const c = document.documentElement.classList, narrow = matchMedia('(max-width:760px)').matches, [max, min] = c.contains('tablet') && c.contains('compact') ? [3, 190] : c.contains('compact') || narrow ? [2, 140] : [3, 200], gap = parseFloat(getComputedStyle(el).columnGap) || 0; // gap comes from the CSS (.masonry)
       setCols(Math.max(1, Math.min(max, Math.floor((el.clientWidth + gap) / (min + gap))))); };
     f(); const ro = new ResizeObserver(f); ro.observe(el); return () => ro.disconnect(); }, []);
   const lanes = Array.from({ length: cols }, () => []); children.forEach((c, i) => lanes[i % cols].push(c));

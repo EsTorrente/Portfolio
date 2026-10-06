@@ -5,11 +5,12 @@ import Section from '../sections';
 import { reducedMotion } from '../utils/assets';
 import { play } from '../utils/sfx';
 import SwIcon from './SwIcon';
+import { useDockOpen } from './MusicDock';
 
 const Ico = ({ id }) => <img src={asset(`/assets/icons/${id}.webp`)} alt="" />;
 // Window grows from the clicked icon (FLIP: icon rect → window rect), overshoots slightly, then reveals content.
 export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
-  const sec = sections.find((s) => s.id === id), el = useRef(), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), [closing, setClosing] = useState(false);
+  const [dockOpen, setDockOpen] = useDockOpen(), sec = sections.find((s) => s.id === id), el = useRef(), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), [closing, setClosing] = useState(false);
   const flip = (reverse, done) => { const w = el.current, r = w.getBoundingClientRect(); if (!origin || reducedMotion()) return done();
     const dx = origin.left + origin.width / 2 - (r.left + r.width / 2), dy = origin.top + origin.height / 2 - (r.top + r.height / 2);
     const from = `translate(${dx}px,${dy}px) scale(${origin.width / r.width},${origin.height / r.height})`;
@@ -26,7 +27,7 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
     <div className={'win' + (shown ? ' shown' : '')} ref={el} role="dialog" aria-modal="true" aria-label={sec.title} onPointerMove={ptr}
     style={{ backgroundImage: `url(${asset('/assets/ui/main-window.webp')})` }}>
     <div className="wtab"><Ico id={id} /><b>{sec.label.toUpperCase()}</b></div>
-    <div className="wctl"><button aria-label="Minimise (closes)" onClick={close}>–</button><button aria-label="Maximise" tabIndex={-1}>▢</button><button className="wclose" aria-label="Close window and return to desktop" onClick={close}>✕</button></div>
+    <div className="wctl"><button aria-label="Minimise (closes)" onClick={close}>–</button><button aria-label="Maximise" tabIndex={-1}>▢</button><button className="wsnd dock-btn" data-sfx="tick" aria-label={dockOpen ? 'Hide music player' : 'Music and volume'} aria-expanded={dockOpen} onClick={() => setDockOpen((o) => !o)}>{dockOpen ? '✕' : '♪'}</button><button className="wclose" aria-label="Close window and return to desktop" onClick={close}>✕</button></div>
     <div className="wbody">
       <nav className="rail" aria-label="Sections">
         <button className="rail-back" onClick={close} aria-label="Back to menu" title="Back to menu">‹</button>

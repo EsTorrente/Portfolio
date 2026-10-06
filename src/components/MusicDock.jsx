@@ -42,7 +42,7 @@ export default function MusicDock({ open = false, compact = false }) {
     addEventListener('pointerdown', out, true); addEventListener('keydown', esc);
     return () => { removeEventListener('pointerdown', out, true); removeEventListener('keydown', esc); }; }, [peek, collapsed]);
   const has = s.tracks.length > 0, info = INFO[parseInt((s.tracks[s.idx]?.file || '').slice(-2), 10) - 1] || {}, pct = s.dur ? (s.time / s.dur) * 100 : 0;
-  return (<aside className={'dock' + (mini ? ' mini' : '') + ' tabbed' + (compact && open ? ' gone' : '')} aria-label="Music player" aria-hidden={compact && !peek ? true : undefined}>
+  return (<aside className={'dock' + (mini ? ' mini' : '') + ' tabbed'} aria-label="Music player" aria-hidden={compact && !peek ? true : undefined}>
     <div className="mp">
       <img className="mp-cover" src={asset(info.cover || COVER)} alt="" draggable="false" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = asset(FALLBACK); }} />
       <div className="mp-meta"><b>{has ? info.title || 'Track ' + s.tracks[s.idx].file.slice(-2) : 'No songs yet'}</b><span>{has ? info.artist || '' : 'add song-01.mp3 to assets/audio'}</span></div>

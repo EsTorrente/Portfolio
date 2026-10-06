@@ -629,9 +629,16 @@ html.wideabout .ab-sheet .ab-ban .hand{font-size:max(1.5cqw,13px)}
 html.wideabout .ab-sheet>*{overflow:auto;-webkit-overflow-scrolling:touch}
 
 /* gallery: flex-column masonry (see Masonry in sections/index.jsx) — replaces CSS multi-column, which made thumbnails vanish on iPad Safari */
-.masonry,html.compact .masonry,html.tablet.compact .masonry{columns:auto!important;column-gap:normal!important;display:flex;align-items:flex-start;gap:18px}
-html.tablet.compact .masonry{gap:16px}
-html.compact:not(.tablet) .masonry{gap:12px}
-@media (max-width:760px){.masonry{gap:12px}}
-.mcol{flex:1 1 0;min-width:0}
+/* ✏️ spacing between pictures: change --mg (desktop) / the tablet + phone values below */
+.masonry,html.compact .masonry,html.tablet.compact .masonry{--mg:30px;columns:auto!important;column-gap:var(--mg)!important;display:flex;align-items:flex-start;gap:var(--mg)}
+html.tablet.compact .masonry{--mg:28px}
+html.compact:not(.tablet) .masonry{--mg:20px}
+@media (max-width:760px){.masonry{--mg:20px}}
+.mcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:var(--mg)}.mcol>.art{margin:0}
 .art{animation-fill-mode:backwards} /* same look, but no animation layer left running on every tile once it has finished */
+
+/* phone + tablet: music / volume button in the window's top-right controls (opens the same player pop-over as the ♪ in the top bar) */
+.wctl .wsnd{display:none}
+html.compact .wctl .wsnd{display:block}
+html.compact .wctl .wsnd[aria-expanded=true]{background:var(--o2)}
+html.compact .dock{z-index:30}
