@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import AboutMore from '../components/AboutMore';
 import Media from '../components/Media';
 import MediaViewer from '../components/MediaViewer';
 import ProjectViewer from '../components/ProjectViewer';
@@ -54,7 +55,7 @@ function Masonry({ children }) {
 }
 function SecIntro({ d, mid }) { return <header className={'sec-intro' + (mid ? ' mid' : '')}><h3>{d.title}</h3><p>{d.text}</p></header>; }
 function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio. "ALL" groups pieces by category, each with its intro.
-  const cats = filter === 'ALL' ? Object.keys(D.illustrationIntro) : [filter]; const [v, setV] = useState(null);
+  const cats = D.illustrationIntro[filter] ? [filter] : Object.keys(D.illustrationIntro); // unknown/stale filter (e.g. 'HAND-PAINTED TEXTURES' from another section) → show everything instead of crashing const [v, setV] = useState(null);
   const items = cats.flatMap((c) => D.illustration.filter((i) => i.category === c)); let off = 0;
   return (<><div className="gallery" key={filter}>{cats.map((c) => { const intro = D.illustrationIntro[c], list = D.illustration.filter((i) => i.category === c), base = off; off += list.length;
     return (<section key={c} className="gcat">
@@ -80,13 +81,17 @@ function Awards() { // collectible paper cards over your drawn base. Click one �
     {v !== null && <ProjectViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
+const bold = (t) => t.split('**').map((x, j) => (j % 2 ? <strong key={j}>{x}</strong> : x)); // **bold**
 function About() { // (bio panel: scroll hint below) positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*). Portrait/polaroids are painted into the art.
-  const A = about, C = A.contact, bio = useRef(), [more, setMore] = useState(false); // `more` = the bio still has text below → show the "scroll" hint
+  const A = about, C = A.contact, bio = useRef(), [more, setMore] = useState(false), [moreOpen, setMoreOpen] = useState(false); // `more` = the bio still has text below → show the "scroll" hint
   useLayoutEffect(() => { const el = bio.current; if (!el) return; const f = () => setMore(el.scrollHeight - el.clientHeight - el.scrollTop > 6); f(); el.addEventListener('scroll', f, { passive: true }); const ro = new ResizeObserver(f); ro.observe(el); return () => { el.removeEventListener('scroll', f); ro.disconnect(); }; }, []);
   return (<div className="about" style={{ '--bg': `url(${new URL(asset('/assets/ui/about-layout.webp'), document.baseURI).href})` }}>
     <div className="ab-sheet">
       {A.sticker && <div className="ab-note"><span>{A.sticker}</span></div>}
-      <section className="ab-bio paper" ref={bio}><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p.split('**').map((t, j) => (j % 2 ? <strong key={j}>{t}</strong> : t))}</p>)}</section>
+      <section className="ab-bio paper" ref={bio}><h3>{A.bioTitle}</h3>
+        <p className="ab-lead">{bold(A.headline)}</p>
+        {A.bio.map((b, i) => (typeof b === 'string' ? <p key={i}>{bold(b)}</p> : b.h ? <h4 key={i}>{b.h}</h4> : <p key={i} className={b.quote ? 'ab-quote' : undefined}>{bold(b.p)}</p>))}
+        <div className="ab-more"><button onClick={() => setMoreOpen(true)} aria-haspopup="dialog">{A.moreButton} ✦</button></div></section>
       <button className={'ab-scroll' + (more ? ' on' : '')} tabIndex={more ? 0 : -1} aria-label="Scroll the text down" onClick={() => bio.current?.scrollBy({ top: bio.current.clientHeight * 0.8, behavior: 'smooth' })}>▼ SCROLL</button>
       <section className="ab-skills paper"><h3>★ {A.skillsTitle}</h3><Tags t={A.skills} /></section>
       <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} className={s.icon ? 'has-icon' : ''} style={s.icon ? undefined : { background: s.c }}>{s.icon ? <TrimmedIcon src={asset(s.icon)} alt={s.name} /> : s.short}<small>{s.name}</small></span>)}</div></section>
@@ -95,7 +100,8 @@ function About() { // (bio panel: scroll hint below) positions are % regions of 
         <li><a href={`mailto:${C.email}`}>{C.email}</a></li><li><a href={`tel:${C.phone.replace(/\s/g, '')}`}>{C.phone}</a></li>
         <li><a href={C.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a></li></ul></section>
       <section className="ab-ban paper"><p className="hand">{A.banner}</p></section>
-    </div></div>);
+    </div>
+    {moreOpen && <AboutMore more={A.more} onClose={() => setMoreOpen(false)} />}</div>);
 }
 
 function Opinions() {

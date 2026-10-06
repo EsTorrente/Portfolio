@@ -43,7 +43,7 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
               {s.filters.map((f, k) => <button key={f} style={{ '--k': k }} tabIndex={open ? 0 : -1} data-sfx="tick" className={f === filter ? 'on' : ''} onClick={() => setFilter(f)} aria-pressed={f === filter}><SwIcon name={f} />{f}</button>)}</div></div>}
           </div>); })}
         </nav>
-        <div className="content"><Section id={id} filter={filter} /></div>
+        <div className="content"><Section id={id} filter={sec.filters?.includes(filter) ? filter : 'ALL'} /></div>
       </div>
       <button className="esc" onClick={close}>‹ ESC / CLOSE</button>
       <button className="back-menu" onClick={close}>‹ Back to menu</button>
