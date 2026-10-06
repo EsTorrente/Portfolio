@@ -86,7 +86,8 @@ function About() { // (bio panel: scroll hint below) positions are % regions of 
   return (<div className="about" style={{ '--bg': `url(${new URL(asset('/assets/ui/about-layout.webp'), document.baseURI).href})` }}>
     <div className="ab-sheet">
       {A.sticker && <div className="ab-note"><span>{A.sticker}</span></div>}
-      <section className="ab-bio paper" ref={bio}><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p.split('**').map((t, j) => (j % 2 ? <strong key={j}>{t}</strong> : t))}</p>)}<span className={'scroll-hint' + (more ? ' on' : '')} aria-hidden="true"><b>▼ SCROLL</b></span></section>
+      <section className="ab-bio paper" ref={bio}><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p.split('**').map((t, j) => (j % 2 ? <strong key={j}>{t}</strong> : t))}</p>)}</section>
+      <button className={'ab-scroll' + (more ? ' on' : '')} tabIndex={more ? 0 : -1} aria-label="Scroll the text down" onClick={() => bio.current?.scrollBy({ top: bio.current.clientHeight * 0.8, behavior: 'smooth' })}>▼ SCROLL</button>
       <section className="ab-skills paper"><h3>★ {A.skillsTitle}</h3><Tags t={A.skills} /></section>
       <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} className={s.icon ? 'has-icon' : ''} style={s.icon ? undefined : { background: s.c }}>{s.icon ? <TrimmedIcon src={asset(s.icon)} alt={s.name} /> : s.short}<small>{s.name}</small></span>)}</div></section>
       <section className="ab-int paper"><h3>♥ {A.learnTitle}</h3><ul>{A.learn.map((x) => <li key={x.name}><b>{x.name}</b>{x.text && <span>{x.text}</span>}</li>)}</ul></section>
