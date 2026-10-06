@@ -18,7 +18,7 @@ export default function MaskMatch() {
     else { lock.current = true; setTimeout(() => { setCards((cs) => cs.map((x, k) => (k === a || k === b ? { ...x, up: false } : x))); lock.current = false; }, 800); } };
   const again = () => { setCards(deal()); setMoves(0); setTime(0); setRun(false); setPend(null); lock.current = false; };
   return (<div className={'mm' + (lb ? ' lb-on' : '')}>
-    <div className="arc-hud"><span>MOVES {moves}</span><span>TIME {time}s</span><span>BEST {best() || '—'}</span><button className="lb-btn" onClick={() => setLb(true)} aria-label="Leaderboard" data-sfx="none">🏆</button></div>
+    <div className="arc-hud"><span>MOVES {moves}</span><span>TIME {time}s</span><span>BEST {best() || '-'}</span><button className="lb-btn" onClick={() => setLb(true)} aria-label="Leaderboard" data-sfx="none">🏆</button></div>
     <div className="mm-grid" role="group" aria-label="Memory cards">{cards.map((c, i) => (
       <button key={i} className={'mm-card' + (c.up || c.ok ? ' up' : '') + (c.ok ? ' ok' : '')} onClick={() => flip(i)} aria-label={c.up || c.ok ? `Cat mask ${c.v + 1}` : 'Hidden card'} data-sfx="none">
         <span className="in"><img className="bk" src={back} alt="" draggable="false" /><img className="fr" src={faces[c.v]} alt="" draggable="false" /></span></button>))}</div>

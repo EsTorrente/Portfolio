@@ -653,3 +653,17 @@ html.tablet.compact .dock{right:max(20px,env(safe-area-inset-right))}
 .sec-intro p{font-size:max(11px,.95cqw);line-height:1.6;opacity:.85;margin:.4em 0}
 .gcat .gtag{display:block;margin-top:.15em;font:700 max(11px,.95cqw) var(--body);letter-spacing:.06em;color:var(--y2)}
 html.compact .sec-intro p{font-size:13px}html.compact .gcat .gtag{font-size:13px}
+
+/* About: the bio stops above the little ✦ star (panel ends at ~50% of the art), shows a scroll hint, and the sticky note under the picture has its text */
+.ab-bio{height:45.6%;scrollbar-width:thin;scrollbar-color:#b66a1f #b66a1f26}
+.ab-bio::-webkit-scrollbar{width:9px}.ab-bio::-webkit-scrollbar-thumb{background:#b66a1f;border-radius:9px}.ab-bio::-webkit-scrollbar-track{background:#b66a1f26;border-radius:9px}
+.scroll-hint{position:sticky;bottom:0;display:grid;place-items:end center;height:4.2cqw;margin:-4.2cqw -1.8cqw -1.6cqw;padding-bottom:.5cqw;pointer-events:none;opacity:0;transition:opacity .3s;background:linear-gradient(#f0c99a00,#f0c99aee 70%)}
+.scroll-hint.on{opacity:1}
+.scroll-hint b{font:700 max(10px,.8cqw) var(--mono);letter-spacing:.14em;color:#fff4dc;background:#b66a1f;padding:.25cqw 1cqw;border-radius:99px;box-shadow:0 2px 6px #0006;animation:hintBob 1.3s ease-in-out infinite}
+@keyframes hintBob{0%,100%{transform:translateY(0)}50%{transform:translateY(.35cqw)}}
+.ab-note{left:15.9%;top:50.5%;width:12.3%;height:10.5%;display:grid;place-items:center;overflow:visible;transform:rotate(-9deg);pointer-events:none;text-align:center}
+.ab-note span{font:700 2.3cqw/1 var(--hand);color:#4a2308;padding:0 .5cqw}
+@media (max-width:760px){.scroll-hint{display:none}.ab-note{display:block!important;overflow:visible!important;transform:rotate(-2deg);justify-self:center;background:#f6b94f;border:2px solid #b66a1f;border-radius:3px;box-shadow:0 4px 8px #0008;padding:6px 16px!important;width:auto!important;height:auto!important}.ab-note span{font-size:26px;padding:0}}
+html.compact:not(.wideabout) .scroll-hint{display:none}
+html.compact:not(.wideabout) .ab-note{display:block!important;overflow:visible!important;transform:rotate(-2deg);justify-self:center;grid-column:1/-1;background:#f6b94f;border:2px solid #b66a1f;border-radius:3px;box-shadow:0 4px 8px #0008;padding:6px 16px!important;width:auto!important;height:auto!important}
+html.compact:not(.wideabout) .ab-note span{font-size:26px;padding:0}

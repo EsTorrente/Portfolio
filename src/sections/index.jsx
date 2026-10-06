@@ -80,11 +80,13 @@ function Awards() { // collectible paper cards over your drawn base. Click one �
     {v !== null && <ProjectViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
-function About() { // positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*). Portrait/polaroids are painted into the art.
-  const A = about, C = A.contact;
+function About() { // (bio panel: scroll hint below) positions are % regions of the 3840×2160 layout art — tweak in styles/main.css (.ab-*). Portrait/polaroids are painted into the art.
+  const A = about, C = A.contact, bio = useRef(), [more, setMore] = useState(false); // `more` = the bio still has text below → show the "scroll" hint
+  useLayoutEffect(() => { const el = bio.current; if (!el) return; const f = () => setMore(el.scrollHeight - el.clientHeight - el.scrollTop > 6); f(); el.addEventListener('scroll', f, { passive: true }); const ro = new ResizeObserver(f); ro.observe(el); return () => { el.removeEventListener('scroll', f); ro.disconnect(); }; }, []);
   return (<div className="about" style={{ '--bg': `url(${new URL(asset('/assets/ui/about-layout.webp'), document.baseURI).href})` }}>
     <div className="ab-sheet">
-      <section className="ab-bio paper"><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p.split('**').map((t, j) => (j % 2 ? <strong key={j}>{t}</strong> : t))}</p>)}</section>
+      {A.sticker && <div className="ab-note"><span>{A.sticker}</span></div>}
+      <section className="ab-bio paper" ref={bio}><h3>{A.bioTitle}</h3>{A.bio.map((p, i) => <p key={i}>{p.split('**').map((t, j) => (j % 2 ? <strong key={j}>{t}</strong> : t))}</p>)}<span className={'scroll-hint' + (more ? ' on' : '')} aria-hidden="true"><b>▼ SCROLL</b></span></section>
       <section className="ab-skills paper"><h3>★ {A.skillsTitle}</h3><Tags t={A.skills} /></section>
       <section className="ab-soft paper"><h3>SOFTWARE</h3><div className="soft">{A.software.map((s) => <span key={s.name} title={s.name} className={s.icon ? 'has-icon' : ''} style={s.icon ? undefined : { background: s.c }}>{s.icon ? <TrimmedIcon src={asset(s.icon)} alt={s.name} /> : s.short}<small>{s.name}</small></span>)}</div></section>
       <section className="ab-int paper"><h3>♥ {A.learnTitle}</h3><ul>{A.learn.map((x) => <li key={x.name}><b>{x.name}</b>{x.text && <span>{x.text}</span>}</li>)}</ul></section>

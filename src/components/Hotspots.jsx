@@ -33,7 +33,7 @@ export default function Hotspots() {
     </div></div>
     {/* Phones: the three objects become buttons at the top-middle of the screen (the glowing stars above are hidden by CSS) */}
     <nav className="hs-bar" aria-label="Mini-games">{hotspots.map((h) => { const off = COARSE && h.game === 'typecat'; return (
-      <button key={h.id} className={'hs-btn' + (off ? ' off' : '')} data-sfx="none" disabled={off} aria-label={off ? `${h.label} (needs a keyboard, PC only)` : h.aria} title={off ? 'Needs a keyboard — play it on a PC' : undefined} onClick={() => { play('open'); setGame(h); }}>
+      <button key={h.id} className={'hs-btn' + (off ? ' off' : '')} data-sfx="none" disabled={off} aria-label={off ? `${h.label} (needs a keyboard, PC only)` : h.aria} title={off ? 'Needs a keyboard, so play it on a PC' : undefined} onClick={() => { play('open'); setGame(h); }}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d={ICON[h.id]} /></svg><span>{h.label}{off && <small>PC ONLY</small>}</span></button>); })}</nav>
     {game && <Guard key={game.id} onError={() => setGame(null)}><Suspense fallback={null}><Arcade game={game.game} onClose={() => setGame(null)} /></Suspense></Guard>}
   </>);

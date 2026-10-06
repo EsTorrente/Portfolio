@@ -31,7 +31,7 @@ function Player({ item, media, cur: want }) {
   useEffect(() => () => release(tok.current), [cur, item.id]); // video changed / popup closed → music comes back
   useEffect(() => { // browsers (esp. Safari) refuse autoplay for videos that have an audio track unless muted → if blocked, retry muted so it always starts
     const v = vid.current; if (!v) return; const go = () => v.play()?.catch(() => { v.muted = true; v.play()?.catch(() => {}); }); go(); v.addEventListener('loadeddata', go, { once: true }); return () => v.removeEventListener('loadeddata', go); }, [m.src, bad]);
-  if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} — YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
+  if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} on YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
   if (m.kind === 'image') return <Zoom fill resetKey={m.src}><Media key={m.src} src={m.src} fallback={m.fallback} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" /></Zoom>;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
   const toggleFs = () => { const el = box.current;
