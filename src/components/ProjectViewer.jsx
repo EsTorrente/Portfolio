@@ -16,7 +16,7 @@ function Slate({ n, title }) { // shown when a video file doesn't exist yet
 
 // What the left side can show, in priority order: a YouTube embed, a list of videos, or an image gallery.
 const mediaOf = (it) => it.youtube ? [{ kind: 'yt', title: it.title, id: it.youtube }]
-  : it.videos?.length ? it.videos.map((v) => ({ kind: 'video', ...v }))
+  : it.videos?.length ? it.videos.map((v) => (v.youtube ? { kind: 'yt', title: v.title, id: v.youtube } : { kind: 'video', ...v })) // a project can mix your own videos with YouTube ones
   : it.images?.length > 1 ? it.images.map((src, i) => ({ kind: 'image', title: it.imageTitles?.[i] || `Image ${String(i + 1).padStart(2, '0')}`, src }))
   : [{ kind: 'image', title: it.title, src: it.images?.[0] || it.image, fallback: it.fallback }];
 
