@@ -668,3 +668,8 @@ html.compact:not(.wideabout) .ab-note span{font-size:26px;padding:0}
 .ab-scroll{left:45.4%;top:52.9%;width:8%;height:4.6%;overflow:visible;display:grid;place-items:center;border:0;border-radius:99px;background:#b66a1f;color:#fff4dc;font:700 max(10px,.85cqw) var(--mono);letter-spacing:.12em;box-shadow:0 2px 6px #0006;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,background .2s;animation:hintBob 1.3s ease-in-out infinite}
 .ab-scroll.on{opacity:1;pointer-events:auto}.ab-scroll:hover{background:#8f4d12}
 @keyframes hintBob{0%,100%{transform:translateY(0)}50%{transform:translateY(.35cqw)}}
+
+/* About bio: a bit more room at the top (text no longer pokes out above the paper's torn edge when scrolling) + soft fade at the top edge */
+.ab-bio{top:7%;height:43.5%;-webkit-mask-image:linear-gradient(transparent 0,#000 1.5cqw);mask-image:linear-gradient(transparent 0,#000 1.5cqw)}
+@media (max-width:760px){.ab-bio{-webkit-mask-image:none;mask-image:none}}
+html.compact:not(.wideabout) .ab-bio{-webkit-mask-image:none;mask-image:none}

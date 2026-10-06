@@ -20,7 +20,7 @@ export const about = {
     "That mindset has taken me from character animation to rigging, procedural systems, shaders, VR, game design, programming, interactive storytelling, and production management.",
     "I love coming up with ideas, but I care just as much about making them **impactful**. To me, a good idea becomes much more interesting when you can turn it into something that benefits humanity and helps build a more **empathetic, ethical and kind world**.",
     "Ultimately, I want to build things that are imaginative, technically interesting, and useful for something beyond themselves. Whether that means telling a story, solving a practical problem, teaching something, or simply making someone curious enough to click one more thing, I want my work to give people a reason to interact with it.",
-    "**I like making things. I like figuring things out. And I like making weird ideas work.**"],
+    "**I like difficult problems, ambitious ideas, and figuring out how to make them real.**"],
   sticker: 'Absolute generalist', // text on the yellow sticky note under your picture
   skillsTitle: 'MAIN SKILLS',
   skills: ['Project Management', 'Rigging', '3D Animation', 'Experience Design', 'Emotional Storytelling', 'Creative Direction'],
