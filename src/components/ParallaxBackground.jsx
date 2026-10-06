@@ -25,7 +25,7 @@ export default function ParallaxBackground({ dim = false }) {
       const W = innerWidth;
       for (const k in LAYERS) {
         const a = LAYERS[k].amp * W, s = 1 + (LAYERS[k].amp * 2 + 0.006); // scale just enough to hide the edges
-        els[k].style.transform = `translate3d(${(-x * a).toFixed(2)}px,${(-y * a).toFixed(2)}px,0) scale(${s.toFixed(4)})`;
+        if (els[k]) els[k].style.transform = `translate3d(${(-x * a).toFixed(2)}px,${(-y * a).toFixed(2)}px,0) scale(${s.toFixed(4)})`;
       }
     };
     addEventListener('pointermove', mv); loop();

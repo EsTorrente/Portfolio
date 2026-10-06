@@ -20,7 +20,7 @@ const fromHash = () => { const id = location.hash.replace(/^#\/?/, ''); return s
 
 function Cursor() { // custom cursor on fine pointers only. Dot and ring move together instantly (no trailing).
   useEffect(() => { if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return; const d = document.getElementById('cur'), r = document.getElementById('ring');
-    const m = (e) => { const t = `translate3d(${e.clientX}px,${e.clientY}px,0)`; d.style.transform = t; r.style.transform = t; r.classList.toggle('big', !!e.target.closest('button,a,input,[role=button]')); };
+    const m = (e) => { if (!d || !r) return; const t = `translate3d(${e.clientX}px,${e.clientY}px,0)`; d.style.transform = t; r.style.transform = t; r.classList.toggle('big', !!e.target.closest('button,a,input,[role=button]')); };
     addEventListener('pointermove', m, { passive: true }); document.body.classList.add('cc'); return () => { removeEventListener('pointermove', m); document.body.classList.remove('cc'); }; }, []);
   return <><i id="ring" className="ring" /><i id="cur" className="dot" /></>;
 }

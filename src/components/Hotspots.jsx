@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { hotspots } from '../data/hotspots';
 import { reducedMotion, isMobile, appleVideo } from '../utils/assets';
 import { play } from '../utils/sfx';
+import Guard from './Guard';
 const Arcade = lazy(() => import('./Arcade')); // games load only when first opened
 const COARSE = matchMedia('(pointer:coarse)').matches; // real phones/tablets: Type-a-Cat needs a physical keyboard
 const ICON = { pc: 'M3 4h18v12H3zM8 20h8M12 16v4', glasses: 'M5 3h14v15H7.5A2.5 2.5 0 0 0 5 20.5zM5 20.5V3M9 7h6', pillar: 'M6 3h12M8 3v14M16 3v14M5 20h14M6 17h12' }; // pc / book / pillar
@@ -10,13 +11,13 @@ const ICON = { pc: 'M3 4h18v12H3zM8 20h8M12 16v4', glasses: 'M5 3h14v15H7.5A2.5 
 export default function Hotspots() {
   const wrap = useRef(), art = useRef(), [game, setGame] = useState(null), debug = location.search.includes('hotspots');
   useEffect(() => {
-    const fit = () => { const W = innerWidth, H = innerHeight, s = Math.max(W / 1920, H / 1080), a = art.current; // object-fit: cover
+    const fit = () => { const W = innerWidth, H = innerHeight, s = Math.max(W / 1920, H / 1080), a = art.current; if (!a) return; // object-fit: cover
       Object.assign(a.style, { width: 1920 * s + 'px', height: 1080 * s + 'px', left: (W - 1920 * s) / 2 + 'px', top: (H - 1080 * s) / 2 + 'px' }); };
     fit(); addEventListener('resize', fit);
     let tx = 0, ty = 0, x = 0, y = 0, raf; const still = reducedMotion() || isMobile() || appleVideo(), amp = 0.011; // same numbers as the foreground layer in ParallaxBackground
     const mv = (e) => { tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1; };
-    const loop = () => { raf = requestAnimationFrame(loop); x += (tx - x) * 0.06; y += (ty - y) * 0.06; const a = amp * innerWidth;
-      wrap.current.style.transform = `translate3d(${(-x * a).toFixed(2)}px,${(-y * a).toFixed(2)}px,0) scale(${(1 + amp * 2 + 0.006).toFixed(4)})`; };
+    const loop = () => { raf = requestAnimationFrame(loop); const w = wrap.current; if (!w) return; x += (tx - x) * 0.06; y += (ty - y) * 0.06; const a = amp * innerWidth;
+      w.style.transform = `translate3d(${(-x * a).toFixed(2)}px,${(-y * a).toFixed(2)}px,0) scale(${(1 + amp * 2 + 0.006).toFixed(4)})`; };
     if (!still) { addEventListener('pointermove', mv); loop(); }
     return () => { removeEventListener('resize', fit); removeEventListener('pointermove', mv); cancelAnimationFrame(raf); };
   }, []);
@@ -34,6 +35,6 @@ export default function Hotspots() {
     <nav className="hs-bar" aria-label="Mini-games">{hotspots.map((h) => { const off = COARSE && h.game === 'typecat'; return (
       <button key={h.id} className={'hs-btn' + (off ? ' off' : '')} data-sfx="none" disabled={off} aria-label={off ? `${h.label} (needs a keyboard, PC only)` : h.aria} title={off ? 'Needs a keyboard — play it on a PC' : undefined} onClick={() => { play('open'); setGame(h); }}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d={ICON[h.id]} /></svg><span>{h.label}{off && <small>PC ONLY</small>}</span></button>); })}</nav>
-    {game && <Suspense fallback={null}><Arcade game={game.game} onClose={() => setGame(null)} /></Suspense>}
+    {game && <Guard key={game.id} onError={() => setGame(null)}><Suspense fallback={null}><Arcade game={game.game} onClose={() => setGame(null)} /></Suspense></Guard>}
   </>);
 }

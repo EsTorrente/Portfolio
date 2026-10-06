@@ -10,11 +10,17 @@ export const site = {
 };
 
 export const about = {
-  bioTitle: 'A LITTLE ABOUT ME',
+  bioTitle: 'ABOUT ME',
   bio: [
-    "I'm a 21-year-old Colombian **Digital Entertainment Design Engineer**, passionate about creating **characters, animations, worlds, mechanics, and interactive experiences** that can help **solve real-world problems**.",
-    "I naturally tend to take on **leadership roles**. Through years of **managing teams of 6\u201330 people** in Scouts and university projects, I've developed strong skills in **organization, communication, delegation, planning**, and adapting to whatever a project needs.",
-    'I believe **art, kindness, and ethical technology** can help build a more **imaginative and empathetic world**.'],
+    "I’m a **multidisciplinary designer, artist, and problem solver** who likes figuring out how things work... and then finding a way to make them better.",
+    "I’m a Colombian **Engineer in Design for Digital Entertainment**, working across **3D art, rigging, animation, interactive experiences, programming, visual development, and production**.",
+    "I’m especially interested in the **space between disciplines**. I like understanding how art, technology, storytelling, and interaction can work together to create experiences that would be difficult to achieve from only one perspective.",
+    "I’ve also spent a significant part of my life **coordinating people and projects**. Through university projects and years of leadership experience in Scouts, I’ve learned how to organize teams, delegate responsibilities, identify people’s strengths, communicate clearly, manage changing priorities, and keep a project moving when things inevitably go wrong.",
+    "One of my biggest strengths is **adaptability**. I’m comfortable being the person who says, “I don’t know how to do this yet, let me figure it out.”",
+    "That mindset has taken me from character animation to rigging, procedural systems, shaders, VR, game design, programming, interactive storytelling, and production management.",
+    "I love coming up with ideas, but I care just as much about making them **impactful**. To me, a good idea becomes much more interesting when you can turn it into something that benefits humanity and helps build a more **empathetic, ethical and kind world**.",
+    "Ultimately, I want to build things that are imaginative, technically interesting, and useful for something beyond themselves. Whether that means telling a story, solving a practical problem, teaching something, or simply making someone curious enough to click one more thing, I want my work to give people a reason to interact with it.",
+    "**I like making things. I like figuring things out. And I like making weird ideas work.**"],
   skillsTitle: 'MAIN SKILLS',
   skills: ['Project Management', 'Rigging', '3D Animation', 'Experience Design', 'Emotional Storytelling', 'Creative Direction'],
   learnTitle: 'LOOKING TO LEARN',

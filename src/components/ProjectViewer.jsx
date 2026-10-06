@@ -81,7 +81,7 @@ function Viewer({ items, index, onClose, onIndex }) {
       <div className="pv-media">
         <div className="pv-stage"><Player item={it} media={media} cur={c} /></div>
         {media.length > 1 && (<ol className="pv-list" ref={strip} aria-label={media[0].kind === 'image' ? 'Images' : 'Videos'}>{media.map((v, i) => (
-          <li key={v.src || v.id}><button className={i === c ? 'on' : ''} onClick={() => setCur(i)} aria-current={i === c}>{media[0].kind === 'image' ? <img src={asset(v.src)} alt="" onError={(e) => (e.currentTarget.style.display = 'none')} /> : null}<span>{String(i + 1).padStart(2, '0')}</span>{media[0].kind === 'image' ? '' : v.title}</button></li>))}</ol>)}
+          <li key={v.src || v.id}><button className={i === c ? 'on' : ''} onClick={() => setCur(i)} aria-current={i === c}>{media[0].kind === 'image' ? <img src={asset(v.src)} alt="" onError={(e) => { if (e.target) e.target.style.display = 'none'; }} /> : null}<span>{String(i + 1).padStart(2, '0')}</span>{media[0].kind === 'image' ? '' : v.title}</button></li>))}</ol>)}
       </div>
       <div className="pv-text" ref={body}>
         <header><small>{it.subtitle}</small><h3>{it.title}</h3></header>

@@ -21,7 +21,7 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
   const close = () => { if (closing) return; play('close'); setClosing(true); setShown(false); flip(true, onClosed); };
   useEffect(() => { const k = (e) => e.key === 'Escape' && close(); addEventListener('keydown', k); return () => removeEventListener('keydown', k); });
   useEffect(() => { el.current.querySelector('.wclose').focus(); }, []);
-  const ptr = (e) => { const w = el.current, r = w.getBoundingClientRect(); w.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3)); w.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3)); };
+  const ptr = (e) => { const w = el.current; if (!w) return; const r = w.getBoundingClientRect(); w.style.setProperty('--px', ((e.clientX - r.left) / r.width - 0.5).toFixed(3)); w.style.setProperty('--py', ((e.clientY - r.top) / r.height - 0.5).toFixed(3)); };
   return (<div className={'wrap' + (closing ? ' closing' : '')}>
     <img className="deco deco-br" src={asset('/assets/ui/back-right.webp')} alt="" draggable="false" />
     <div className={'win' + (shown ? ' shown' : '')} ref={el} role="dialog" aria-modal="true" aria-label={sec.title} onPointerMove={ptr}

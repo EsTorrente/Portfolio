@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useRef } from 'react';
 import { play } from '../utils/sfx';
+import Guard from './Guard';
 const GAMES = { // title shown in the little window's title bar
   catman: { title: 'CAT-MAN.EXE', C: lazy(() => import('../games/CatMan')) },
   typecat: { title: 'TYPE-A-CAT.EXE', C: lazy(() => import('../games/TypeCat')) },
@@ -17,5 +18,5 @@ export default function Arcade({ game, onClose }) {
   return (<div className="arc" ref={root} role="dialog" aria-modal="true" aria-label={g.title} onPointerDown={(e) => !touch && e.target === e.currentTarget && close()}>
     <div className="arc-win" ref={box} tabIndex={-1}>
       <div className="arc-bar"><span>★ {g.title}</span><button onClick={close} aria-label="Close game" data-sfx="none">✕</button></div>
-      <div className="arc-body"><Suspense fallback={<p className="arc-load">LOADING…</p>}><g.C /></Suspense></div></div></div>);
+      <div className="arc-body"><Guard fallback={<p className="arc-load">COULDN'T LOAD THE GAME :(<br />Close it and try again.</p>}><Suspense fallback={<p className="arc-load">LOADING…</p>}><g.C /></Suspense></Guard></div></div></div>);
 }

@@ -52,12 +52,13 @@ function Masonry({ children }) {
   const lanes = Array.from({ length: cols }, () => []); children.forEach((c, i) => lanes[i % cols].push(c));
   return <div className="masonry" ref={ref}>{lanes.map((l, i) => <div className="mcol" key={i}>{l}</div>)}</div>;
 }
+function SecIntro({ d, mid }) { return <header className={'sec-intro' + (mid ? ' mid' : '')}><h3>{d.title}</h3><p>{d.text}</p></header>; }
 function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio. "ALL" groups pieces by category, each with its intro.
   const cats = filter === 'ALL' ? Object.keys(D.illustrationIntro) : [filter]; const [v, setV] = useState(null);
   const items = cats.flatMap((c) => D.illustration.filter((i) => i.category === c)); let off = 0;
   return (<><div className="gallery" key={filter}>{cats.map((c) => { const intro = D.illustrationIntro[c], list = D.illustration.filter((i) => i.category === c), base = off; off += list.length;
     return (<section key={c} className="gcat">
-      <header><h3>{c}</h3><p>{intro.text}</p><small>{intro.n} {intro.unit}</small></header>
+      <header><h3>{c}</h3>{intro.tagline && <strong className="gtag">{intro.tagline}</strong>}<p>{intro.text}</p><small>{intro.n} {intro.unit}</small></header>
       <Masonry>{list.map((it, k) => (
         <button key={it.id} className="art" style={{ '--n': k, '--r': (((base + k) * 53) % 5) - 2 + 'deg' }} onClick={() => setV(base + k)} aria-label={`View ${it.title}`}>
           <ArtPiece it={it} n={k} /></button>))}</Masonry></section>); })}</div>
@@ -67,7 +68,7 @@ function Gallery({ filter }) { // masonry, no crop, objects keep their own aspec
 function Awards() { // collectible paper cards over your drawn base. Click one → the big pop-up with the full text (same as projects).
   const [v, setV] = useState(null);
   const items = D.awards.map((a) => ({ ...a, subtitle: `${a.year} · ${a.organization}`, tags: [a.badge], fallback: '/assets/ui/award-card.webp', images: [a.image] })); // pop-up art = your award image, or the card drawing if there isn't one
-  return (<><div className="awards">{D.awards.map((a, n) => (
+  return (<><SecIntro d={D.awardsIntro} /><div className="awards">{D.awards.map((a, n) => (
     <article key={a.id} className="award" style={{ '--n': n, '--r': ((n * 41) % 5) - 2 + 'deg', backgroundImage: `url(${asset('/assets/ui/award-card.webp')})` }}>
       <div className="aslot"><Media src={a.image} alt={a.title} label="" ratio={1.4} quiet /></div>
       <span className="year">{a.year}</span>
@@ -102,6 +103,6 @@ function Opinions() {
 
 export default function Section({ id, filter }) {
   const rig = filter === 'ALL' ? D.rigging : D.rigging.filter((r) => r.software === filter);
-  return { rigging: <Grid items={rig} />, animation: <Grid items={D.animation} cls="wide" />, modelling: <Grid items={filter === '3D MODELS' ? D.modelling : filter === 'HAND-PAINTED TEXTURES' ? D.handpainted : [...D.modelling, ...D.handpainted]} />, illustration: <Gallery filter={filter} />,
+  return { rigging: <Grid items={rig} />, animation: <Grid items={D.animation} cls="wide" />, modelling: filter === '3D MODELS' ? <Grid items={D.modelling} /> : filter === 'HAND-PAINTED TEXTURES' ? <><SecIntro d={D.handpaintedIntro} /><Grid items={D.handpainted} /></> : <><Grid items={D.modelling} /><SecIntro d={D.handpaintedIntro} mid /><Grid items={D.handpainted} /></>, illustration: <Gallery filter={filter} />,
     awards: <Awards />, projects: <Grid items={D.projects} cls="wide big" />, about: <About />, opinions: <Opinions /> }[id];
 }
