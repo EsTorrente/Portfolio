@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Media from '../components/Media';
 import MediaViewer from '../components/MediaViewer';
 import ProjectViewer from '../components/ProjectViewer';
@@ -21,7 +21,8 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
     <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
       <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
         <Media src={THUMB_AT[it.id] != null ? null : it.image} video={it.videos?.[0]?.src} at={THUMB_AT[it.id]} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge"><SwIcon name={it.software} />{it.software}</em>}
-        {rich(it) && <span className="cta"><b>▶</b>{ctaLabel(it)}</span>}</button>
+        </button>
+      {rich(it) && <div className="cta" aria-hidden="true"><b>▶</b>{ctaLabel(it)}</div>}
       <h3>{it.title}</h3>{it.subtitle && <p className="csub">{it.subtitle}</p>}{it.description && <p>{it.description}</p>}
       {it.role && <p className="meta">ROLE: {it.role}</p>}
       <Tags t={it.tags || it.technologies} />
@@ -40,15 +41,26 @@ function ArtPiece({ it, n }) { // image, or an animated webm (muted loop). Loade
     {vis && <video src={asset(it.video)} autoPlay loop muted playsInline preload="auto" onLoadedData={() => setOk(true)} onError={() => setBad(true)} aria-label={it.title} />}</div>);
   return <Media src={it.video ? it.video : it.image} alt={it.title} label={it.title} ratio={ratio} />;
 }
+// Masonry made of plain flex columns instead of CSS multi-column: iPad Safari mishandles multi-column + rotated/animated items inside a scrolling pane (thumbnails turned invisible but stayed clickable).
+// Column counts mirror the old rules: desktop 3 (≥200px each) · tablet 3 (≥190px) · phones / narrow windows 2 (≥140px). Pieces are dealt left→right, row by row.
+function Masonry({ children }) {
+  const ref = useRef(), [cols, setCols] = useState(3);
+  useLayoutEffect(() => { const el = ref.current; if (!el) return;
+    const f = () => { const c = document.documentElement.classList, narrow = matchMedia('(max-width:760px)').matches, [max, min, gap] = c.contains('tablet') && c.contains('compact') ? [3, 190, 16] : c.contains('compact') || narrow ? [2, 140, 12] : [3, 200, 18];
+      setCols(Math.max(1, Math.min(max, Math.floor((el.clientWidth + gap) / (min + gap))))); };
+    f(); const ro = new ResizeObserver(f); ro.observe(el); return () => ro.disconnect(); }, []);
+  const lanes = Array.from({ length: cols }, () => []); children.forEach((c, i) => lanes[i % cols].push(c));
+  return <div className="masonry" ref={ref}>{lanes.map((l, i) => <div className="mcol" key={i}>{l}</div>)}</div>;
+}
 function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio. "ALL" groups pieces by category, each with its intro.
   const cats = filter === 'ALL' ? Object.keys(D.illustrationIntro) : [filter]; const [v, setV] = useState(null);
   const items = cats.flatMap((c) => D.illustration.filter((i) => i.category === c)); let off = 0;
   return (<><div className="gallery" key={filter}>{cats.map((c) => { const intro = D.illustrationIntro[c], list = D.illustration.filter((i) => i.category === c), base = off; off += list.length;
     return (<section key={c} className="gcat">
       <header><h3>{c}</h3><p>{intro.text}</p><small>{intro.n} {intro.unit}</small></header>
-      <div className="masonry">{list.map((it, k) => (
+      <Masonry>{list.map((it, k) => (
         <button key={it.id} className="art" style={{ '--n': k, '--r': (((base + k) * 53) % 5) - 2 + 'deg' }} onClick={() => setV(base + k)} aria-label={`View ${it.title}`}>
-          <ArtPiece it={it} n={k} /></button>))}</div></section>); })}</div>
+          <ArtPiece it={it} n={k} /></button>))}</Masonry></section>); })}</div>
     {v !== null && <MediaViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 

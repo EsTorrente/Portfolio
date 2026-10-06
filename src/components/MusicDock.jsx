@@ -4,7 +4,7 @@ import * as M from '../utils/music';
 // ✏️ EDIT ME: names shown in the player (same order as song-01, song-02, …). `cover` is optional (e.g. '/assets/audio/song-01.webp'); default is your logo.
 const INFO = [
   { title: 'Dawn Chorus', artist: 'Cosmo Sheldrake' }, { title: 'But Once a Child', artist: 'Cosmo Sheldrake' },
-  { title: 'Greenfields, Golden Sands', artist: 'Yusuf / Cat Stevens' }, { title: 'Quisiera Despertar', artist: 'Gustavo Pena - El príncipe' },
+  { title: 'Greenfields, Golden Sands', artist: 'Yusuf / Cat Stevens' }, { title: 'Quisiera Despertar', artist: 'Gustavo Pena - El príncipe' }, { title: 'Para Ver Las Estrellas', artist: 'Gustavo Pena - El príncipe' }, { title: 'Birth a Basket', artist: 'Cosmo Sheldrake' }
 ];
 const COVER = '/assets/audio/PlayerIcon.webp', FALLBACK = '/assets/intro/color-logo.webp'; // FALLBACK only shows if PlayerIcon.webp is missing
 const EV = ['pointerdown', 'pointerup', 'keydown', 'touchend', 'click'];

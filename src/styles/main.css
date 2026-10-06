@@ -65,7 +65,7 @@ video.layer{object-fit:cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:1.4cqw}.grid.wide{grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))}.grid.big{gap:2cqw}
 .card{position:relative;background:var(--bg2);border:1px solid #ff8c1844;border-radius:6px;padding:10px;animation:rise .6s cubic-bezier(.2,1.2,.4,1) both;animation-delay:calc(var(--n)*55ms);transition:transform .3s,border-color .3s}
 .card:hover{transform:translateY(-4px) rotate(-.4deg);border-color:var(--o2)}@keyframes rise{from{opacity:0;transform:translateY(24px) rotate(1.5deg)}}
-.thumb{position:relative;display:block;width:100%;background:#0d0705;border-radius:4px;overflow:hidden}.thumb img{width:100%;max-height:300px;object-fit:contain}
+.thumb{position:relative;display:block;width:100%;aspect-ratio:910/556;background:#0d0705;border-radius:4px;overflow:hidden}
 .badge{position:absolute;left:8px;bottom:8px;background:var(--o2);color:var(--bg);font-style:normal;font-size:10px;padding:3px 9px;border-radius:99px;font-weight:600}
 .play{position:absolute;right:10px;top:10px;background:#000a;border-radius:50%;width:32px;height:32px;font-size:0}
 .card h3{font-size:13px;letter-spacing:.1em;margin:12px 0 6px;color:var(--cr2)}.card p{font-size:11px;line-height:1.55;opacity:.8}.meta{margin-top:6px;color:var(--y)}
@@ -76,11 +76,12 @@ video.layer{object-fit:cover}
 /* clickable project cards: obvious call-to-action */
 .card.clickable{cursor:pointer;border-color:#ff8c1877}.card.clickable:hover{box-shadow:0 0 0 1px var(--o2),0 14px 30px #000a,0 0 24px #ff8c1840}
 .card .csub{font-size:10px;letter-spacing:.06em;color:var(--y);opacity:1;margin:-2px 0 8px}
-.cta{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 6px;font-size:9.5px;white-space:nowrap;font-weight:600;letter-spacing:.07em;color:var(--bg);background:linear-gradient(90deg,var(--o2),var(--y));transform:translateY(0);transition:padding .25s,filter .25s}
+.cta{position:relative;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 6px;margin-top:-1px;border-radius:0 0 4px 4px;font-size:9.5px;white-space:nowrap;font-weight:600;letter-spacing:.07em;color:var(--bg);background:linear-gradient(90deg,var(--o2),var(--y));transition:filter .25s;cursor:pointer}
 .cta b{position:relative;flex:none;width:20px;height:20px;border-radius:50%;background:var(--bg);font-size:0;animation:pulse 1.8s ease-out infinite}
 .cta b::after,.play::after,.pv-slate b::after{content:'';position:absolute;left:50%;top:50%;width:36%;height:42%;background:var(--y);clip-path:polygon(0 0,100% 50%,0 100%);transform:translate(-36%,-50%)} /* optical centre: a triangle's middle sits left of its bounding box */
 @keyframes pulse{0%{box-shadow:0 0 0 0 #1b100bcc}70%,100%{box-shadow:0 0 0 9px #1b100b00}}
-.clickable .thumb:hover .cta,.clickable:hover .cta{padding:13px 8px;filter:brightness(1.08)}
+.clickable:hover .cta{filter:brightness(1.1)}
+.thumb:has(+ .cta){border-radius:4px 4px 0 0}
 .clickable .thumb .badge{bottom:auto;top:8px}
 .more{display:inline-flex;gap:8px;align-items:center;margin-top:12px;padding:7px 14px;font-size:10.5px;font-weight:600;letter-spacing:.14em;border:1px solid var(--o2);border-radius:99px;color:var(--y2);transition:.2s}
 .more:hover,.clickable:hover .more{background:var(--o2);color:var(--bg)}.more b{transition:transform .2s}.more:hover b{transform:translateX(4px)}
@@ -174,7 +175,7 @@ video.layer{object-fit:cover}
 .pv-loading{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;background:#000c;color:var(--y2);font-size:11px;letter-spacing:.2em;pointer-events:none}
 .spin{display:block;width:30px;height:30px;border-radius:50%;border:3px solid #ff8c1844;border-top-color:var(--o2);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .ph.ldr{background:linear-gradient(100deg,#24150e 30%,#3a2113 50%,#24150e 70%) 0 0/250% 100%;animation:shim 1.4s linear infinite;min-height:90px}@keyframes shim{to{background-position:-150% 0}}
-.vthumb{display:block;width:100%;aspect-ratio:1.6;max-height:300px;object-fit:contain;background:#000}
+.vthumb{display:block;width:100%;background:#000}
 .vbox{position:relative;width:100%}.vbox:not(.ok) video{position:absolute;inset:0;width:100%;height:100%;opacity:0}.vbox:not(.ok) .ph{position:absolute;inset:0;height:100%;aspect-ratio:auto!important}.vbox.ok video{animation:fade .4s}
 /* sidebar: every section stays visible; the active one unfolds its sub-panel */
 .side{max-height:72vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--o) transparent}.grp{display:flex;flex-direction:column}.grp>button{width:100%}
@@ -267,24 +268,24 @@ html.compact .side img{display:none}
 html.compact .whead h2{font-size:26px}
 html.compact .whead img{width:46px}
 html.compact .whead p{font-size:10px}
-html.compact .about{aspect-ratio:auto;background:none}
-html.compact .ab-sheet{position:static;display:grid;gap:14px;font-size:13px}
-html.compact .ab-sheet>*{position:static!important;width:auto!important;height:auto!important}
-html.compact .paper,html.compact .ab-pol{background:var(--cr);border-radius:4px;box-shadow:0 6px 12px #0008}
-html.compact .paper h3,html.compact .paper p,html.compact .ab-int ul,html.compact .ab-con ul,html.compact .ab-sheet .tags span{font-size:13px}
-html.compact .hand{font-size:28px}
-html.compact .ab-portrait{max-height:70vh}
-html.compact .ab-pol .ph,html.compact .ab-pol img{height:auto}
-html.compact .soft span{font-size:18px}
-html.compact .ab-portrait figcaption{display:grid}
+html.compact:not(.wideabout) .about{aspect-ratio:auto;background:none}
+html.compact:not(.wideabout) .ab-sheet{position:static;display:grid;gap:14px;font-size:13px}
+html.compact:not(.wideabout) .ab-sheet>*{position:static!important;width:auto!important;height:auto!important}
+html.compact:not(.wideabout) .paper,html.compact:not(.wideabout) .ab-pol{background:var(--cr);border-radius:4px;box-shadow:0 6px 12px #0008}
+html.compact:not(.wideabout) .paper h3,html.compact:not(.wideabout) .paper p,html.compact:not(.wideabout) .ab-int ul,html.compact:not(.wideabout) .ab-con ul,html.compact:not(.wideabout) .ab-sheet .tags span{font-size:13px}
+html.compact:not(.wideabout) .hand{font-size:28px}
+html.compact:not(.wideabout) .ab-portrait{max-height:70vh}
+html.compact:not(.wideabout) .ab-pol .ph,html.compact:not(.wideabout) .ab-pol img{height:auto}
+html.compact:not(.wideabout) .soft span{font-size:18px}
+html.compact:not(.wideabout) .ab-portrait figcaption{display:grid}
 html.compact .award .atext{font-size:inherit}
 html.compact .masonry{columns:2 140px;column-gap:12px}
-html.compact .ab-ban{padding-left:1.8cqw!important}
-html.compact .ab-bio p{font-size:14px}
-html.compact .ab-int li b{font-size:14px}
-html.compact .ab-int li span{font-size:13px}
-html.compact .ab-con ul,html.compact .ab-con b{font-size:13px}
-html.compact .ab-sheet .ab-ban .hand{font-size:26px}
+html.compact:not(.wideabout) .ab-ban{padding-left:1.8cqw!important}
+html.compact:not(.wideabout) .ab-bio p{font-size:14px}
+html.compact:not(.wideabout) .ab-int li b{font-size:14px}
+html.compact:not(.wideabout) .ab-int li span{font-size:13px}
+html.compact:not(.wideabout) .ab-con ul,html.compact:not(.wideabout) .ab-con b{font-size:13px}
+html.compact:not(.wideabout) .ab-sheet .ab-ban .hand{font-size:26px}
 html.compact .side{max-height:none;overflow-y:visible}
 html.compact .grp{display:contents}
 html.compact .grp>button{width:auto}
@@ -389,33 +390,33 @@ html.compact .win{background-image:none!important;background-color:#150c08;filte
 html.compact .back-menu{display:none}
 html.compact .whead{align-items:center}
 /* About on phones: real, roomy cards (two columns in landscape, one in portrait) */
-html.compact .about{aspect-ratio:auto;background:none;container-type:normal}
-html.compact .ab-sheet{position:static;display:grid;grid-template-columns:1fr;gap:12px;font-size:14px;color:var(--ink)}
-html.compact:not(.portrait) .ab-sheet{grid-template-columns:repeat(2,minmax(0,1fr))}
-html.compact:not(.portrait) .ab-bio,html.compact:not(.portrait) .ab-ban{grid-column:1/-1}
-html.compact .ab-sheet>*{position:static!important;width:auto!important;height:auto!important;overflow:visible!important}
-html.compact .paper{padding:14px 16px;background:var(--cr);border-radius:6px;box-shadow:0 6px 14px #0008}
-html.compact .paper h3{font-size:12px;letter-spacing:.14em;margin-bottom:10px}
-html.compact .ab-bio p{font:15px/1.6 var(--body);margin-bottom:10px}
-html.compact .ab-sheet .tags span{font-size:11.5px;padding:4px 10px}
-html.compact .ab-int ul,html.compact .ab-con ul{gap:10px}html.compact .ab-int li b,html.compact .ab-con b{font-size:14px}html.compact .ab-int li span{font:13.5px/1.4 var(--body);margin-top:2px}html.compact .ab-con ul{font-size:13.5px}
-html.compact .ab-con a{display:inline-block;padding:3px 0;text-underline-offset:3px}
-html.compact .soft{grid-template-columns:repeat(3,1fr);gap:12px 10px}html.compact .soft span.has-icon{gap:5px}html.compact .soft span:not(.has-icon){font-size:20px;border-radius:12px}html.compact .soft small{font-size:11px}
-html.compact .ab-sheet .ab-ban{display:block}html.compact .ab-sheet .ab-ban .hand{font:700 24px/1.2 var(--hand);white-space:pre-line;text-align:center;margin:0;width:auto}
+html.compact:not(.wideabout) .about{aspect-ratio:auto;background:none;container-type:normal}
+html.compact:not(.wideabout) .ab-sheet{position:static;display:grid;grid-template-columns:1fr;gap:12px;font-size:14px;color:var(--ink)}
+html.compact:not(.wideabout):not(.portrait) .ab-sheet{grid-template-columns:repeat(2,minmax(0,1fr))}
+html.compact:not(.wideabout):not(.portrait) .ab-bio,html.compact:not(.wideabout):not(.portrait) .ab-ban{grid-column:1/-1}
+html.compact:not(.wideabout) .ab-sheet>*{position:static!important;width:auto!important;height:auto!important;overflow:visible!important}
+html.compact:not(.wideabout) .paper{padding:14px 16px;background:var(--cr);border-radius:6px;box-shadow:0 6px 14px #0008}
+html.compact:not(.wideabout) .paper h3{font-size:12px;letter-spacing:.14em;margin-bottom:10px}
+html.compact:not(.wideabout) .ab-bio p{font:15px/1.6 var(--body);margin-bottom:10px}
+html.compact:not(.wideabout) .ab-sheet .tags span{font-size:11.5px;padding:4px 10px}
+html.compact:not(.wideabout) .ab-int ul,html.compact:not(.wideabout) .ab-con ul{gap:10px}html.compact:not(.wideabout) .ab-int li b,html.compact:not(.wideabout) .ab-con b{font-size:14px}html.compact:not(.wideabout) .ab-int li span{font:13.5px/1.4 var(--body);margin-top:2px}html.compact:not(.wideabout) .ab-con ul{font-size:13.5px}
+html.compact:not(.wideabout) .ab-con a{display:inline-block;padding:3px 0;text-underline-offset:3px}
+html.compact:not(.wideabout) .soft{grid-template-columns:repeat(3,1fr);gap:12px 10px}html.compact:not(.wideabout) .soft span.has-icon{gap:5px}html.compact:not(.wideabout) .soft span:not(.has-icon){font-size:20px;border-radius:12px}html.compact:not(.wideabout) .soft small{font-size:11px}
+html.compact:not(.wideabout) .ab-sheet .ab-ban{display:block}html.compact:not(.wideabout) .ab-sheet .ab-ban .hand{font:700 24px/1.2 var(--hand);white-space:pre-line;text-align:center;margin:0;width:auto}
 
 /* v10 · About: equal-size program icons, wider banner on two lines, bold highlights */
 .soft span.has-icon img{width:100%;aspect-ratio:1;height:auto;object-fit:contain;padding:6%}
 .ab-bio strong{font-weight:700;color:#3a1c08;background:linear-gradient(transparent 62%,#f6b94f88 62%)}
-html:not(.compact) .ab-ban{width:47%;padding-left:20%!important;padding-right:1cqw!important}
-html:not(.compact) .ab-sheet .ab-ban .hand{white-space:pre-line;font-size:1.45cqw;line-height:1.2}
+html:is(:not(.compact),.wideabout) .ab-ban{width:47%;padding-left:20%!important;padding-right:1cqw!important}
+html:is(:not(.compact),.wideabout) .ab-sheet .ab-ban .hand{white-space:pre-line;font-size:1.45cqw;line-height:1.2}
 
 /* v11 · About: icons are now normalised in TrimmedIcon.jsx (no extra padding), banner text stays inside the paper */
 .soft span.has-icon img{padding:0}
-html:not(.compact) .ab-sheet .ab-ban{left:8.2%;top:73.4%;width:41.6%;height:23.6%;padding:0 3.2cqw 0 12.8cqw!important;overflow:hidden}
-html:not(.compact) .ab-sheet .ab-ban .hand{width:100%;min-width:0;max-width:100%;overflow-wrap:break-word;white-space:pre-line;font-size:1.5cqw;line-height:1.18}
+html:is(:not(.compact),.wideabout) .ab-sheet .ab-ban{left:8.2%;top:73.4%;width:41.6%;height:23.6%;padding:0 3.2cqw 0 12.8cqw!important;overflow:hidden}
+html:is(:not(.compact),.wideabout) .ab-sheet .ab-ban .hand{width:100%;min-width:0;max-width:100%;overflow-wrap:break-word;white-space:pre-line;font-size:1.5cqw;line-height:1.18}
 
 /* v12 · About software grid: columns must NOT grow with their labels (long names like "MotionBuilder" were widening the middle column → bigger Maya/MotionBuilder icons) */
-html:not(.compact) .soft{grid-template-columns:repeat(3,minmax(0,1fr))}
+html:is(:not(.compact),.wideabout) .soft{grid-template-columns:repeat(3,minmax(0,1fr))}
 .soft span.has-icon{min-width:0}.soft span.has-icon img{width:100%;max-width:100%}
 
 /* ===== v9: glowing stars on the objects + mini-games ===== */
@@ -597,8 +598,8 @@ html.tablet.compact.portrait .grid{grid-template-columns:repeat(auto-fill,minmax
 html.tablet.compact .card h3{font-size:15px}html.tablet.compact .card p{font-size:12.5px;-webkit-line-clamp:3}html.tablet.compact .tags span{font-size:11px;padding:4px 10px}
 html.tablet.compact .masonry{columns:3 190px;column-gap:16px}
 html.tablet.compact.portrait .awards{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:24px}
-html.tablet.compact .ab-sheet{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}html.tablet.compact .ab-bio,html.tablet.compact .ab-ban,html.tablet.compact .ab-portrait{grid-column:1/-1}
-html.tablet.compact .ab-bio p{font-size:16px}html.tablet.compact .paper h3{font-size:13px}
+html.tablet.compact:not(.wideabout) .ab-sheet{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}html.tablet.compact:not(.wideabout) .ab-bio,html.tablet.compact:not(.wideabout) .ab-ban,html.tablet.compact:not(.wideabout) .ab-portrait{grid-column:1/-1}
+html.tablet.compact:not(.wideabout) .ab-bio p{font-size:16px}html.tablet.compact:not(.wideabout) .paper h3{font-size:13px}
 html.tablet.compact.portrait .pv-panel{width:min(94vw,820px);height:94dvh}
 html.tablet.compact .dock{top:calc(76px + env(safe-area-inset-top));width:min(400px,calc(100vw - 40px))}
 
@@ -612,3 +613,25 @@ html.tablet.compact:not(.portrait) .wmain{padding-bottom:20px}
 /* "coming soon" label on every missing image / video */
 .ph em.soon{font-size:10px;letter-spacing:.22em;opacity:.9;color:var(--y);word-break:normal;padding:0}
 .avatar.ph small,.avatar.ph em,.ab-pol .ph small{display:none}
+
+
+/* ===== v14 · thumbnails + wide-tablet About ===== */
+/* Every card thumbnail is a 910×556 frame. Images are scaled to FILL it (the edges may be trimmed if an image has another ratio).
+   To show the WHOLE image instead (with dark bars), change --thumb-fit to contain. --thumb-pos = which part stays visible when trimmed (x y). */
+:root{--thumb-fit:cover;--thumb-pos:50% 38%}
+.thumb>img,.thumb>.vthumb,.thumb>.ph{position:absolute;inset:0;width:100%;height:100%;max-height:none;aspect-ratio:auto!important;border-radius:0}
+.thumb>img,.thumb>.vthumb{object-fit:var(--thumb-fit);object-position:var(--thumb-pos)}
+/* About on wide tablets = the desktop drawing. Text keeps a readable minimum even though the drawing is smaller than on a monitor. */
+html.wideabout .ab-bio p{font-size:max(.98cqw,11.5px)}html.wideabout .paper h3{font-size:max(1.1cqw,10.5px)}
+html.wideabout .ab-int li b,html.wideabout .ab-con b{font-size:max(1.1cqw,11px)}html.wideabout .ab-int li span,html.wideabout .ab-con ul{font-size:max(.95cqw,10.5px)}
+html.wideabout .ab-sheet .tags span{font-size:max(.95cqw,10px)}html.wideabout .soft small{font-size:max(.72cqw,8.5px)}
+html.wideabout .ab-sheet .ab-ban .hand{font-size:max(1.5cqw,13px)}
+html.wideabout .ab-sheet>*{overflow:auto;-webkit-overflow-scrolling:touch}
+
+/* gallery: flex-column masonry (see Masonry in sections/index.jsx) — replaces CSS multi-column, which made thumbnails vanish on iPad Safari */
+.masonry,html.compact .masonry,html.tablet.compact .masonry{columns:auto!important;column-gap:normal!important;display:flex;align-items:flex-start;gap:18px}
+html.tablet.compact .masonry{gap:16px}
+html.compact:not(.tablet) .masonry{gap:12px}
+@media (max-width:760px){.masonry{gap:12px}}
+.mcol{flex:1 1 0;min-width:0}
+.art{animation-fill-mode:backwards} /* same look, but no animation layer left running on every tile once it has finished */

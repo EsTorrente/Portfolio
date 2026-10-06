@@ -26,13 +26,14 @@ function Cursor() { // custom cursor on fine pointers only. Dot and ring move to
 }
 
 // Adds <html class="compact"> on phones/small screens (and "portrait" when held upright) so the CSS can switch to the phone layout.
+const WIDE_ABOUT_MIN = 1000; // ✏️ tablets at least this many px wide (e.g. iPad in either orientation) use the desktop About layout; narrower ones keep the stacked one
 function useLayoutClass() {
   // phone  = small screen  → full-screen "compact" layout (rail + pills)
   // tablet = touch device whose short side is ≥ 600px (iPad, Android tablets): gets the SAME compact layout as phones, in both orientations, with bigger spacing (html.tablet.compact);
   const [compact, setCompact] = useState(false);
   useEffect(() => { const root = document.documentElement, ph = matchMedia('(max-width:760px), (pointer:coarse) and (max-height:520px)'), touch = matchMedia('(pointer:coarse)');
     const f = () => { const portrait = innerHeight > innerWidth, tablet = !ph.matches && touch.matches && Math.min(innerWidth, innerHeight) >= 600, c = ph.matches || tablet;
-      setCompact(c); root.classList.toggle('compact', c); root.classList.toggle('tablet', tablet); root.classList.toggle('portrait', c && portrait); };
+      setCompact(c); root.classList.toggle('compact', c); root.classList.toggle('tablet', tablet); root.classList.toggle('wideabout', tablet && innerWidth >= WIDE_ABOUT_MIN); root.classList.toggle('portrait', c && portrait); };
     f(); ph.addEventListener('change', f); touch.addEventListener('change', f); addEventListener('resize', f); addEventListener('orientationchange', f);
     return () => { ph.removeEventListener('change', f); touch.removeEventListener('change', f); removeEventListener('resize', f); removeEventListener('orientationchange', f); }; }, []);
   return compact;

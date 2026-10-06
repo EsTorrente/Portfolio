@@ -132,7 +132,8 @@ export const modelling = [
 // ---- 3D HAND-PAINTED TEXTURES (sub-section of 3D Modelling) ---------------------------------------------
 // Files go in  public/assets/modelling/handpainted/  →  eridan-01.webp (full body), eridan-02.webp (face close-up), hugo-01/02, julia-01/02, lira-01/02, granny-01/02, astronaut-01.webp, golub-01.webp (full body)
 // `imageTitles` = the label of each image inside the pop-up. Edit titles / descriptions / tags freely.
-const hp = (slug, o) => { const images = Array.from({ length: o.n }, (_, i) => `/assets/modelling/handpainted/${slug}-${String(i + 1).padStart(2, '0')}.webp`); return { id: `hp-${slug}`, images, image: images[0], tags: ['Hand-Painted Textures', 'Texturing'], ...o }; };
+const hp = (slug, o) => { const images = Array.from({ length: o.n }, (_, i) => `/assets/modelling/handpainted/${slug}-${String(i + 1).padStart(2, '0')}.webp`); const face = (o.imageTitles || []).findIndex((t) => /face/i.test(t)); // thumbnail = the face close-up when there is one (otherwise the first image)
+  return { id: `hp-${slug}`, images, image: images[face >= 0 ? face : 0], tags: ['Hand-Painted Textures', 'Texturing'], ...o }; };
 export const handpainted = [
   hp('eridan', { n: 2, title: 'Eridan', subtitle: 'Hand-Painted Texture', description: 'Full-body view and face close-up of the hand-painted textures, all done by me.', imageTitles: ['Full body', 'Face close-up'] }),
   hp('hugo', { n: 2, title: 'Hugo', subtitle: 'Hand-Painted Texture', description: 'Full-body view and face close-up of the hand-painted skin textures. Father of Eridan and Lira in the Platillo AU.', imageTitles: ['Full body', 'Face close-up'] }),
