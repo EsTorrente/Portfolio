@@ -55,7 +55,9 @@ function Masonry({ children }) {
 }
 function SecIntro({ d, mid }) { return <header className={'sec-intro' + (mid ? ' mid' : '')}><h3>{d.title}</h3><p>{d.text}</p></header>; }
 function Gallery({ filter }) { // masonry, no crop, objects keep their own aspect ratio. "ALL" groups pieces by category, each with its intro.
-  const cats = D.illustrationIntro[filter] ? [filter] : Object.keys(D.illustrationIntro); // unknown/stale filter (e.g. 'HAND-PAINTED TEXTURES' from another section) → show everything instead of crashing const [v, setV] = useState(null);
+  const [v, setV] = useState(null);
+  // unknown/stale filter (e.g. 'HAND-PAINTED TEXTURES' from another section) → show everything instead of crashing
+  const cats = D.illustrationIntro[filter] ? [filter] : Object.keys(D.illustrationIntro);
   const items = cats.flatMap((c) => D.illustration.filter((i) => i.category === c)); let off = 0;
   return (<><div className="gallery" key={filter}>{cats.map((c) => { const intro = D.illustrationIntro[c], list = D.illustration.filter((i) => i.category === c), base = off; off += list.length;
     return (<section key={c} className="gcat">
