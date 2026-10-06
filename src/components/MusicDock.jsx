@@ -45,7 +45,7 @@ export default function MusicDock({ open = false, compact = false }) {
   return (<aside className={'dock' + (mini ? ' mini' : '') + ' tabbed' + (compact && open ? ' gone' : '')} aria-label="Music player" aria-hidden={compact && !peek ? true : undefined}>
     <div className="mp">
       <img className="mp-cover" src={asset(info.cover || COVER)} alt="" draggable="false" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = asset(FALLBACK); }} />
-      <div className="mp-meta"><b>{has ? info.title || s.tracks[s.idx].file : 'No songs yet'}</b><span>{has ? info.artist : 'add song-01.mp3 to assets/audio'}</span></div>
+      <div className="mp-meta"><b>{has ? info.title || 'Track ' + s.tracks[s.idx].file.slice(-2) : 'No songs yet'}</b><span>{has ? info.artist || '' : 'add song-01.mp3 to assets/audio'}</span></div>
       <div className="mp-ctl">
         <button data-sfx="tick" disabled={!has} onClick={M.prev} aria-label="Previous song"><I d={Ico.prev} /></button>
         <button className="mp-play" data-sfx="none" disabled={!has} onClick={M.toggle} aria-label={s.playing ? 'Pause' : 'Play'}><I d={s.playing ? Ico.pause : Ico.play} /></button>

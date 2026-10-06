@@ -2,7 +2,7 @@ import { asset } from './assets';
 // Background-music engine (one <audio> element shared by the whole site).
 // Files: public/assets/audio/song-01 … song-04 (.mp3 / .m4a / .ogg / .wav). Missing songs are skipped.
 // duck(token) / release(token): fades the music out and pauses it while a video plays, then resumes and fades back in.
-const FILES = ['song-01', 'song-02', 'song-03', 'song-04'], EXTS = ['mp3', 'm4a', 'ogg', 'wav'];
+const MAX_SONGS = 99, MAX_GAP = 2, EXTS = ['mp3', 'm4a', 'ogg', 'wav']; // drop song-05, song-06 … into public/assets/audio and they join the playlist by themselves (up to song-99; a gap of 2 missing numbers is tolerated)
 export const FADE_OUT_MS = 1800, FADE_IN_MS = 2200;
 const audio = typeof Audio !== 'undefined' ? new Audio() : null; if (audio) audio.preload = 'auto';
 let initP = null, muted = false, tracks = [], idx = 0, want = false, wasPlaying = false, raf = 0, started = false; const ducks = new Set(), subs = new Set();
@@ -27,8 +27,9 @@ const go = () => { if (ducks.size) { wasPlaying = true; return; } audio.play().t
 
 export const init = () => (initP ||= _init());
 async function _init() { if (!audio) return; want = true; // try to autoplay right away (allowed when muted, or when the browser trusts the site; otherwise the first click/tap/key starts it)
-  for (const f of FILES) for (const ext of EXTS) { const url = `/assets/audio/${f}.${ext}`;
-    try { const r = await fetch(asset(url), { method: 'HEAD' }); if (r.ok && !/html/.test(r.headers.get('content-type') || '')) { tracks.push({ file: f, url }); break; } } catch {} }
+  const probe = async (url) => { try { const r = await fetch(asset(url), { method: 'HEAD' }); return r.ok && !/html/.test(r.headers.get('content-type') || ''); } catch { return false; } };
+  for (let i = 1, miss = 0; i <= MAX_SONGS && miss <= MAX_GAP; i++) { const f = 'song-' + String(i).padStart(2, '0'), urls = EXTS.map((e) => `/assets/audio/${f}.${e}`), ok = await Promise.all(urls.map(probe)), k = ok.indexOf(true);
+    if (k >= 0) { tracks.push({ file: f, url: urls[k] }); miss = 0; } else miss++; }
   if (!tracks.length) { emit(); return; } load(0, want); }
 
 export const play = () => { want = true; if (!tracks.length) return; if (!audio.src) load(idx); if (!ducks.size) { cancelAnimationFrame(raf); fading = false; try { audio.volume = vol; } catch {} } go(); };

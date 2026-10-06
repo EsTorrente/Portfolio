@@ -90,6 +90,6 @@ function Opinions() {
 
 export default function Section({ id, filter }) {
   const rig = filter === 'ALL' ? D.rigging : D.rigging.filter((r) => r.software === filter);
-  return { rigging: <Grid items={rig} />, animation: <Grid items={D.animation} cls="wide" />, modelling: <Grid items={D.modelling} />, illustration: <Gallery filter={filter} />,
+  return { rigging: <Grid items={rig} />, animation: <Grid items={D.animation} cls="wide" />, modelling: <Grid items={filter === '3D MODELS' ? D.modelling : filter === 'HAND-PAINTED TEXTURES' ? D.handpainted : [...D.modelling, ...D.handpainted]} />, illustration: <Gallery filter={filter} />,
     awards: <Awards />, projects: <Grid items={D.projects} cls="wide big" />, about: <About />, opinions: <Opinions /> }[id];
 }

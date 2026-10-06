@@ -1,7 +1,7 @@
 export const sections = [
   { id: 'rigging', label: 'Rigging', title: 'RIGGING', sub: ['Character setup, deformation and performance.', 'Tools: Blender, Maya, Harmony'], filters: ['ALL', 'BLENDER', 'MAYA', 'HARMONY'] },
   { id: 'animation', label: 'Animation', title: 'ANIMATION', sub: ['Moving artworks, shorts and tests.'] },
-  { id: 'modelling', label: '3D Modelling', title: '3D MODELLING', sub: ['Props, characters and little worlds.'] },
+  { id: 'modelling', label: '3D Modelling', title: '3D MODELLING', sub: ['Props, characters and little worlds.'], filters: ['ALL', '3D MODELS', 'HAND-PAINTED TEXTURES'] },
   { id: 'illustration', label: 'Illustration', title: 'ILLUSTRATION', sub: ['A walk through the gallery.'], filters: ['ALL', 'SEMI-REALISTIC', 'ENVIRONMENT', 'CHARACTER DESIGN', 'SPLASH ART', 'OTHER'] },
   { id: 'awards', label: 'Awards', title: 'AWARDS', sub: ['Milestones, recognitions and special moments', 'along the way.'] },
   { id: 'projects', label: 'Projects', title: 'PROJECTS', sub: ['Major exhibits.'] },

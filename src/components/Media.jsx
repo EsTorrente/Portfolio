@@ -11,7 +11,7 @@ export default function Media({ src, video, at = 0.6, alt = '', label, ratio = 1
   if (bad && quiet) return null;
   if (bad) return (<div className={'ph ' + className} style={{ aspectRatio: ratio }} role="img" aria-label={alt} data-replace={src}>
     <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3l3.5 12.5L37 20l-13.5 4.5L20 37l-3.5-12.5L3 20l13.5-4.5z" fill="currentColor" /></svg>
-    <small>{label || alt}</small><em>{src}</em></div>);
+    <small>{label || alt}</small><em className="soon" title={src}>COMING SOON</em></div>);
   return (<>
     {!ok && <div className={'ph ldr ' + className} style={{ aspectRatio: ratio }} role="status" aria-label="Loading"><i className="spin" /></div>}
     <img className={className} src={asset(shown)} alt={alt} loading="lazy" decoding="async" style={ok ? undefined : HIDE}

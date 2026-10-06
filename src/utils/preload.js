@@ -40,7 +40,7 @@ export async function preloadAll(onProgress) {
     const num = (u) => +(/-(\d+)\.\w+$/.exec(u)?.[1] || 0), noop = () => {};
     const restImgs = [...all].filter((u) => !crit.has(u) && !VID.test(u)); // (crit images are already cached; never fetched twice)
     const restVids = save ? [] : [...all].filter((u) => !crit.has(u) && VID.test(u) && !phone).sort((a, b) => num(a) - num(b)); // video 01 of every project before video 02, etc.
-    const rest = [...restVids, ...(save || phone ? [] : songs.slice(1))];
+    const rest = [...restVids, ...(save || phone ? [] : songs.slice(1, 3))];
     try { await pool(restImgs, 3, async (u) => { await calm(); await imgTask(u, noop); }); await pool(rest, 2, async (u) => { await calm(); await streamTask(u, noop); }); } catch {}
   }, BG_DELAY_MS);
 }
