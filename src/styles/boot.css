@@ -1,0 +1,33 @@
+/* Boot-up terminal scene (components/Boot.jsx). Looks like an old orange CRT screen. Sizes use vmin / dvh so it fits phones, tablets and desktops in both orientations. */
+.boot{position:fixed;inset:0;z-index:250;display:grid;place-items:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:#000;cursor:pointer;transition:background .9s ease,opacity .38s ease,backdrop-filter .9s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.boot.lit{background:#0a0604d6;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.boot.out{opacity:0;pointer-events:none}
+.boot .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.boot-screen{--f:clamp(11px,2.1vmin + 3px,19px);position:relative;width:min(100%,780px);max-height:100%;overflow:hidden;padding:clamp(14px,3.4vmin,34px) clamp(16px,4vmin,40px);display:grid;gap:calc(var(--f)*.7);align-content:center;
+  font:600 var(--f)/1.35 var(--mono);letter-spacing:.09em;color:#ffb347;text-shadow:0 0 8px #ff8c1888;background:radial-gradient(ellipse at 50% 40%,#1c0f08,#0c0705 80%);border-radius:14px;box-shadow:0 0 0 1px #ff8c1822,0 0 60px #ff7a0022,inset 0 0 70px #000;opacity:0;transform:scale(.97);transition:opacity .5s,transform .6s cubic-bezier(.2,1.2,.4,1)}
+.boot.lit .boot-screen{opacity:1;transform:none}
+.boot-screen::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 2px,#0000002e 2px 3px);mix-blend-mode:multiply;border-radius:inherit} /* scan lines */
+.bc{position:absolute;width:clamp(14px,3vmin,24px);height:clamp(14px,3vmin,24px);border:0 solid #ff8c18aa}.bc1{left:10px;top:10px;border-width:2px 0 0 2px}.bc2{right:10px;top:10px;border-width:2px 2px 0 0}.bc3{left:10px;bottom:10px;border-width:0 0 2px 2px}.bc4{right:10px;bottom:10px;border-width:0 2px 2px 0}
+.boot p{margin:0;min-height:1.35em}
+.b-id{color:#e6c9a0;opacity:.85}.b-found b{color:#ffd36a;font-weight:800}
+.b-name{margin:calc(var(--f)*.3) 0;font:800 clamp(26px,9.6vmin,74px)/1 var(--mono);letter-spacing:.07em;color:#ffcf7a;text-shadow:0 0 14px #ff8c18,0 0 34px #ff7a0066;opacity:0;min-height:1em;white-space:normal;overflow-wrap:anywhere}
+.b-name.on{opacity:1;animation:bflick .55s steps(1) both}
+.calm .b-name.on{animation:none}
+@keyframes bflick{0%{opacity:0}8%{opacity:1}14%{opacity:.15}22%{opacity:1}30%{opacity:.4}38%{opacity:1}46%{opacity:0}54%{opacity:1}62%{opacity:.6}100%{opacity:1}}
+.b-role{color:#ffd9a0;font-size:calc(var(--f)*.92);letter-spacing:.14em;min-height:2.7em}
+.b-rule{height:2px;background:linear-gradient(90deg,#ff8c1800,#ffb347,#ff8c1800);transform:scaleX(0);transition:transform .6s ease;transform-origin:left;margin:2px 0}.b-rule.on{transform:none}
+.b-skills{font-size:calc(var(--f)*.8);color:#e6c9a0;letter-spacing:.12em;opacity:0;transition:opacity .6s}.b-skills.on{opacity:.95}
+.b-multi{color:#ffe0b0;margin-top:calc(var(--f)*.3)}
+.b-chat{list-style:none;margin:calc(var(--f)*.3) 0 0;padding:0;display:grid;gap:calc(var(--f)*.45)}
+.b-chat li{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:.7em;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;font-size:calc(var(--f)*.95);letter-spacing:.05em}
+.b-chat li.on{opacity:1;transform:none}
+.b-chat .av{display:grid;place-items:center;width:calc(var(--f)*1.9);height:calc(var(--f)*1.9);border-radius:50%;overflow:hidden;background:#2a1409;border:1px solid #ff8c1888;font-size:.8em;color:#ffcf7a}.b-chat .av{position:relative}.b-chat .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#2a1409}
+.b-chat .who{font-weight:800;font-size:.78em;letter-spacing:.14em;color:#ff9a30}.b-chat .mar .who{color:#ffd36a}
+.b-chat .say{color:#fff0d6;font-weight:500;letter-spacing:.03em;text-shadow:none}
+.b-ready{color:#ffd36a;font-weight:800;opacity:0;transition:opacity .3s;margin-top:calc(var(--f)*.2)}.b-ready.on{opacity:1}
+.b-ready .cur{display:inline-block;width:.6em;height:1.05em;margin-left:.5em;background:#ffb347;vertical-align:-.15em;animation:bblink 1s steps(2) infinite}@keyframes bblink{50%{opacity:0}}
+.b-skip{position:absolute;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));min-width:44px;min-height:44px;padding:0 16px;border:1px dashed #ff8c18aa;border-radius:99px;background:#120b08cc;color:#ffd36a;font:700 11px var(--mono);letter-spacing:.2em;cursor:pointer}.b-skip:hover,.b-skip:focus-visible{background:#ff8c1833}
+/* short screens (phones in landscape): drop the skills line and tighten */
+@media (max-height:460px){.boot-screen{--f:clamp(10px,2.6vmin,13px);padding:12px 18px;gap:calc(var(--f)*.45)}.b-skills,.b-rule:nth-of-type(2){display:none}.b-name{font-size:clamp(22px,13vmin,44px);margin:0}.b-role{min-height:1.35em}.b-chat{grid-template-columns:1fr 1fr;gap:calc(var(--f)*.4) 14px}.b-chat .av{width:calc(var(--f)*1.7);height:calc(var(--f)*1.7)}}
+@media (max-width:520px){.boot-screen{letter-spacing:.05em}.b-role{letter-spacing:.06em}.b-skills{letter-spacing:.05em}}
+@media (prefers-reduced-motion:reduce){.boot,.boot-screen{transition:none}.b-name.on{animation:none}}

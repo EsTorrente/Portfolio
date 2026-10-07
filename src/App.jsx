@@ -9,6 +9,7 @@ import { initSfx, play } from './utils/sfx';
 import { preloadAll } from './utils/preload';
 import Intro from './components/Intro';
 import RotateHint from './components/RotateHint';
+import Boot from './components/Boot';
 import { canFullscreen, enterFullscreen } from './utils/fullscreen';
 import * as M from './utils/music';
 // If the browser blocks autoplay, the intro waits for ONE click/tap ("click to enter") so the music can start by itself afterwards. Set to false to never wait.
@@ -41,11 +42,12 @@ function useLayoutClass() {
 
 export default function App() {
   const [open, setOpen] = useState(fromHash()), [origin, setOrigin] = useState(null);
+  const [boot, setBoot] = useState(false); // the little "boot-up" terminal scene that plays once, right after the loading screen (components/Boot.jsx)
   const [phase, setPhase] = useState(fromHash() || reducedMotion() ? 'done' : 'intro'); // intro → reveal → done
   const [gamePlayed, setGamePlayed] = useState(false), [pct, setPct] = useState(0), [loaded, setLoaded] = useState(false), [minTime, setMinTime] = useState(false), [music, setMusic] = useState(M.getState());
   useEffect(() => { preloadAll(setPct).then(() => setLoaded(true)); return M.subscribe(setMusic); }, []); // everything loads behind the intro logo
   useEffect(() => { if (phase === 'intro') { const t = setTimeout(() => setMinTime(true), 3200); return () => clearTimeout(t); }
-    if (phase === 'reveal') { const t = setTimeout(() => setPhase('done'), 1800); return () => clearTimeout(t); } }, [phase]);
+    if (phase === 'reveal') { setBoot(true); const t = setTimeout(() => setPhase('done'), 1800); return () => clearTimeout(t); } }, [phase]);
   // wait for a click if the browser blocked the music, or if the visitor is mid-snake-game (so it never yanks the screen away)
   const needClick = gamePlayed || (WAIT_FOR_CLICK_IF_MUSIC_BLOCKED && music.tracks.length > 0 && !music.playing && !music.muted);
   useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick) setPhase('reveal'); }, [phase, minTime, loaded, needClick]);
@@ -61,6 +63,7 @@ export default function App() {
     <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro'} introDone={phase === 'done'} />
     {open && <PortfolioWindow key="win" id={open} origin={origin} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />}
     {phase !== 'done' && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} />}
+    {boot && <Boot onDone={() => setBoot(false)} />}
     <MusicDock open={!!open} compact={compact} />
     <RotateHint />
     <Cursor />
