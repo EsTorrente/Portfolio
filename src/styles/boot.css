@@ -35,3 +35,15 @@
 .b-hint{font-size:calc(var(--f)*.72);letter-spacing:.2em;color:#e6c9a0;opacity:0;transition:opacity .5s;margin-top:calc(var(--f)*.35)}.b-hint.on{opacity:.8;animation:bblink2 1.6s ease-in-out infinite}@keyframes bblink2{50%{opacity:.35}}
 @media (max-height:460px){.b-hint{display:none}}
 .boot.lit .boot-screen{max-height:calc(100dvh - 24px)}
+
+/* ===== v16 · wider boot screen on desktop, readable skills line on phones/tablets ===== */
+@media (min-width:900px) and (min-height:461px){
+  .boot-screen{width:min(100%,clamp(840px,68vw,1200px));padding:clamp(30px,4.8vmin,60px) clamp(40px,6.4vmin,86px);gap:calc(var(--f)*.95)}
+  .boot-screen .b-name{margin:calc(var(--f)*.5) 0}.boot-screen .b-role{min-height:1.35em}
+  .boot-screen .b-chat{gap:calc(var(--f)*.75)}.boot-screen .b-skills{font-size:calc(var(--f)*.88)}
+}
+/* the "3D ART · ANIMATION · RIGGING …" line was shrunk to ~8px on small screens, so it looked missing: bigger + brighter */
+@media (max-width:900px),(max-height:460px){
+  .boot .b-skills{font-size:max(10.5px,calc(var(--f)*1));letter-spacing:.07em;line-height:1.5;color:#ffd9a0}
+  .boot .b-skills.on{opacity:1}
+}

@@ -777,3 +777,10 @@ html.compact .ab-more{justify-content:center;padding:10px 0 4px}html.compact .ab
 .bub b{display:block;font:700 10px var(--mono);letter-spacing:.18em;color:var(--o2);margin-bottom:4px}.mar .bub b{color:#b24a00}.am .bub p{margin:0;font-size:clamp(14px,1.8vw,16px);line-height:1.55}
 .am .am-back{display:block;margin:26px auto 4px;min-height:46px}
 @media (prefers-reduced-motion:reduce){.chat li{opacity:1;transform:none}}
+
+/* ===== v16 · phones/tablets: video list moved to the TOP of the player (the bottom edge is where iPad/iPhone swipe gestures switch apps), slightly bigger side icons on phones ===== */
+html.compact .pv-list{order:-1;border-top:0;border-bottom:1px solid #ff8c1855;padding:8px 10px 10px;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+html.compact .pv-list button{min-height:44px;font-size:12px;padding:8px 14px}
+html.compact:not(.tablet) .rail{gap:3px}
+html.compact:not(.tablet) .rail button{width:46px;height:clamp(36px,calc((100dvh - 48px)/9),48px)}
+html.compact:not(.tablet) .rail img{width:88%;height:88%}
