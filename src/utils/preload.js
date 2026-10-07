@@ -4,13 +4,13 @@ import { sections } from '../data/navigationData';
 import { asset, appleVideo } from './assets';
 import * as M from './music';
 // Two-stage loading, so the loading screen stays short:
-//   1) CRITICAL (blocks the intro): backgrounds, UI, logo + section icons, every card thumbnail, and Eridan's first video.
+//   1) CRITICAL (blocks the intro): backgrounds, UI, logo + section icons and the Rigging thumbnails (the first section most visitors open).
 //   2) BACKGROUND (starts shortly after the desktop appears, never blocks anything): all remaining images, then the rest of the videos
 //      (first video of each project before the second ones), then the other songs. It pauses while a pop-up/viewer is open so it never competes with what the visitor is watching.
 // URLs are collected automatically from your data files (portfolioData / siteData) — new entries are picked up with no changes here.
 // Missing files are skipped silently. Anything still loading after TIMEOUT_MS keeps loading in the background.
-const TIMEOUT_MS = 60000, BG_DELAY_MS = 2500, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
-const EAGER_VIDEO_OF = 'blender-01'; // ✏️ project whose FIRST video loads during the loading screen (Eridan). Everything else loads afterwards.
+const TIMEOUT_MS = 60000, BG_DELAY_MS = 700, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
+const EAGER_VIDEO_OF = 'blender-01'; // ✏️ project whose FIRST video is the very first thing loaded in the background stage right after the desktop appears (Eridan). It no longer holds up the loading screen.
 const STATIC = ['/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp',
   '/assets/ui/back-right.webp', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', ...(appleVideo() ? ['/assets/backgrounds/backgroundApple.webm'] : ['/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'])];
 function walk(o, out, seen = new Set()) { if (typeof o === 'string') { if ((o.startsWith('/assets/') || o.startsWith('http')) && (IMG.test(o) || VID.test(o))) out.add(o); return; }
@@ -27,20 +27,20 @@ export async function preloadAll(onProgress) {
   const all = new Set(); walk(D, all); walk(about, all);
   // ---- stage 1: critical ----
   const crit = new Set(STATIC); crit.add(site.logo); sections.forEach((s) => crit.add(`/assets/icons/${s.id}.webp`));
-  [D.rigging, D.animation, D.modelling, D.awards, D.projects].forEach((list) => list.forEach((it) => { if (typeof it.image === 'string' && (it.image.startsWith('/assets/') || it.image.startsWith('http'))) crit.add(it.image); })); // every card thumbnail
-  const eager = D.rigging.find((r) => r.id === EAGER_VIDEO_OF)?.videos?.[0]?.src; if (eager && !save && !phone) crit.add(eager);
+  D.rigging.forEach((it) => { if (typeof it.image === 'string' && (it.image.startsWith('/assets/') || it.image.startsWith('http'))) crit.add(it.image); }); // Rigging thumbnails only; the other sections' thumbnails load right after the desktop appears (stage 2, first in line)
+  const eager = D.rigging.find((r) => r.id === EAGER_VIDEO_OF)?.videos?.[0]?.src; // (no longer blocks loading)
   await M.init(); const songs = M.getState().tracks.map((t) => t.url); // song 1 streams by itself through the player's <audio>; the others load in stage 2
   const imgs = [...crit].filter((u) => !VID.test(u)), vids = save ? [] : [...crit].filter((u) => VID.test(u) && (!phone || /backgrounds/.test(u))).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
   const total = imgs.length + vids.length || 1, frac = new Map(); let t = 0;
   const rep = (u) => (f) => { frac.set(u, f); const n = performance.now(); if (n - t > 90 || f === 1) { t = n; onProgress?.([...frac.values()].reduce((a, b) => a + b, 0) / total); } };
-  const run = Promise.all([pool(imgs, 8, (u) => imgTask(u, rep(u))), pool(vids, 3, (u) => streamTask(u, rep(u)))]);
+  const run = Promise.all([pool(imgs, 10, (u) => imgTask(u, rep(u))), pool(vids, 3, (u) => streamTask(u, rep(u)))]);
   await Promise.race([run, new Promise((r) => setTimeout(r, TIMEOUT_MS))]); onProgress?.(1);
   // ---- stage 2: everything else, quietly, after the intro ----
   setTimeout(async () => {
     const num = (u) => +(/-(\d+)\.\w+$/.exec(u)?.[1] || 0), noop = () => {};
-    const restImgs = [...all].filter((u) => !crit.has(u) && !VID.test(u)); // (crit images are already cached; never fetched twice)
+    const restImgs = [...all].filter((u) => !crit.has(u) && !VID.test(u)).sort((a, b) => /thumb|\/animation\/|\/modelling\/|\/awards\/|\/projects\//.test(b) - /thumb|\/animation\/|\/modelling\/|\/awards\/|\/projects\//.test(a)); // section thumbnails first, then the rest // (crit images are already cached; never fetched twice)
     const restVids = save ? [] : [...all].filter((u) => !crit.has(u) && VID.test(u) && !phone).sort((a, b) => num(a) - num(b)); // video 01 of every project before video 02, etc.
-    const rest = [...restVids, ...(save || phone ? [] : songs.slice(1, 3))];
-    try { await pool(restImgs, 3, async (u) => { await calm(); await imgTask(u, noop); }); await pool(rest, 2, async (u) => { await calm(); await streamTask(u, noop); }); } catch {}
+    const first = eager && !save && !phone ? [eager] : [], rest = [...first, ...restVids.filter((u) => u !== eager), ...(save || phone ? [] : songs.slice(1, 3))];
+    try { await pool(restImgs, 5, async (u) => { await calm(); await imgTask(u, noop); }); await pool(rest, 2, async (u) => { await calm(); await streamTask(u, noop); }); } catch {}
   }, BG_DELAY_MS);
 }

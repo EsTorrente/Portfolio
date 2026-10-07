@@ -2,12 +2,13 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { asset } from '../utils/assets';
 import { play } from '../utils/sfx';
+import '../styles/about-more.css';
 const rich = (t) => t.split('**').map((s, j) => (j % 2 ? <strong key={j}>{s}</strong> : s)); // **bold**
 function Bubble({ who, text, i, av }) { // each chat bubble pops in when it scrolls into view
   const ref = useRef();
-  useEffect(() => { const el = ref.current, o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('in'); o.disconnect(); } }, { threshold: 0.4 }); o.observe(el); return () => o.disconnect(); }, []);
+  useEffect(() => { const el = ref.current, o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('in'); o.disconnect(); } }, { threshold: 0, rootMargin: '0px 0px 18% 0px' }); o.observe(el); return () => o.disconnect(); }, []);
   return (<li ref={ref} className={who === 'MAR' ? 'mar' : 'deer'}>
-    <span className="av" aria-hidden="true">{av ? <img src={asset(av)} alt="" draggable="false" /> : who[0]}</span>
+    <span className="av" aria-hidden="true">{av ? <img src={asset(av)} alt="" draggable="false" onError={(e) => (e.currentTarget.style.display = 'none')} /> : who[0]}</span>
     <div className="bub"><b>{who}</b><p>{text}</p></div></li>);
 }
 // "Tell me more" pop-up of the About section. All text lives in src/data/siteData.js → about.more

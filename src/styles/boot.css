@@ -31,3 +31,7 @@
 @media (max-height:460px){.boot-screen{--f:clamp(10px,2.6vmin,13px);padding:12px 18px;gap:calc(var(--f)*.45)}.b-skills,.b-rule:nth-of-type(2){display:none}.b-name{font-size:clamp(22px,13vmin,44px);margin:0}.b-role{min-height:1.35em}.b-chat{grid-template-columns:1fr 1fr;gap:calc(var(--f)*.4) 14px}.b-chat .av{width:calc(var(--f)*1.7);height:calc(var(--f)*1.7)}}
 @media (max-width:520px){.boot-screen{letter-spacing:.05em}.b-role{letter-spacing:.06em}.b-skills{letter-spacing:.05em}}
 @media (prefers-reduced-motion:reduce){.boot,.boot-screen{transition:none}.b-name.on{animation:none}}
+
+.b-hint{font-size:calc(var(--f)*.72);letter-spacing:.2em;color:#e6c9a0;opacity:0;transition:opacity .5s;margin-top:calc(var(--f)*.35)}.b-hint.on{opacity:.8;animation:bblink2 1.6s ease-in-out infinite}@keyframes bblink2{50%{opacity:.35}}
+@media (max-height:460px){.b-hint{display:none}}
+.boot.lit .boot-screen{max-height:calc(100dvh - 24px)}

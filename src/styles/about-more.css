@@ -1,0 +1,11 @@
+/* "Tell me more" pop-up fixes (loaded by components/AboutMore.jsx) */
+/* 1) your picture fills the whole round avatar (it used to sit as a small square inside the circle) */
+.chat .mar .av{position:relative}.chat .mar .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+/* 2) smooth touch scrolling (iPad / tablets): scrolling is never interrupted by the bubbles popping in */
+.am-win{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
+.chat li{will-change:auto}
+@media (pointer:coarse){
+  .am{backdrop-filter:none;-webkit-backdrop-filter:none;background:#0a0604f5} /* blurred backdrops make iOS Safari drop scroll momentum */
+  .chat li{transform:none;transition:opacity .35s ease}
+  .chat li.in{transform:none}
+}
