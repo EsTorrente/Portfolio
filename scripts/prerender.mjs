@@ -4,23 +4,28 @@
 // interactive experience on top. Also generates dist/llms.txt + dist/sitemap.xml and fails the build if key facts go missing.
 import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'), DIST = path.join(ROOT, 'dist');
-const SITE = process.env.SITE_URL || 'https://estorrente.github.io/Portfolio/'; // ✏️ change if you get a custom domain
+const SITE = process.env.SITE_URL || 'https://estorrente.github.io/Portfolio/'; 
 const load = (f) => import(pathToFileURL(path.join(ROOT, 'src/data', f)).href);
 const [S, P] = await Promise.all([load('siteData.js'), load('portfolioData.js')]);
 const A = S.about, C = A.contact;
 
-// ✏️ EDIT: headline facts shown in the static page, JSON-LD and llms.txt
 const NAME = 'Mar Torrente', FULL_NAME = C.name || 'Maria del Mar Torrente';
 const ROLES = ['Digital Entertainment Design Engineer', 'Technical Artist', '2D & 3D Animator', 'Rigger'];
-const AREAS = ['technical art', 'character rigging', '2D and 3D animation', 'procedural animation', 'programming', 'interactive experiences', 'game design', 'AR/VR', 'illustration', 'creative technology', 'production and creative leadership'];
-// ✏️ EDIT: the achievements a recruiter should see first (shown in the page's About section and in llms.txt)
+
+// Upgraded technical areas reflecting real-time graphics, WebGL, and advanced rigging
+const AREAS = ['technical art', 'character rigging', 'Python rigging automation', '2D and 3D animation', 'procedural animation', 'interactive WebGL experiences', 'game mechanics programming', 'mathematical graphics modeling', 'AR/VR', 'creative technology', 'production and creative leadership'];
+
+// Upgraded highlights to expose detailed technical complexity for recruiters and AI agents
 const HIGHLIGHTS = [
+  'Eridan: Advanced custom character rig built from scratch for Autodesk Maya and Blender 4.3, featuring Python-scripted IK/FK switching, pole targets, driven keys, orient constraints, Geometry Nodes deformation, and custom NPR shading.',
+  'Interactive Architecture: Develops complex web graphics and audio-visualizers using p5.js, Three.js, WebGL, and custom shaders, incorporating spatial hashing and Kuramoto oscillator synchronization.',
+  'Software Engineering: Programs Unity C# mechanics, crafting scripts for UI sticker placement, draggable object behaviors, and automated unit testing.',
+  'Mathematical Modeling: Studies stochastic processes, probability, and queuing theory, applying M/M/1 mathematical models to analyze complex systems.',
   'Regret: a 9-minute 2D animated short produced entirely solo at age 17, with 1M+ views on YouTube.',
   'Platillo: 13-minute interactive animated mystery (producer and visual director) that won three awards in 2026: Best DEX Project, Excellence in Visual Design and Most Original Visual Style.',
-  'Best DEX Project awarded three times (2024-2, 2025-2, 2026-1) and Outstanding Student (IDED 2026), Universidad Pontificia Bolivariana.',
-  'Eridan: a fully custom Blender character rig built from scratch (no autorig) with procedural animation, a facial system and custom tools.',
-  'Leads multidisciplinary teams and production pipelines, from concept to final delivery.',
+  'Best DEX Project awarded three times (2024-2, 2025-2, 2026-1) and Outstanding Student (IDED 2026), Universidad Pontificia Bolivariana.'
 ];
+
 const INTRO = `${NAME} is a Colombian Digital Entertainment Design Engineer who works across ${AREAS.slice(0, -1).join(', ')} and ${AREAS.at(-1)}. She builds custom character rigs and procedural animation systems, produces and directs animated and interactive projects, and leads multidisciplinary teams from first idea to final delivery.`;
 
 const esc = (s = '') => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -47,7 +52,7 @@ const html = `<div id="static-content">
 <main>
 ${section('about', 'About & skills', clean(A.headline), `<h3>Highlights</h3>${ul(HIGHLIGHTS)}${bio}<h3>Skills</h3>${ul(A.skills)}<h3>Software</h3>${ul(A.software.map((s) => s.name))}<h3>Currently learning</h3>${ul(A.learn.map((x) => x.name))}`)}
 ${section('projects', 'Featured projects', '', P.projects.map((p) => article(p, { deep: true })).join('\n'))}
-${section('rigging', 'Rigging (Blender, Maya, Harmony)', 'Custom character rigs, procedural animation systems and rigging tools.', P.rigging.map((p) => article(p, { deep: true })).join('\n'))}
+${section('rigging', 'Rigging (Blender, Maya, Harmony)', 'Custom character rigs, procedural animation systems and Python automation tools.', P.rigging.map((p) => article(p, { deep: true })).join('\n'))}
 ${section('animation', 'Animation', '', P.animation.map((p) => article(p)).join('\n'))}
 ${section('modelling', '3D modelling', '', P.modelling.map((p) => article(p)).join('\n'))}
 ${section('illustration', 'Illustration', P.illustrationIntro?.text || '', `<p>Gallery categories: ${esc(ill.join(', '))}.</p>`)}
@@ -58,10 +63,12 @@ ${section('awards', 'Awards', P.awardsIntro?.text || '', `<ol>${P.awards.map((a)
 <script>(function(d){d.documentElement.classList.add('js');var s=d.getElementById('static-content');if(!s)return;s.querySelectorAll('a').forEach(function(a){a.tabIndex=-1});['header','footer'].forEach(function(t){var e=s.querySelector(t);e&&e.setAttribute('role','none')});var m=s.querySelector('main');if(m){m.setAttribute('role','region');m.setAttribute('aria-label','Portfolio text version')}})(document)</script>`;
 
 const award = P.awards.map((a) => `${a.title} — ${clean(a.organization)}`);
+const detailedKnowsAbout = [...new Set([...AREAS, ...A.skills, ...A.software.map((s) => s.name), 'Python', 'Autodesk Maya', 'Blender 4.3', 'Unity C#', 'React', 'Three.js', 'WebGL', 'p5.js', 'JavaScript ES6', 'Spatial Hashing', 'Kuramoto Oscillator Synchronization', 'M/M/1 Queuing Theory', 'Stochastic Processes'])];
+
 const ld = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'WebSite', '@id': SITE + '#site', url: SITE, name: `${NAME} — Portfolio`, inLanguage: 'en', publisher: { '@id': SITE + '#mar' } },
   { '@type': 'Person', '@id': SITE + '#mar', name: FULL_NAME, alternateName: NAME, jobTitle: ROLES, url: SITE, email: `mailto:${C.email}`, sameAs: [C.linkedin], nationality: { '@type': 'Country', name: 'Colombia' },
-    description: INTRO, affiliation: { '@type': 'EducationalOrganization', name: 'Universidad Pontificia Bolivariana' }, knowsAbout: [...AREAS, ...A.skills, ...A.software.map((s) => s.name)], award,
+    description: INTRO, affiliation: { '@type': 'EducationalOrganization', name: 'Universidad Pontificia Bolivariana' }, knowsAbout: detailedKnowsAbout, award,
     workExample: P.projects.map((p) => ({ '@type': 'CreativeWork', name: p.title, description: clean(p.description), keywords: (p.tags || []).join(', '), ...(ytId(p) ? { url: `https://youtu.be/${ytId(p)}` } : {}) })) }] };
 const jsonld = `<script type="application/ld+json">${JSON.stringify(ld)}</script>`;
 
@@ -81,7 +88,7 @@ for (const m of ['<!--SEO-JSONLD-->', '<!--STATIC-CONTENT-->']) if (!out.include
 out = out.replace('<!--SEO-JSONLD-->', () => jsonld).replace('<!--STATIC-CONTENT-->', () => html);
 fs.writeFileSync(file, out); fs.writeFileSync(path.join(DIST, 'llms.txt'), L); fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
-// ---- self-check: could a no-JS reader identify everything? (fails the build if not)
+// ---- self-check
 const must = [NAME, 'Digital Entertainment Design Engineer', 'Technical Artist', 'Rigger', 'Eridan', 'Platillo', 'StarBlitz', 'Regret', 'Crónicas del Tonusco', 'Vuforia', 'Unity', 'Best DEX Project', C.email, C.linkedin, 'procedural animation', 'AR/VR'];
 const miss = must.filter((m) => !out.toLowerCase().includes(esc(m).toLowerCase()) && !out.toLowerCase().includes(m.toLowerCase()));
 const h1 = (out.match(/<h1[\s>]/g) || []).length, imgsNoAlt = (out.match(/<img(?![^>]*\balt=)[^>]*>/g) || []).length;
