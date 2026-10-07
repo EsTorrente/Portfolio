@@ -29,6 +29,15 @@ const synth = {
   open: (c) => { swoosh(c, {}); [392, 523, 659].forEach((f, i) => tone(c, { f, t: 0.1 + i * 0.07, d: 0.4, v: 0.09, type: 'triangle' })); },
   close: (c) => { swoosh(c, { d: 0.3, v: 0.05, f1: 2000, f2: 250 }); [659, 440].forEach((f, i) => tone(c, { f, t: i * 0.07, d: 0.25, v: 0.08, type: 'triangle' })); },
   ready: (c) => { [523, 659, 784, 1047].forEach((f, i) => tone(c, { f, t: i * 0.09, d: 0.38, v: 0.11, type: 'triangle' })); tone(c, { f: 2093, t: 0.3, d: 0.5, v: 0.03 }); }, // loading finished: bright rising chime
+  // boot-screen sounds: one per step
+  bootId: (c) => tone(c, { f: 330, f2: 300, d: 0.09, v: 0.05, type: 'square' }),
+  bootFound: (c) => { tone(c, { f: 523, d: 0.1, v: 0.09, type: 'triangle' }); tone(c, { f: 784, t: 0.09, d: 0.2, v: 0.09, type: 'triangle' }); },
+  bootName: (c) => { swoosh(c, { d: 0.55, v: 0.06, f1: 120, f2: 1600 }); tone(c, { f: 110, f2: 440, d: 0.5, v: 0.05, type: 'sawtooth' }); tone(c, { f: 1319, t: 0.38, d: 0.35, v: 0.05, type: 'sine' }); },
+  bootRole: (c) => [1200, 1000, 1400].forEach((f, i) => tone(c, { f, t: i * 0.055, d: 0.035, v: 0.03, type: 'square' })),
+  bootMulti: (c) => { tone(c, { f: 440, f2: 880, d: 0.16, v: 0.08, type: 'triangle' }); tone(c, { f: 660, f2: 1320, t: 0.12, d: 0.2, v: 0.07, type: 'triangle' }); },
+  chatDeer: (c) => { tone(c, { f: 320, f2: 210, d: 0.12, v: 0.12, type: 'sine' }); tone(c, { f: 640, t: 0.02, d: 0.06, v: 0.03, type: 'triangle' }); },
+  chatMar: (c) => { tone(c, { f: 520, f2: 720, d: 0.1, v: 0.1, type: 'triangle' }); tone(c, { f: 1040, t: 0.04, d: 0.07, v: 0.03, type: 'sine' }); },
+  bootReady: (c) => { [523, 659, 784, 1047].forEach((f, i) => tone(c, { f, t: i * 0.1, d: 0.5, v: 0.09, type: 'triangle' })); tone(c, { f: 2093, t: 0.4, d: 0.7, v: 0.03 }); },
   viewer: (c) => { tone(c, { f: 300, f2: 620, d: 0.18, v: 0.1 }); tone(c, { f: 920, t: 0.1, d: 0.2, v: 0.04 }); },
 };
 export function play(name) { if (muted) return; const c = ac(); if (!c) return; const b = buffers[name];

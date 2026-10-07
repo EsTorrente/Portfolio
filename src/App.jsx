@@ -10,6 +10,7 @@ import { preloadAll } from './utils/preload';
 import Intro from './components/Intro';
 import RotateHint from './components/RotateHint';
 import Boot from './components/Boot';
+import AgentSummary from './components/AgentSummary';
 import { canFullscreen, enterFullscreen } from './utils/fullscreen';
 import * as M from './utils/music';
 // If the browser blocks autoplay, the intro waits for ONE click/tap ("click to enter") so the music can start by itself afterwards. Set to false to never wait.
@@ -66,6 +67,7 @@ export default function App() {
     {boot && <Boot onDone={() => setBoot(false)} />}
     <MusicDock open={!!open} compact={compact} />
     <RotateHint />
+    <AgentSummary />
     <Cursor />
   </>);
 }

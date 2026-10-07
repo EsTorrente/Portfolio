@@ -15,7 +15,7 @@ export const about = {
   headline: `I like **difficult problems, ambitious ideas,** and figuring out how to make them real.`,
   bio: [
     { h: 'WHO I AM' },
-    `I'm a Colombian **Engineer in Design for Digital Entertainment** and a **multidisciplinary artist** working across **3D art, animation, rigging, illustration, programming, and interactive experiences**.`,
+    `I'm a Colombian **Digital Entertainment Design Engineer** and a **multidisciplinary artist** working across **3D art, animation, rigging, illustration, programming, and interactive experiences**.`,
     { h: 'WHAT I MAKE' },
     `My work ranges from **custom character rigs and procedural animation systems** to **animated films, educational games, and interactive projects**. I've worked across the **full animation pipeline** (from concept and storyboarding through modelling, rigging, animation, rendering, editing, and compositing) and I'm comfortable learning new tools whenever a project demands it.`,
     { h: 'ADAPTABILITY' },

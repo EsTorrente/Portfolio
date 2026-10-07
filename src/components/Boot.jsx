@@ -12,7 +12,7 @@ const TIMES = { // when (ms after start) each part appears
 };
 const CHAT = [['DEERCAT', '...That sounds complicated.'], ['MAR', "It's fine."], ['DEERCAT', 'Is it?'], ['MAR', '...Usually.']];
 const TEXT = {
-  id: 'IDENTIFYING USER...', found: 'USER FOUND.', name: 'MAR TORRENTE', role: 'ENGINEER IN DIGITAL ENTERTAINMENT DESIGN',
+  id: 'IDENTIFYING USER...', found: 'USER FOUND.', name: 'MAR TORRENTE', role: 'DIGITAL ENTERTAINMENT DESIGN ENGINEER',
   skills: '3D ART · ANIMATION · RIGGING · PROGRAMMING · INTERACTIVE EXPERIENCES', multi: 'MULTIDISCIPLINARY USER DETECTED.', ready: 'WORLD READY.',
 };
 
@@ -31,8 +31,10 @@ export default function Boot({ onDone }) {
   const adv = useRef(); adv.current = advance;
   useEffect(() => { const k = (e) => { if (e.key === 'Escape') finish(); else if (!e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); adv.current(); } }; addEventListener('keydown', k, true); return () => removeEventListener('keydown', k, true); }, []);
   const seen = (ms) => t >= ms, chatN = TIMES.chat.filter((ms) => t >= ms).length;
-  const last = useRef(0); useEffect(() => { const n = [TIMES.id, TIMES.found, TIMES.name, TIMES.role, TIMES.multi, ...TIMES.chat].filter((ms) => t >= ms).length; if (n > last.current) { last.current = n; play('tick'); } }, [t]);
-  useEffect(() => { if (seen(TIMES.ready)) play('open'); }, [t >= TIMES.ready]);
+  // a different little sound for each step (defined in utils/sfx.js). If everything is revealed at once (visitor tapped to fast-forward) only the last one plays.
+  const played = useRef(new Set());
+  useEffect(() => { const ev = [[TIMES.id, 'bootId'], [TIMES.found, 'bootFound'], [TIMES.name, 'bootName'], [TIMES.role, 'bootRole'], [TIMES.multi, 'bootMulti'], [TIMES.chat[0], 'chatDeer'], [TIMES.chat[1], 'chatMar'], [TIMES.chat[2], 'chatDeer'], [TIMES.chat[3], 'chatMar'], [TIMES.ready, 'bootReady']];
+    const fresh = ev.filter(([ms]) => t >= ms && !played.current.has(ms)); fresh.forEach(([ms]) => played.current.add(ms)); if (fresh.length) play(fresh[fresh.length - 1][1]); }, [t]);
   return (<div className={'boot' + (out ? ' out' : '') + (seen(TIMES.panel) ? ' lit' : '') + (calm ? ' calm' : '')} role="dialog" aria-label="Welcome" onPointerDown={advance}>
     <div className="boot-screen">
       <i className="bc bc1" /><i className="bc bc2" /><i className="bc bc3" /><i className="bc bc4" />

@@ -17,7 +17,10 @@ export default function PortfolioWindow({ id, origin, onNav, onClosed }) {
     const a = w.animate(reverse ? [{ transform: 'none', opacity: 1 }, { transform: from, opacity: 0 }] : [{ transform: from, opacity: 0 }, { opacity: 1, offset: 0.25 }, { transform: 'none', opacity: 1 }],
       { duration: reverse ? 520 : 820, easing: reverse ? 'cubic-bezier(.6,0,.9,.4)' : 'cubic-bezier(.2,1.15,.3,1)', fill: 'both' }); a.onfinish = done; };
   useLayoutEffect(() => { flip(false, () => setShown(true)); }, []);
-  useEffect(() => { setFilter('ALL'); el.current?.querySelector('.wbody')?.scrollTo(0, 0); }, [id]);
+  const toTop = () => { const w = el.current; if (!w) return; // desktop scrolls .wbody, phones/tablets scroll .wmain → reset every possible scroller (instantly, even if CSS says smooth)
+    ['.wbody', '.wmain', '.content'].forEach((q) => { const n = w.querySelector(q); if (!n) return; try { n.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch { n.scrollTop = 0; } }); };
+  useEffect(() => { setFilter('ALL'); }, [id]);
+  useEffect(() => { toTop(); const r = requestAnimationFrame(toTop); return () => cancelAnimationFrame(r); }, [id, filter]); // new section OR new category → back to the top
   const close = () => { if (closing) return; play('close'); setClosing(true); setShown(false); flip(true, onClosed); };
   useEffect(() => { const k = (e) => e.key === 'Escape' && close(); addEventListener('keydown', k); return () => removeEventListener('keydown', k); });
   useEffect(() => { el.current.querySelector('.wclose').focus(); }, []);
