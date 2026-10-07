@@ -1,6 +1,30 @@
 # NOTE: crawlers only read robots.txt at the ROOT of a domain (https://estorrente.github.io/robots.txt on GitHub Pages).
-# This file starts working if you move to a custom domain (e.g. martorrente.com) or a user-site repo (username.github.io).
+# This file starts working if you move to a custom domain (e.g. martorrente.com) or ALSO publish the files in dist/root-site/ in a user-site repo called  estorrente.github.io
 User-agent: *
+Allow: /
+
+# AI assistants / answer engines: explicitly welcome
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+User-agent: CCBot
 Allow: /
 
 Sitemap: https://estorrente.github.io/Portfolio/sitemap.xml

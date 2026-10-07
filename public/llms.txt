@@ -1,99 +1,234 @@
-# Mar Torrente - Technical Profile and Project Context
+# Maria del Mar Torrente (Mar Torrente) — Digital Entertainment Design Engineer / Technical Artist / 2D & 3D Animator / Rigger
 
-Mar Torrente (full name: Maria del Mar Torrente) is a Digital Entertainment Design Engineer, Technical Artist, Animator, Rigger, and Creative Technologist. 
+> Mar Torrente is a Colombian Digital Entertainment Design Engineer who works across technical art, character rigging, Python rigging automation, 2D and 3D animation, procedural animation, interactive WebGL experiences, game mechanics programming, mathematical graphics modeling, AR/VR, creative technology and production and creative leadership. She builds custom character rigs and procedural animation systems, produces and directs animated and interactive projects, and leads multidisciplinary teams from first idea to final delivery. Her portfolio is itself a playable interactive experience, with reactive particles, a story, original minigames and global leaderboards. Portfolio: https://estorrente.github.io/Portfolio/
 
-## Technical Strengths
+## This portfolio is itself a fully interactive experience
+Mar Torrente's portfolio is not a template: it is an explorable, playable digital world designed as a surreal retro computer inside a dream. Visitors open each portfolio section like a program on a strange old computer, play original minigames hidden in the scene, compete on global leaderboards, and follow a small story told by a deer-cat companion. All art, animation, characters and music direction are by Mar Torrente.
 
-### Advanced Character Rigging & Technical Art
-Eridan is Mar Torrente's strongest technical-art showcase.
-It is a fully custom character rig built from scratch without an autorig, engineered in Autodesk Maya and Blender 4.3. 
-The rig was designed as a production-oriented animation system rather than a simple bone setup.
+- Retro "dream desktop" interface: every portfolio section (Rigging, 3D Modelling, Animation, Illustration, Awards, Projects, About Me, Opinions) is a program icon, and its window physically grows out of the icon with spatial, animated transitions.
+- Living background: a looping video environment with a separate transparent foreground layer and mouse parallax (a single pre-rendered video on Apple devices that cannot play transparent WebM).
+- Real-time reactive particle system: flowing organic particles drawn on a canvas that bend around the mouse or finger. Quality adapts to the device, it respects reduced-motion settings, and it switches itself off automatically if the frame rate drops.
+- A storyline: the loading screen tells a short story about a deer-cat who collects unfinished dreams in an old computer, with a playable Snake game to pass the time while all media preloads.
+- Three original playable minigames hidden in the environment, opened by clicking glowing stars on the old computer, the glasses and the pillar: Cat-Man (a Pac-Man-style maze where a cat dodges monsters), Type-A-Cat (a 60-second typing speed test with WPM, CPM and mistakes) and Mask Match (a memory game with eight pixel-art cat masks). All their pixel art is generated in code.
+- Persistent global leaderboards for every minigame. Players pick a 3-emoji tag instead of a name; scores are validated and stored in a JSON file inside a GitHub repository through a Cloudflare Worker (browser → Cloudflare Worker → GitHub API).
+- Ambient music player with a playlist that fades out automatically while project videos play and fades back in afterwards, plus synthesized and custom sound effects, a custom cursor and a mute / volume control.
+- Rich project viewers: embedded demo videos, zoomable image galleries, hand-painted texture galleries, an "About" section with a "tell me more" pop-up and an in-world chat between Mar and her deer-cat.
+- Responsive for every device: separate phone and tablet layouts, full-screen and landscape support, touch and keyboard controls.
+- Accessibility and performance engineering: keyboard navigation, focus states, ARIA labels, reduced-motion support, lazy-loaded games, preloading behind the intro, adaptive quality and error boundaries.
+- Built with React and Vite, canvas 2D particle systems, Web Audio and CSS animation, with this text version prerendered from the same data files at build time so crawlers, screen readers and AI assistants can read the whole portfolio.
 
-Technical systems include:
-- IK/FK switching and snapping built via custom Python scripting
-- Independent body-part isolation
-- Custom animator tweak controls, pole targets, orient constraints, and driven keys
-- Automated shoulder and foot systems
-- Custom finger controllers
-- Squash/stretch systems
-- Facial rig combining bones, shape keys, and Bendy Bones
-- Lip-sync controls for M/E/A/O/P
-- Jaw and mouth systems
-- Eye, eyebrow, and ear relationships
-- Procedural eye highlight and dart animation
-- Procedural breathing
-- Clothing and accessory systems
-- Goggles space switching
-- Geometry Nodes deformation effects
-- Custom NPR/Toon shader
-- Independent key, fill, and rim lighting
-- RGB light-channel mapping
-- Proxy meshes for performance
-- Unity-compatible deformation workflows
+### Minigames
+- **Cat-Man**: Pac-Man-style maze game: a cat eats fish bits, dodges three differently-behaving monsters and uses catnip power-ups.
+- **Type-A-Cat**: 60-second typing speed test with WPM, CPM, mistake tracking and a ranking from "Sleepy Kitten" to "Keyboard Panther".
+- **Mask Match**: Memory card game with eight pixel-art cat masks, move and time counters.
 
-This project demonstrates advanced character technical art, rigging-system design, Python automation, procedural animation, animator-facing tools, shader development, and performance-aware production workflows.
+## Highlights
+- Interactive portfolio: this website is a fully interactive, playable experience: a surreal retro-computer desktop, reactive particles, an animated storyline, three original minigames and global leaderboards with 3-emoji player tags (browser → Cloudflare Worker → GitHub API).
+- Eridan: Advanced custom character rig built from scratch for Autodesk Maya and Blender 4.3, featuring Python-scripted IK/FK switching, pole targets, driven keys, orient constraints, Geometry Nodes deformation, and custom NPR shading.
+- Interactive Architecture: Develops complex web graphics and audio-visualizers using p5.js, Three.js, WebGL, and custom shaders, incorporating spatial hashing and Kuramoto oscillator synchronization.
+- Software Engineering: Programs Unity C# mechanics, crafting scripts for UI sticker placement, draggable object behaviors, and automated unit testing.
+- Mathematical Modeling: Studies stochastic processes, probability, and queuing theory, applying M/M/1 mathematical models to analyze complex systems.
+- Regret: a 9-minute 2D animated short produced entirely solo at age 17, with 1M+ views on YouTube.
+- Platillo: 13-minute interactive animated mystery (producer and visual director) that won three awards in 2026: Best DEX Project, Excellence in Visual Design and Most Original Visual Style.
+- Best DEX Project awarded three times (2024-2, 2025-2, 2026-1) and Outstanding Student (IDED 2026), Universidad Pontificia Bolivariana.
 
-### Portfolio Engineering
-The portfolio itself is an interactive software project.
+## Projects and exactly what Mar did in each
 
-It combines:
-- React
-- Three.js / WebGL / p5.js
-- Clean modular ES6 implementations
-- Real-time reactive particle simulations utilizing spatial hashing and Kuramoto oscillator synchronization
-- Interactive 3D elements
-- Animated UI transitions
-- Touch and pointer interaction
-- Environmental minigames
-- Persistent competitive leaderboard functionality
-- Backend Architecture: Browser → Cloudflare Worker → GitHub API
-- Responsive and performance-adaptive rendering
-- Accessibility and reduced-motion support
+### Platillo — Interactive Animated Mystery · Producer · Visual Director
+A 13-minute interactive mystery combining animation, puzzle mechanics, character-driven storytelling, and a stylized 3D production pipeline.
 
-The portfolio is intentionally designed as an explorable digital environment rather than a conventional portfolio website.
+  Mar Torrente's responsibilities in Platillo:
+  - Producing and coordinating the project pipeline and schedule
+  - Leading a junior team through a four-month production cycle
+  - Modelling, rigging, and texturing all five main characters
+  - Developing procedural animation systems for the main rigs
+  - Creating custom rigging tools and UI workflows
+  - Developing proxy systems for smoother animation
+  - Designing and developing a custom NPR shader pipeline inspired by Arcane
+  - Creating a lighting workflow with independent control over ambient occlusion, shadows, rim lighting, and color channels
+  - Directing the project's soundtrack and overall visual aesthetic
+  - Supervising animation polish and providing feedback across all six shorts
+  - Animating the 1st and 5th shorts
+  - Video editing and final compositing
 
-## Technical Profile
-Mar Torrente's work spans several overlapping disciplines:
+  Recognition:
+  - Most Original Visual Style
+  - Excellence in Visual Design
+  - Best DEX Project (2026‑01)
 
-### Technical Art
-- Advanced character rigging (Blender 4.3, Maya)
-- Python rigging automation and tooling
-- Procedural animation
-- Character deformation
-- NPR/toon shader development
-- Real-time lighting systems
-- Geometry Nodes
-- Performance-aware workflows
-- Proxy systems
+  Video: https://youtu.be/fdkMMAWzWsQ
 
-### Animation
-- 2D animation
-- 3D animation
-- Character animation
-- Facial animation & Lip sync
-- Procedural animation
-- Motion capture integration
-- Editing and compositing
+### StarBlitz — Educational virtual world · Game Design · Programming · 2D/3D Art · Project Management
+An educational virtual world that teaches children to recognize grooming and unsafe situations by practicing real decisions and seeing their consequences, instead of being given warnings.
 
-### Interactive Development & Engineering
-- Unity (C#) & C++ Graphics (OpenFrameworks)
-- Mathematical graphics modeling (Stochastic processes, M/M/1 queuing theory applications)
-- Game mechanics, UI physics, and automated unit testing
-- React, p5.js, Three.js, WebGL
-- Interactive storytelling
-- AR/Vuforia
-- VR
+  Mar Torrente's responsibilities in StarBlitz:
+  - Programmed gameplay mechanics, interactions, and interactive systems
+  - Designed gameplay systems and adaptive risk scenarios
+  - Designed how player decisions affected the progression and presentation of scenarios
+  - Developed 2D and 3D assets, including character art, models, rigs, and animations
+  - Designed child-accessible UI/UX
+  - Researched online grooming, digital safety, and vulnerability factors
+  - Coordinated team responsibilities, deadlines, and production priorities
+  - Maintained project documentation and development planning
 
-### Creative Leadership
-- Project management & Production planning
-- Creative direction & Visual direction
-- Multidisciplinary team leadership
-- Pipeline coordination
+  Video: https://youtu.be/xijbo6FrxBQ
 
-## Evidence of Technical Complexity
-- **Eridan:** Demonstrates advanced character technical art through a custom rigging system built without an autorig, combining Python-driven controls for Maya/Blender 4.3, procedural systems, facial deformation, secondary animation, shader development, and performance optimization.
-- **Portfolio Website:** Demonstrates creative coding through React, p5.js, Three.js, reactive WebGL particles powered by spatial hashing, interactive 3D elements, environmental interactions, minigames, a persistent leaderboard infrastructure (Browser → Cloudflare Worker → GitHub API), responsive interaction, and adaptive rendering.
-- **Unity Mechanics:** Demonstrates software engineering discipline through C# physics scripting, draggable UI object scale behaviors, and ThreadManager unit testing. 
-- **Crónicas del Tonusco:** Demonstrates production-scale interactive development through a ~40-minute AR experience with branching narrative, object recognition, minigames, animation, mocap integration, and Unity/Vuforia programming.
-- **Platillo:** Demonstrates multidisciplinary production leadership through creative direction, visual direction, rigging, procedural animation, custom shaders, animation, pipeline coordination, and team management.
-- **Regret:** Demonstrates solo execution and audience reach through a 9-minute production created at age 17 that gained over 1 million views.
+### Regret — 9-Minute 2D Animated Short · Solo Production
+A 9-minute animated short I created independently at 17, taking the project from concept to final delivery, and eventually reaching more than one million views on YouTube.
+
+  Video: https://youtu.be/fDQSp0BcJGo
+
+### Crónicas del Tonusco — Augmented Reality Museum Experience · Concept · Project Lead · Programming
+An approximately 40-minute augmented reality experience in which visitors of the Juan del Corral Museum scan real objects to trigger animated scenes that place them back into their historical and cultural context.
+
+  Mar Torrente's responsibilities in Crónicas del Tonusco:
+  - Project leadership and coordination
+  - Concept development and narrative design
+  - Historical research
+  - Branching narrative and decision design
+  - AR interaction programming in Unity
+  - Vuforia image/object recognition and interaction
+  - Gameplay and minigame programming
+  - UI/UX design and implementation
+  - Character rigging
+  - Character animation
+  - Motion-capture integration and cleanup
+  - Character texturing
+  - 3D asset and environment production
+  - Sound design
+  - Production planning and task distribution
+  - Guiding teammates through Blender animation workflows
+
+  Building the experience:
+  - Augmented reality object recognition through Vuforia
+  - Branching narrative logic
+  - Interactive minigames
+  - Player decisions and progression
+  - UI and interaction systems
+  - Cinematic triggers
+  - Object-scanning interactions
+
+  What I learned:
+  - They find it.
+  - They scan it.
+  - They interact with it.
+  - And they see it become part of a story.
+
+  Video: https://youtu.be/fPf5k40GXlo
+
+## Rigging (full technical detail)
+
+### Eridan (BLENDER) — Custom Character Rig · Blender
+My first fully custom character rig, built entirely from scratch without an autorig. I designed the system around animator-friendly workflows, combining expressive facial controls, procedural animation, custom tools, interchangeable clothing, and a stylized NPR rendering pipeline.
+
+  Rigging & deformation:
+  - Full IK/FK switching and snapping
+  - Custom tweak controls
+  - Independent isolation for the arms, legs, neck, and head
+  - IK shoulder automation
+  - Optional foot collision with the root for easier walk cycles
+  - Custom finger controller
+  - Squash and stretch synchronized with blinks and eyebrow movement
+  - Ear controls synchronized with the eyebrows
+
+  Facial system:
+  - Chewing control
+  - Jaw-driven mouth opening while keeping the lips closed
+  - Zipper lips
+  - Custom eye controls
+
+  Procedural animation:
+  - Eye highlight shake
+  - Eye dart
+  - Breathing
+
+  Custom NPR shader:
+  - Main light
+  - Fill light
+  - Rim light
+  - Shadows
+  - Ambient occlusion
+  - Shadow colors
+  - Rim-light colors
+  - Other lighting properties
+
+  Clothing & accessories:
+  - Cape
+  - Goggles
+  - Shirt
+  - Pants
+  - Boots
+  - Waist cloth
+  - Belt accessories
+  - Gloves
+
+### Golub (BLENDER) — Custom Character Rig · Procedural Animation · Blender
+A custom rig for an intentionally awkward pigeon, designed to turn repetitive locomotion and flight animation into simple, animator-friendly controls.
+
+### Skirt (BLENDER) — Deformation & Cloth Rig · Blender
+A custom deformation system developed to solve a common character-animation problem: keeping a skirt flexible and visually clean while preventing it from clipping through the legs.
+
+### Biped Character (MAYA) — Maya · Character Rigging
+A character-rigging study focused on deformation quality, weight painting, and building a reliable animation-ready setup using Maya's autorig workflow.
+
+### Dragon (MAYA) — Maya · Autorig · Driven Keys
+A customizable dragon rig built around procedural relationships and driven-key systems, allowing the character's proportions and wing behavior to be adjusted without rebuilding the setup.
+
+### Excavator (MAYA) — Mechanical Rigging · Procedural Animation · Maya
+A mechanical rig designed to feel like a small toy vehicle, with procedural track movement and intuitive controls for operating the excavator.
+
+### Hand (MAYA) — Driven Keys · Weight Painting · Maya
+A compact rigging study exploring how complex hand movement can be simplified into a small set of animator-friendly attributes.
+
+### Aria (HARMONY) — Harmony · Character Rigging
+A Harmony character rig developed as part of my 2D animation work.
+
+## Animation
+- **Platillo: Intro**: The opening sequence of Platillo, a 13-minute interactive animated mystery. I contributed across the entire production pipeline, from character creation and rigging to animation, visual direction, and production coordination.
+- **Platillo: Evidence 4, Hugo**: A character-animation sequence from Platillo, taking Hugo from model to final performance through modelling, rigging, and animation.
+- **Akali vs Gru**: An animation study focused on understanding why a scene works, not simply reproducing its final poses.
+- **Void**: 
+
+## 3D modelling and hand-painted textures
+- **Granny**: A character created by translating a real person into a stylized fictional design, combining anatomical observation with costume, shape language, and character development.
+- **Aragorn**: A character sculpt built completely from scratch, focused on anatomy, proportions, facial structure, and translating a recognizable character into a 3D form.
+- **Low-Poly Astronaut**: A lightweight character designed for real-time VR, balancing visual clarity, stylized design, and performance constraints.
+- **Eri: Base Mesh**: A reusable character base mesh designed with future sculpting, rigging, animation, and deformation in mind.
+- **Steampunk Cat**: A stylized character combining organic anatomy with mechanical design, developed through shape language, costume, and visual storytelling.
+- **Eridan**: Hand-painted character textures developed as part of Platillo, designed to work with the project’s stylized NPR rendering pipeline.
+- **Hugo**: Hand-painted skin and character textures developed for Hugo, with emphasis on readable forms, stylized color, and consistency with the Platillo visual language.
+- **Julia**: Hand-painted skin and character textures developed for Julia, balancing expressive color with clear forms and consistency with the Platillo visual language.
+- **Lira**: Hand-painted skin and character textures developed for Lira, designed to keep her shapes readable while staying consistent with the Platillo visual language.
+- **Granny**: Hand-painted textures developed for Granny, using painted color and surface detail to reinforce her costume, shape language, and personality.
+- **Astronaut**: Hand-painted textures developed for the low-poly VR astronaut, communicating form, material, and detail without relying on geometric complexity.
+- **Golub**: Hand-painted textures developed for Golub, the pigeon from Platillo, supporting the character’s awkward personality and stylized rendering.
+
+## Skills & tools
+- Project Management, Rigging, 3D Animation, Experience Design, Emotional Storytelling, Creative Direction
+- Software: Blender, Maya, Harmony, Unity, MotionBuilder, After Effects
+- Learning: Houdini, Moho, Advanced Simulations, Unreal Engine
+
+## Awards
+- 2026 · Outstanding Student, IDED 2026 — Universidad Pontificia Bolivariana · 2026. Recognized as the most outstanding student within the Ingeniería en Diseño de Entretenimiento Digital program in 2026.
+- 2026 · Best DEX Project (2026‑01) — Universidad Pontificia Bolivariana · May 2026. Awarded to Platillo as the best project produced within the DEX program during the 2026-1 semester. Issued by: Álvaro Enrique Ospina Sanjuan.
+- 2026 · Excellence in Visual Design — Universidad Pontificia Bolivariana · May 2026. Awarded to Platillo for its visual development, stylized rendering, and cohesive artistic direction. Issued by: Álvaro Enrique Ospina Sanjuan.
+- 2026 · Most Original Visual Style — Universidad Pontificia Bolivariana · May 2026. Awarded to Platillo for its distinctive visual identity and creative approach to animated storytelling. Issued by: Álvaro Enrique Ospina Sanjuan.
+- 2025 · Best DEX Project (2025‑02) — Universidad Pontificia Bolivariana · November 2025. Recognized as the best project produced within the DEX program during the 2025-2 semester. Issued by: Álvaro Enrique Ospina Sanjuan.
+- 2025 · Greatest Social / Cultural Impact (2025-1) — Universidad Pontificia Bolivariana · May 2025. Recognized for developing a project with significant social and cultural impact, combining creative development with a meaningful real-world purpose. Issued by: Álvaro Enrique Ospina Sanjuan.
+- 2024 · Best DEX Project (2024‑02) — Universidad Pontificia Bolivariana · November 2024. Recognized as the best project produced within the DEX program during the 2024-2 semester. Issued by: Álvaro Enrique Ospina Sanjuan.
+
+## Site sections
+- The interactive experience: https://estorrente.github.io/Portfolio/#experience
+- About & skills: https://estorrente.github.io/Portfolio/#about
+- Featured projects: https://estorrente.github.io/Portfolio/#projects
+- Who did what: https://estorrente.github.io/Portfolio/#contributions
+- Rigging: https://estorrente.github.io/Portfolio/#rigging
+- Animation: https://estorrente.github.io/Portfolio/#animation
+- 3D modelling: https://estorrente.github.io/Portfolio/#modelling
+- Illustration: https://estorrente.github.io/Portfolio/#illustration
+- Awards: https://estorrente.github.io/Portfolio/#awards
+
+## Contact
+- Email: estorrentee@gmail.com
+- LinkedIn: https://www.linkedin.com/in/martorrente/
+- Location: Colombia
