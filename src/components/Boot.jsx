@@ -27,7 +27,10 @@ export default function Boot({ onDone }) {
   const avatars = about.more?.avatars || {};
   const finish = () => { if (done.current) return; done.current = true; setOut(true); setTimeout(onDone, 380); };
   useEffect(() => { const t0 = performance.now(), i = setInterval(() => { const e = performance.now() - t0; setT(e); if (e >= TIMES.end) clearInterval(i); }, 80); return () => clearInterval(i); }, []); // stops at the end and waits
-  const advance = () => { if (complete) finish(); else { setFf(true); setT(TIMES.end + 1); } }; // 1st tap: show everything · 2nd tap: enter
+  // The scene closes on pointer-DOWN, but a finger lifts ~100 ms later and the browser then sends a "click" to whatever is under it. By then the scene is gone,
+  // so that click used to open the icon underneath. This swallows that one click (and gives up after 0.7 s if there isn't one, e.g. the finger dragged away).
+  const shield = () => { const kill = (e) => { e.stopImmediatePropagation(); e.preventDefault(); off(); }, off = () => { removeEventListener('click', kill, true); clearTimeout(t); }, t = setTimeout(off, 700); addEventListener('click', kill, true); };
+  const advance = (e) => { if (complete) { if (e?.type === 'pointerdown') shield(); finish(); } else { setFf(true); setT(TIMES.end + 1); } }; // 1st tap: show everything · 2nd tap: enter
   const adv = useRef(); adv.current = advance;
   useEffect(() => { const k = (e) => { if (e.key === 'Escape') finish(); else if (!e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); adv.current(); } }; addEventListener('keydown', k, true); return () => removeEventListener('keydown', k, true); }, []);
   const seen = (ms) => t >= ms, chatN = TIMES.chat.filter((ms) => t >= ms).length;

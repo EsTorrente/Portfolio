@@ -56,6 +56,12 @@ export default function App() {
   useEffect(() => { if (!AUTO_FULLSCREEN_ON_PHONES || !compact || document.documentElement.classList.contains('tablet') || !canFullscreen() || !matchMedia('(pointer:coarse)').matches) return;
     const go = () => { enterFullscreen(); off(); }, off = () => removeEventListener('pointerup', go, true); addEventListener('pointerup', go, true); return off; }, [compact]);
   useEffect(() => { document.documentElement.dataset.phase = phase; }, [phase]); // the FPS guard waits for 'done'
+  // Ghost-tap shield: if a tap STARTS while the loading screen is up but the screen is already gone when the finger lifts (the first touch starts the music, which ends the
+  // loading screen), swallow that tap's click, otherwise it lands on whatever is underneath (e.g. the SKIP button of the boot scene or a desktop icon).
+  useEffect(() => { let armed = 0; const ph = () => document.documentElement.dataset.phase;
+    const down = () => { armed = ph() === 'intro' ? performance.now() : 0; };
+    const click = (e) => { if (armed && ph() !== 'intro' && performance.now() - armed < 1500) { e.stopImmediatePropagation(); e.preventDefault(); } armed = 0; };
+    addEventListener('pointerdown', down, true); addEventListener('click', click, true); return () => { removeEventListener('pointerdown', down, true); removeEventListener('click', click, true); }; }, []);
   useEffect(() => initSfx(), []);
   const openSec = useCallback((id, rect) => { if (rect) play('open'),  setOrigin(rect); location.hash = '/' + id; }, []);
   const closed = useCallback(() => { history.pushState('', document.title, location.pathname + location.search); setOpen(null); setOrigin(null); }, []);
