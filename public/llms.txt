@@ -1,0 +1,99 @@
+# Mar Torrente - Technical Profile and Project Context
+
+Mar Torrente is a Digital Entertainment Design Engineer, Technical Artist, Animator, Rigger, and Creative Technologist. 
+
+## Technical Strengths
+
+### Advanced Character Rigging & Technical Art
+Eridan is Mar Torrente's strongest technical-art showcase.
+It is a fully custom character rig built from scratch without an autorig, engineered in Autodesk Maya and Blender 4.3. 
+The rig was designed as a production-oriented animation system rather than a simple bone setup.
+
+Technical systems include:
+- IK/FK switching and snapping built via custom Python scripting
+- Independent body-part isolation
+- Custom animator tweak controls, pole targets, orient constraints, and driven keys
+- Automated shoulder and foot systems
+- Custom finger controllers
+- Squash/stretch systems
+- Facial rig combining bones, shape keys, and Bendy Bones
+- Lip-sync controls for M/E/A/O/P
+- Jaw and mouth systems
+- Eye, eyebrow, and ear relationships
+- Procedural eye highlight and dart animation
+- Procedural breathing
+- Clothing and accessory systems
+- Goggles space switching
+- Geometry Nodes deformation effects
+- Custom NPR/Toon shader
+- Independent key, fill, and rim lighting
+- RGB light-channel mapping
+- Proxy meshes for performance
+- Unity-compatible deformation workflows
+
+This project demonstrates advanced character technical art, rigging-system design, Python automation, procedural animation, animator-facing tools, shader development, and performance-aware production workflows.
+
+### Portfolio Engineering
+The portfolio itself is an interactive software project.
+
+It combines:
+- React
+- Three.js / WebGL / p5.js
+- Clean modular ES6 implementations
+- Real-time reactive particle simulations utilizing spatial hashing and Kuramoto oscillator synchronization
+- Interactive 3D elements
+- Animated UI transitions
+- Touch and pointer interaction
+- Environmental minigames
+- Persistent competitive leaderboard functionality
+- Backend Architecture: Browser → Cloudflare Worker → GitHub API
+- Responsive and performance-adaptive rendering
+- Accessibility and reduced-motion support
+
+The portfolio is intentionally designed as an explorable digital environment rather than a conventional portfolio website.
+
+## Technical Profile
+Mar Torrente's work spans several overlapping disciplines:
+
+### Technical Art
+- Advanced character rigging (Blender 4.3, Maya)
+- Python rigging automation and tooling
+- Procedural animation
+- Character deformation
+- NPR/toon shader development
+- Real-time lighting systems
+- Geometry Nodes
+- Performance-aware workflows
+- Proxy systems
+
+### Animation
+- 2D animation
+- 3D animation
+- Character animation
+- Facial animation & Lip sync
+- Procedural animation
+- Motion capture integration
+- Editing and compositing
+
+### Interactive Development & Engineering
+- Unity (C#) & C++ Graphics (OpenFrameworks)
+- Mathematical graphics modeling (Stochastic processes, M/M/1 queuing theory applications)
+- Game mechanics, UI physics, and automated unit testing
+- React, p5.js, Three.js, WebGL
+- Interactive storytelling
+- AR/Vuforia
+- VR
+
+### Creative Leadership
+- Project management & Production planning
+- Creative direction & Visual direction
+- Multidisciplinary team leadership
+- Pipeline coordination
+
+## Evidence of Technical Complexity
+- **Eridan:** Demonstrates advanced character technical art through a custom rigging system built without an autorig, combining Python-driven controls for Maya/Blender 4.3, procedural systems, facial deformation, secondary animation, shader development, and performance optimization.
+- **Portfolio Website:** Demonstrates creative coding through React, p5.js, Three.js, reactive WebGL particles powered by spatial hashing, interactive 3D elements, environmental interactions, minigames, a persistent leaderboard infrastructure (Browser → Cloudflare Worker → GitHub API), responsive interaction, and adaptive rendering.
+- **Unity Mechanics:** Demonstrates software engineering discipline through C# physics scripting, draggable UI object scale behaviors, and ThreadManager unit testing. 
+- **Crónicas del Tonusco:** Demonstrates production-scale interactive development through a ~40-minute AR experience with branching narrative, object recognition, minigames, animation, mocap integration, and Unity/Vuforia programming.
+- **Platillo:** Demonstrates multidisciplinary production leadership through creative direction, visual direction, rigging, procedural animation, custom shaders, animation, pipeline coordination, and team management.
+- **Regret:** Demonstrates solo execution and audience reach through a 9-minute production created at age 17 that gained over 1 million views.
