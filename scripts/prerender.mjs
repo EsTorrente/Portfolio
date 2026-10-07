@@ -97,7 +97,8 @@ const detailedKnowsAbout = [...new Set([...AREAS, ...A.skills, ...A.software.map
 
 const ME = { '@id': SITE + '#mar' }, gameNode = ([n, d]) => ({ '@type': 'VideoGame', name: n, description: d, genre: ['Arcade', 'Casual'], gamePlatform: 'Web browser', playMode: 'SinglePlayer', author: ME, isPartOf: { '@id': SITE + '#experience' }, url: SITE });
 const ld = { '@context': 'https://schema.org', '@graph': [
-  { '@type': 'WebSite', '@id': SITE + '#site', url: SITE, name: `${NAME} — Portfolio`, inLanguage: 'en', publisher: ME },
+  { '@type': 'WebSite', '@id': SITE + '#site', url: SITE, name: NAME, alternateName: [FULL_NAME, `${NAME} Portfolio`], inLanguage: 'en', publisher: ME }, // Google uses name/alternateName as the site name in results
+  { '@type': 'ProfilePage', '@id': SITE + '#profile', url: SITE, name: `${FULL_NAME} (${NAME}) — Portfolio`, inLanguage: 'en', dateModified: new Date().toISOString(), mainEntity: ME, isPartOf: { '@id': SITE + '#site' } }, // tells Google this page is the profile of this person,
   { '@type': ['WebApplication', 'CreativeWork'], '@id': SITE + '#experience', name: `${NAME} — interactive portfolio experience`, url: SITE, description: EXP_SUMMARY, applicationCategory: 'Interactive portfolio / creative technology', operatingSystem: 'Any (modern web browser)', browserRequirements: 'Requires JavaScript; a text-only version is also provided', featureList: EXP_FEATURES, creator: ME, author: ME, keywords: 'interactive portfolio, reactive particles, minigames, leaderboard, storytelling, technical art, rigging, animation' },
   ...MINIGAMES.map(gameNode),
   { '@type': 'Person', '@id': SITE + '#mar', name: FULL_NAME, alternateName: NAME, jobTitle: ROLES, url: SITE, email: `mailto:${C.email}`, sameAs: [C.linkedin], nationality: { '@type': 'Country', name: 'Colombia' },
