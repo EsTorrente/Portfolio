@@ -49,7 +49,7 @@ export const about = {
       ['DEERCAT', `She is incurable.`],
       ['MAR', `Anyway.`],
     ],
-    avatars: { DEERCAT: '/assets/intro/color-logo.webp', MAR: null }, // MAR: null = shows an "M"; put e.g. '/assets/about/mar-avatar.webp' to use your own picture
+    avatars: { DEERCAT: '/assets/intro/color-logo.webp', MAR: '/assets/about/me.webp' }, // MAR: your picture (set to null to go back to the "M" letter)
     closingTitle: 'WHAT I WANT MY WORK TO DO',
     closing: [
       `I love coming up with ideas, but I care just as much about **what those ideas can do once they leave my head**.`,
