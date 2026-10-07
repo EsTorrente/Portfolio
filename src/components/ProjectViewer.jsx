@@ -20,6 +20,21 @@ const mediaOf = (it) => it.youtube ? [{ kind: 'yt', title: it.title, id: it.yout
   : it.images?.length > 1 ? it.images.map((src, i) => ({ kind: 'image', title: it.imageTitles?.[i] || `Image ${String(i + 1).padStart(2, '0')}`, src }))
   : [{ kind: 'image', title: it.title, src: it.images?.[0] || it.image, fallback: it.fallback }];
 
+// YouTube embed that tells the site when it plays/pauses (YouTube's postMessage API), so the site music fades out while the video plays and comes back after.
+function YT({ item, m }) {
+  const ref = useRef(), tok = useRef({});
+  useEffect(() => {
+    const f = ref.current; if (!f) return;
+    const onMsg = (e) => { if (e.source !== f.contentWindow) return; let d = e.data; if (typeof d === 'string') { try { d = JSON.parse(d); } catch { return; } }
+      const st = d?.event === 'onStateChange' ? d.info : d?.event === 'infoDelivery' ? d.info?.playerState : undefined;
+      if (st === 1) duck(tok.current); else if (st === 2 || st === 0) release(tok.current); };
+    const hello = () => { try { f.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); f.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'], id: 1, channel: 'widget' }), '*'); } catch { /* not ready yet */ } };
+    addEventListener('message', onMsg); f.addEventListener('load', hello); const t = [300, 1200, 3000].map((ms) => setTimeout(hello, ms));
+    return () => { removeEventListener('message', onMsg); f.removeEventListener('load', hello); t.forEach(clearTimeout); release(tok.current); }; // closing the pop-up / switching video brings the music back
+  }, []);
+  return <iframe ref={ref} className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0&enablejsapi=1`} title={`${item.title} on YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
+}
+
 function Player({ item, media, cur: want }) {
   const cur = want < media.length ? want : 0; // never index past the list
   const [bad, setBad] = useState(false), [ready, setReady] = useState(false), [fs, setFs] = useState(false), box = useRef(), vid = useRef();
@@ -31,7 +46,7 @@ function Player({ item, media, cur: want }) {
   useEffect(() => () => release(tok.current), [cur, item.id]); // video changed / popup closed → music comes back
   useEffect(() => { // browsers (esp. Safari) refuse autoplay for videos that have an audio track unless muted → if blocked, retry muted so it always starts
     const v = vid.current; if (!v) return; const go = () => v.play()?.catch(() => { v.muted = true; v.play()?.catch(() => {}); }); go(); v.addEventListener('loadeddata', go, { once: true }); return () => v.removeEventListener('loadeddata', go); }, [m.src, bad]);
-  if (m.kind === 'yt') return <iframe className="pv-video" src={`https://www.youtube-nocookie.com/embed/${m.id}?rel=0`} title={`${item.title} on YouTube`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />;
+  if (m.kind === 'yt') return <YT key={m.id} item={item} m={m} />;
   if (m.kind === 'image') return <Zoom fill resetKey={m.src}><Media key={m.src} src={m.src} fallback={m.fallback} alt={m.title} label={item.title} ratio={1.4} className="pv-hero" /></Zoom>;
   if (bad) return <Slate n={cur + 1} title={m.title} />;
   const toggleFs = () => { const el = box.current;
