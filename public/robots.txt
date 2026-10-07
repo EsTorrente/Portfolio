@@ -1,0 +1,6 @@
+# NOTE: crawlers only read robots.txt at the ROOT of a domain (https://estorrente.github.io/robots.txt on GitHub Pages).
+# This file starts working if you move to a custom domain (e.g. martorrente.com) or a user-site repo (username.github.io).
+User-agent: *
+Allow: /
+
+Sitemap: https://estorrente.github.io/Portfolio/sitemap.xml
