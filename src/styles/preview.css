@@ -1,26 +1,37 @@
-.pr{position:fixed;inset:0;z-index:270;display:grid;place-items:center;background:rgba(5,3,10,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));animation:prIn .35s ease both;touch-action:manipulation;cursor:auto}
-.pr *{cursor:auto}.pr button{cursor:pointer}
+/* first-open preview popup — uses the site's own tokens (--bg2, --o2, --hand, --cr…) so it looks like part of the drawing */
+.pr{position:fixed;inset:0;z-index:270;display:grid;place-items:center;background:rgba(8,4,2,.72);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));animation:prIn .35s ease both;touch-action:manipulation}
+body.cc .pr,body.cc .pr *{cursor:none!important}
 @keyframes prIn{from{opacity:0}to{opacity:1}}
-@keyframes prPop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
-@keyframes prGlow{0%,100%{box-shadow:0 0 0 1px rgba(255,200,120,.35),0 0 24px rgba(255,170,80,.25),0 20px 70px rgba(0,0,0,.7)}50%{box-shadow:0 0 0 1px rgba(255,200,120,.7),0 0 44px rgba(255,170,80,.5),0 20px 70px rgba(0,0,0,.7)}}
-.pr-card{width:min(92vw,calc((100dvh - 150px)*1.7778),1100px);max-width:100%;background:#120c1c;border-radius:12px;overflow:hidden;animation:prPop .45s cubic-bezier(.2,.9,.3,1.2) both,prGlow 2.4s ease-in-out infinite;color:#fff;font-family:inherit}
-.pr-head{display:flex;align-items:center;gap:10px;padding:9px 10px 9px 14px;background:linear-gradient(90deg,#ff9a3c,#ff5d8f);color:#1a0d0a;min-height:40px}
-.pr-badge{font-weight:800;letter-spacing:.14em;font-size:clamp(11px,1.6vw,14px);white-space:nowrap;background:#1a0d0a;color:#ffc27a;padding:4px 9px;border-radius:99px}
-.pr-sub{flex:1;font-size:clamp(11px,1.5vw,14px);font-weight:600;line-height:1.2;min-width:0}
-.pr-x{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.35);color:#fff;font-size:16px;line-height:1}
-.pr-x:hover{background:rgba(0,0,0,.6)}
-.pr-stage{position:relative;aspect-ratio:16/9;background:#000}
-.pr-stage video{width:100%;height:100%;object-fit:contain;display:block}
-.pr-mute{position:absolute;right:10px;bottom:10px;border:0;border-radius:99px;padding:8px 12px;background:rgba(0,0,0,.65);color:#fff;font-weight:700;font-size:12px;letter-spacing:.06em;min-height:36px}
-.pr-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2.5vh,18px);padding:16px;text-align:center;background:rgba(8,4,14,.78);animation:prIn .4s ease both}
-.pr-end p{margin:0;font-size:clamp(15px,2.6vw,26px);font-weight:700;line-height:1.3;max-width:28ch;text-wrap:balance}
-.pr-end p span{display:inline-block;color:#ffb066;animation:prBob 1s ease-in-out infinite}
-@keyframes prBob{50%{transform:translateY(5px)}}
-.pr-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.pr-go,.pr-re{border:0;border-radius:99px;padding:10px 20px;font-weight:800;letter-spacing:.08em;font-size:clamp(12px,1.6vw,15px);min-height:42px}
-.pr-go{background:linear-gradient(90deg,#ff9a3c,#ff5d8f);color:#1a0d0a}
-.pr-re{background:rgba(255,255,255,.14);color:#fff}
-.pr-bar{display:block;height:4px;background:rgba(255,255,255,.12)}.pr-bar b{display:block;height:100%;background:linear-gradient(90deg,#ff9a3c,#ff5d8f);transition:width .25s linear}
-@media (max-height:430px){.pr-card{width:min(92vw,calc((100dvh - 96px)*1.7778))}.pr-head{min-height:32px;padding:4px 8px 4px 12px}.pr-x{width:28px;height:28px}.pr-end p{font-size:14px}.pr-go,.pr-re{min-height:34px;padding:6px 14px}}
-@media (max-width:480px){.pr-sub{display:none}.pr-head{justify-content:space-between}}
-@media (prefers-reduced-motion:reduce){.pr-card{animation:none}.pr-end p span{animation:none}}
+@keyframes prPop{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes prGlow{0%,100%{box-shadow:0 30px 80px #000,0 0 0 6px #ff8c1822}50%{box-shadow:0 30px 80px #000,0 0 0 8px #ff8c1840,0 0 40px #ff8c1840}}
+.pr-card{position:relative;width:min(92vw,820px,calc((100dvh - 250px)*1.7778 + 56px));background:var(--bg2,#1B100B);border:1.5px solid var(--o2,#FF8C18);border-radius:22px;padding:clamp(14px,3vh,28px) clamp(14px,3vw,28px) clamp(12px,2.2vh,20px);color:var(--cr,#F4E7D0);text-align:center;animation:prPop .5s cubic-bezier(.2,1.2,.3,1) both,prGlow 2.8s ease-in-out infinite;font-family:var(--hand,'Caveat',cursive)}
+.pr-x{position:absolute;top:10px;right:12px;width:40px;height:40px;display:grid;place-items:center;color:var(--o2,#FF8C18);border-radius:50%;transition:background .2s,transform .2s}
+.pr-x svg{width:22px;height:22px}.pr-x:hover{background:#ff8c1826;transform:rotate(90deg)}
+.pr-head h2{display:inline-flex;align-items:center;gap:12px;position:relative;font:inherit;font-weight:700;margin:0 36px 4px}
+.pr-ico{flex:none;width:clamp(36px,5.5vw,50px);aspect-ratio:1;border:2px solid var(--o2,#FF8C18);border-radius:50%;display:grid;place-items:center;color:var(--o2,#FF8C18)}.pr-ico svg{width:56%;margin-left:6%}
+.pr-title{position:relative;font-size:clamp(24px,4.6vw,38px);letter-spacing:.14em;text-transform:uppercase;color:var(--cr2,#FFF3DD);line-height:1.1}
+.pr-title i{position:absolute;left:0;right:0;bottom:-7px;height:3px;border-radius:3px;background:var(--o2,#FF8C18);transform:rotate(-.8deg);opacity:.9}
+.pr-spark{position:absolute;width:26px;color:var(--o2,#FF8C18)}.pr-spark.s1{right:-30px;top:-10px}.pr-spark.s2{left:-26px;bottom:-10px;width:20px}
+.pr-head p{margin:clamp(8px,1.6vh,14px) 0 clamp(10px,2vh,18px);font-size:clamp(17px,2.7vw,23px);letter-spacing:.07em;color:var(--cr,#F4E7D0);opacity:.92}
+.pr-head p b{color:var(--y2,#FFD36A);font-weight:700}
+.pr-vid{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1.5px solid #ffb98a99;background:#000;margin:0 auto;max-height:calc(100dvh - 250px);max-width:100%}
+.pr-vid:fullscreen,.pr-vid:-webkit-full-screen{max-height:none;width:100vw;height:100vh;border:0;border-radius:0;aspect-ratio:auto}
+.pr-vid video{width:100%;height:100%;object-fit:contain;display:block}
+.pr-big{position:absolute;left:50%;top:46%;width:clamp(52px,11vw,84px);aspect-ratio:1;transform:translate(-50%,-50%);border:2px solid var(--cr2,#FFF3DD);border-radius:50%;background:#1b100b8c;color:var(--cr2,#FFF3DD);display:grid;place-items:center;transition:transform .2s,background .2s}
+.pr-big svg{width:50%}.pr-big:hover{transform:translate(-50%,-50%) scale(1.08);background:#ff8c1899}
+.pr-ctl{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:clamp(6px,1.6vw,14px);padding:22px clamp(8px,2vw,16px) 8px;background:linear-gradient(transparent,#000000b8);color:#fff;font-family:var(--mono,monospace)}
+.pr-ctl button{flex:none;width:34px;height:34px;display:grid;place-items:center;color:#fff;border-radius:6px}.pr-ctl button:hover{color:var(--y2,#FFD36A)}.pr-ctl button svg{width:22px;height:22px}
+.pr-time{flex:none;font-size:clamp(10px,1.5vw,12px);letter-spacing:.02em;white-space:nowrap}
+.pr-seek{flex:1;min-width:30px;height:22px;display:flex;align-items:center;position:relative;touch-action:none}
+.pr-seek:before{content:"";position:absolute;left:0;right:0;height:4px;border-radius:4px;background:#ffffff44}
+.pr-seek b{position:relative;display:block;height:4px;border-radius:4px;background:var(--o2,#FF8C18)}
+.pr-foot{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:clamp(10px,2.2vh,20px);font-size:clamp(18px,2.8vw,24px);letter-spacing:.09em;color:var(--cr,#F4E7D0);opacity:.55;transition:opacity .5s;position:relative;padding-bottom:30px;min-height:30px}
+.pr-foot.on{opacity:1;cursor:pointer}.pr-foot.on span{animation:prNudge 1.4s ease-in-out infinite}
+@keyframes prNudge{50%{transform:translateY(-2px);color:var(--y2,#FFD36A)}}
+.pr-d{width:18px;height:18px;flex:none;position:relative;color:var(--o2,#FF8C18)}.pr-d:before,.pr-d:after{content:"";position:absolute;left:0;height:2.4px;border-radius:2px;background:currentColor;width:100%}.pr-d:before{top:5px;transform:rotate(-12deg)}.pr-d:after{top:12px;transform:rotate(8deg);width:75%}
+.pr-d.r{transform:scaleX(-1)}
+.pr-cur{position:absolute;left:50%;bottom:-2px;width:28px;margin-left:-8px;color:var(--o2,#FF8C18)}
+.pr-foot.on .pr-cur{animation:prTap 1.1s ease-in-out infinite}@keyframes prTap{50%{transform:translate(3px,-4px) scale(.92)}}
+@media (max-height:520px){.pr-card{width:min(94vw,calc((100dvh - 120px)*1.7778 + 40px));padding:8px 14px 8px;border-radius:16px}.pr-head h2{margin:0 30px 0}.pr-title{font-size:20px}.pr-ico{width:28px}.pr-head p{font-size:14px;margin:4px 0 6px}.pr-head p,.pr-spark{}.pr-vid{max-height:calc(100dvh - 120px)}.pr-foot{font-size:15px;margin-top:4px;padding-bottom:0;min-height:0}.pr-cur,.pr-d{display:none}.pr-x{top:4px;right:6px;width:32px;height:32px}.pr-big{width:48px}.pr-ctl{padding-top:14px}.pr-ctl button{width:28px;height:28px}}
+@media (max-width:480px){.pr-spark{display:none}.pr-title{letter-spacing:.08em}.pr-head h2{margin:0 30px 4px 0}}
+@media (prefers-reduced-motion:reduce){.pr-card,.pr-foot.on span,.pr-foot.on .pr-cur{animation:none}}
