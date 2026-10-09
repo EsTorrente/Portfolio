@@ -60,14 +60,16 @@ function Player({ item, media, cur: want }) {
     <button className="pv-fs" data-sfx="tick" onClick={toggleFs} aria-label={fs ? 'Exit full screen' : 'Full screen'} title={fs ? 'Exit full screen' : 'Full screen'}>{fs ? '✕' : '⛶'}</button></div>);
 }
 
+// **bold** and *italic* inside any text of the data file
+const fmt = (t) => String(t).split(/(\*\*[^*]+\*\*|\*[^*\n]+\*)/g).map((x, i) => (x.startsWith('**') && x.length > 4 ? <strong key={i}>{x.slice(2, -2)}</strong> : x.startsWith('*') && x.length > 2 ? <em key={i}>{x.slice(1, -1)}</em> : x));
 function Blocks({ blocks }) {
   return blocks.map((b, i) => (<section key={i} className="pv-block">
     {b.h && <h4>{b.h}</h4>}
-    {b.p && [].concat(b.p).map((t, i) => <p key={i}>{t}</p>)}
-    {b.ul && <ul>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul>}
-    {b.after && <p>{b.after}</p>}
+    {b.p && [].concat(b.p).map((t, i) => <p key={i}>{fmt(t)}</p>)}
+    {b.ul && <ul>{b.ul.map((x) => <li key={x}>{fmt(x)}</li>)}</ul>}
+    {b.after && <p>{fmt(b.after)}</p>}
     {b.rgb && <div className="pv-rgb">{b.rgb.map(([c, l, col]) => <span key={c}><i style={{ background: col }} />{c} <b>→</b> {l}</span>)}</div>}
-    {b.after2 && <p>{b.after2}</p>}
+    {b.after2 && <p>{fmt(b.after2)}</p>}
   </section>));
 }
 
@@ -100,7 +102,7 @@ function Viewer({ items, index, onClose, onIndex }) {
       </div>
       <div className="pv-text" ref={body}>
         <header><small>{it.subtitle}</small><h3>{it.title}</h3></header>
-        {(d.intro || (it.description ? [it.description] : [])).map((p, i) => <p key={i} className="pv-intro">{p}</p>)}
+        {(d.intro || (it.description ? [it.description] : [])).map((p, i) => <p key={i} className="pv-intro">{fmt(p)}</p>)}
         {d.blocks && <Blocks blocks={d.blocks} />}
         {d.note && <p className="pv-note"><b>Note</b> {d.note}</p>}
         {it.certificate && <a className="pv-cert" href={asset(it.certificate)} target="_blank" rel="noreferrer">VIEW CERTIFICATE ↗</a>}

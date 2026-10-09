@@ -10,6 +10,7 @@ import { preloadAll } from './utils/preload';
 import Intro from './components/Intro';
 import RotateHint from './components/RotateHint';
 import Boot from './components/Boot';
+import PreviewReel, { PREVIEWS, seenPreview } from './components/PreviewReel';
 import { canFullscreen, enterFullscreen } from './utils/fullscreen';
 import * as M from './utils/music';
 // If the browser blocks autoplay, the intro waits for ONE click/tap ("click to enter") so the music can start by itself afterwards. Set to false to never wait.
@@ -52,6 +53,9 @@ export default function App() {
   const needClick = gamePlayed || (WAIT_FOR_CLICK_IF_MUSIC_BLOCKED && music.tracks.length > 0 && !music.playing && !music.muted);
   useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick) setPhase('reveal'); }, [phase, minTime, loaded, needClick]);
   useEffect(() => { const h = () => { setOpen(fromHash()); if (!fromHash()) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
+  const [preview, setPreview] = useState(null); // first time a section (rigging / animation / projects) is opened → short reel popup (components/PreviewReel.jsx)
+  useEffect(() => { if (!open || !PREVIEWS[open] || boot || phase !== 'done' || seenPreview(open)) return; const t = setTimeout(() => setPreview(open), 500); return () => clearTimeout(t); }, [open, boot, phase]);
+  useEffect(() => { if (!open) setPreview(null); }, [open]);
   const compact = useLayoutClass();
   useEffect(() => { if (!AUTO_FULLSCREEN_ON_PHONES || !compact || document.documentElement.classList.contains('tablet') || !canFullscreen() || !matchMedia('(pointer:coarse)').matches) return;
     const go = () => { enterFullscreen(); off(); }, off = () => removeEventListener('pointerup', go, true); addEventListener('pointerup', go, true); return off; }, [compact]);
@@ -69,6 +73,7 @@ export default function App() {
     <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro'} introDone={phase === 'done'} />
     {open && <PortfolioWindow key="win" id={open} origin={origin} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />}
     {phase !== 'done' && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} />}
+    {preview && open === preview && <PreviewReel key={preview} id={preview} onClose={() => setPreview(null)} />}
     {boot && <Boot onDone={() => setBoot(false)} />}
     <MusicDock open={!!open} compact={compact} />
     <RotateHint />
