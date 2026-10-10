@@ -12,7 +12,7 @@ import { SfxToggle, FsButton } from './Desktop';
 
 const Ico = ({ id }) => <img src={asset(`/assets/icons/${id}.webp`)} alt="" />;
 // Window grows from the clicked icon (FLIP: icon rect → window rect), overshoots slightly, then reveals content.
-export default function PortfolioWindow({ id, origin, onNav, onClosed, focus }) { // focus = 'rigging' | 'animation' | 'projects' (role-focused version) or undefined (the normal portfolio)
+export default function PortfolioWindow({ id, origin, onNav, onClosed, focus }) { // focus = 'rigging' | 'animation' | 'modelling' | 'illustration' | 'projects' (role-focused version) or undefined (the normal portfolio)
   const list = focus ? FOCUS[focus].nav.map((k) => sections.find((s) => s.id === k)) : sections;
   const [dockOpen, setDockOpen] = useDockOpen(), sec = sections.find((s) => s.id === id), el = useRef(), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), [closing, setClosing] = useState(false), [more, setMore] = useState(false); // more = content below → floating ▼ button (focused version)
   const flip = (reverse, done) => { const w = el.current, r = w.getBoundingClientRect(); if (!origin || reducedMotion()) return done();

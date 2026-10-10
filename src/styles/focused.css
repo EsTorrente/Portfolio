@@ -18,10 +18,10 @@ html.focused .dock{top:max(14px,2.4vh);left:max(14px,1.2vw)}
 .fw-top{right:1.1%;top:2.5%;display:flex;align-items:center;pointer-events:none}
 .fw-top .clock{margin-left:auto;pointer-events:auto;font-size:max(11px,.85cqw)}.fw-top .sfxbtn{font-size:max(10px,.8cqw)}
 /* left navigation */
-.fw-nav{left:calc(-1*max(0px,calc((100vw - 100cqw)/2)));top:calc(19% - var(--lift));width:calc(15.6cqw + max(0px,calc((100vw - 100cqw)/2)));display:flex;flex-direction:column;gap:.3cqw;padding:1cqw 1cqw 1cqw calc(.9cqw + max(0px,calc((100vw - 100cqw)/2)));border-radius:0 1.5cqw 1.5cqw 0;background:linear-gradient(160deg,#4a2a63d9,#25122fe6 55%,#1c0d26ee);border:1px solid #c79bff2e;border-left:0;backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1.2cqw 3.4cqw #000b,inset 0 1px 0 #ffffff2e,inset -1px 0 0 #ff8c1822;animation:fwSlide .8s cubic-bezier(.2,1,.3,1) .2s both}
-.fw-nav button{display:flex;align-items:center;gap:.75cqw;padding:.8cqw .8cqw;text-align:left;font:600 .86cqw/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;border-radius:.7cqw;transition:.2s;color:var(--cr2)}
-.fw-nav img{width:2cqw;height:2cqw;object-fit:contain;flex:none}
-.fw-nav button:hover{background:var(--o2);color:var(--bg);transform:translateX(.2cqw)}.fw-nav button:hover img{filter:brightness(.25) contrast(1.3)}
+.fw-nav{left:calc(-1*max(0px,calc((100vw - 100cqw)/2)));top:calc(19% - var(--lift));width:calc(15.6cqw + max(0px,calc((100vw - 100cqw)/2)));display:flex;flex-direction:column;gap:.3cqw;padding:1cqw 1cqw 1cqw calc(.9cqw + max(0px,calc((100vw - 100cqw)/2)));border-radius:0 1.5cqw 1.5cqw 0;background:linear-gradient(160deg,#ffffff26,#ffffff08 38%,#ffffff03),rgba(16,2,33,.5);border:1px solid #ffffff2b;border-left:0;backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);box-shadow:0 1.2cqw 3.4cqw #0009,inset 0 1px 0 #ffffff40,inset -1px 0 0 #ffffff14;animation:fwSlide .8s cubic-bezier(.2,1,.3,1) .2s both}
+.fw-nav button{position:relative;overflow:hidden;display:flex;align-items:center;gap:.75cqw;padding:.8cqw .8cqw;text-align:left;font:600 .86cqw/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;border-radius:.7cqw;transition:transform .22s cubic-bezier(.2,1.4,.4,1),background .22s,box-shadow .22s,color .2s;color:var(--cr2)}
+.fw-nav img{width:2cqw;height:2cqw;object-fit:contain;flex:none;transition:transform .25s cubic-bezier(.2,1.5,.4,1),filter .2s}
+.fw-nav button:hover{background:linear-gradient(90deg,#ffffff1c,#ffffff08);color:#fff;transform:translateX(.4cqw);box-shadow:inset .2cqw 0 0 #ff8c1899,0 .3cqw 1cqw #1001216e}.fw-nav button:hover img{transform:scale(1.14) rotate(-6deg)}
 .fw-nav .on{background:linear-gradient(90deg,#ff8c18cc,#ff8c1844);box-shadow:0 .2cqw .8cqw #ff8c1855,inset 0 1px 0 #ffffff44;color:#fff}
 /* banner = name + role */
 .fw-banner{left:19.6%;top:calc(9.2% - var(--lift));width:65.4%;height:16.6%;display:flex;align-items:center;gap:1.8cqw;transform:rotate(-1.1deg);pointer-events:none}
@@ -78,9 +78,9 @@ html.compact .fw .fw-scroll .card p{display:block;-webkit-line-clamp:unset;overf
 /* smaller sub-headings inside the focused window (Recognition…, category intros) */
 .fw-scroll .sec-intro h3{font-size:max(12px,1.1cqw)}.fw-scroll .sec-intro p{font-size:max(10px,.8cqw);line-height:1.5}
 
-/* ---- the name as a LOGO (loaded font: Tilt Warp) ---- */
-:root{--logo:'Tilt Warp','Archivo Black',Impact,'Arial Black',sans-serif}
-.mar-logo{font-family:var(--logo)!important;font-weight:400!important;font-synthesis:none;letter-spacing:.035em!important;color:var(--cr2);text-shadow:.04em .055em 0 #c4540a,.07em .14em .12em #0009}
+/* ---- the name as a LOGO (loaded font: Righteous) ---- */
+:root{--logo:'Righteous','Archivo Black',Impact,'Arial Black',sans-serif}
+.mar-logo{font-family:var(--logo)!important;font-weight:400!important;font-synthesis:none;letter-spacing:.05em!important;color:var(--cr2);text-shadow:.04em .055em 0 #c4540a,.07em .14em .12em #0009}
 .fid h1.mar-logo{letter-spacing:.07em!important}
 
 /* ---- phones / portrait tablets, focused: music + SFX + fullscreen in the window's top bar; the title block folds away while you scroll ---- */
@@ -132,3 +132,11 @@ html.compact .win.focus .wctl .fs-btn{border:2px solid var(--brown)!important;ba
 html.compact .win.focus .scroll-dn{display:grid;place-items:center;position:absolute;right:calc(14px + env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom));z-index:8;width:44px;height:44px;border-radius:50%;border:2px solid var(--bg);background:var(--o2);color:var(--bg);font:700 18px/1 var(--mono);box-shadow:0 3px 10px #000a;opacity:0;pointer-events:none;transition:opacity .25s}
 html.compact .win.focus .scroll-dn.on{opacity:1;pointer-events:auto;animation:carNudgeY 1.4s ease-in-out infinite}
 @keyframes carNudgeY{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* side buttons: press = squish, then a quick pop + a soft light ripple */
+.fw-nav button:active{transform:translateX(.15cqw) scale(.95)}
+.fw-nav button:after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 30% 50%,#ffd36a88,#ffd36a00 62%);opacity:0;pointer-events:none}
+.fw-nav button.pop{animation:fwPop .45s cubic-bezier(.2,1.4,.4,1)}.fw-nav button.pop:after{animation:fwRipple .55s ease-out}
+@keyframes fwPop{0%{scale:.94}55%{scale:1.05}100%{scale:1}}
+@keyframes fwRipple{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(1.6)}}
+@media (prefers-reduced-motion:reduce){.fw-nav button.pop,.fw-nav button.pop:after{animation:none}}

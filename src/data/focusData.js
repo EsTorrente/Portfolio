@@ -17,6 +17,18 @@ export const FOCUS = {
     nav: ['animation', 'awards', 'projects', 'about', 'opinions'],
     bring: ['Technical knowledge about rigs and animation tools', 'Expressive acting with squash & stretch', 'Ambitious projects: 13-min Platillo, Regret (1M+ views)', 'Storyboard to compositing, solo or in a team', 'Picks up any tool a project demands'],
   },
+  modelling: {
+    role: '3D CHARACTER MODELLING',
+    tagline: 'Digital Entertainment Design Engineer, 3D Character Artist, generalist.',
+    nav: ['modelling', 'awards', 'projects', 'about', 'opinions'],
+    bring: ['Clean topology built for rigging & deformation', 'Sculpts from scratch: no base mesh needed', 'Real-time ready: optimized VR characters', 'Hand-painted textures for stylized rendering', 'I rig & animate too, so models deform right'],
+  },
+  illustration: {
+    role: 'ILLUSTRATION & VISUAL DEVELOPMENT',
+    tagline: 'Digital Entertainment Design Engineer, Illustrator, generalist.',
+    nav: ['illustration', 'awards', 'projects', 'about', 'opinions'],
+    bring: ['Characters, environments & splash art in one hand', 'Shape language and storytelling in every piece', 'Animated illustrations, not just still images', 'Art-directed Platillo: Most Original Visual Style', 'I design, model & animate what I draw'],
+  },
   projects: {
     role: 'CREATIVE DIRECTION & PRODUCTION',
     tagline: 'Digital Entertainment Design Engineer, Creative Director, generalist.',

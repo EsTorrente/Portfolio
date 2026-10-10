@@ -27,7 +27,7 @@ export function FocusIntro({ focusId }) {
 
 // Desktop / wide tablets: header banner + left navigation + "what I bring" + sticky note drawn over FocusedWindow.webp / FocusedLayerTop.webp (a 16:9 stage that scales with the screen).
 export default function FocusedWindow({ id, focusId, onNav }) {
-  const F = FOCUS[focusId], cur = sec(id), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), sc = useRef(), stage = useRef(), [more, setMore] = useState(false); // more = there is content below the visible part → show the "MORE" button
+  const F = FOCUS[focusId], cur = sec(id), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), sc = useRef(), stage = useRef(), [pop, setPop] = useState(null), [more, setMore] = useState(false); // more = there is content below the visible part → show the "MORE" button
   useEffect(() => { const r = requestAnimationFrame(() => setShown(true)); return () => cancelAnimationFrame(r); }, []);
   useEffect(() => { setFilter('ALL'); }, [id]);
   useEffect(() => { const n = sc.current; if (n) try { n.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch { n.scrollTop = 0; } }, [id, filter]);
@@ -44,7 +44,7 @@ export default function FocusedWindow({ id, focusId, onNav }) {
       <img className="deco fw-pc" src={asset('/assets/ui/front-left.webp')} alt="" draggable="false" />
       <header className="fw-top"><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>
       <nav className="fw-nav" aria-label="Sections">
-        {F.nav.map((k) => { const s = sec(k); return <button key={k} data-sfx="tick" className={k === id ? 'on' : ''} aria-current={k === id ? 'page' : undefined} onClick={() => (k === id ? setFilter('ALL') : onNav(k))}><Ico id={k} />{s.label}</button>; })}
+        {F.nav.map((k) => { const s = sec(k); return <button key={k} data-sfx="tick" className={(k === id ? 'on' : '') + (pop === k ? ' pop' : '')} aria-current={k === id ? 'page' : undefined} onClick={() => { setPop(k); setTimeout(() => setPop(null), 520); k === id ? setFilter('ALL') : onNav(k); }}><Ico id={k} />{s.label}</button>; })}
       </nav>
       <section className="fw-banner" aria-label={`${site.name} · ${F.role}`}><Ico id={focusId} /><div><h2 className="mar-logo">{site.name}</h2><p>{F.tagline}</p></div><img className="fw-logo" src={asset('/assets/intro/color-logo.webp')} alt="" draggable="false" /></section>
       {cur.filters && <div className="fw-head"><div className="fw-pills" role="group" aria-label={`${cur.label} categories`}>{cur.filters.map((f) => <button key={f} data-sfx="tick" className={f === filter ? 'on' : ''} aria-pressed={f === filter} onClick={() => setFilter(f)}><SwIcon name={f} />{f}</button>)}</div></div>}
