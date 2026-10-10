@@ -32,7 +32,10 @@ export async function preloadAll(onProgress) {
   if (FOC) FOC.nav.forEach((id) => walk(DATA[id], all)); else { walk(D, all); walk(about, all); } // focused: only the sections in its navigation
   // ---- stage 1: critical ----
   const crit = new Set(STATIC); crit.add(site.logo); (FOC ? FOC.nav : sections.map((s) => s.id)).forEach((id) => crit.add(`/assets/icons/${id}.webp`));
-  if (!save && !FOC) Object.values(PREVIEWS).forEach((p) => crit.add(p.src)); // the first-visit preview reels (a missing file is skipped silently). Thumbnails + project videos are NOT waited for any more.
+  if (!save) { // the first-visit preview reels (a missing file is skipped silently). Thumbnails + project videos are NOT waited for any more.
+    if (!FOC) Object.values(PREVIEWS).forEach((p) => crit.add(p.src));
+    else { const k = [R.focus, R.id, ...FOC.nav].find((x) => PREVIEWS[x]); if (k) crit.add(PREVIEWS[k].src); } // focused link: ONLY its own preview (the first match: the focus name, then the section, then the focused navigation)
+  }
   const hot = R.focus || R.id || 'rigging', hotSet = new Set(); (Array.isArray(D[hot]) ? D[hot] : D.rigging).forEach((it) => typeof it.image === 'string' && hotSet.add(it.image)); // thumbnails of the section being opened load first
   await M.init(); const songs = M.getState().tracks.map((t) => t.url); // song 1 streams by itself through the player's <audio>; the others load in stage 2
   const imgs = [...crit].filter((u) => !VID.test(u)), vids = save ? [] : [...crit].filter((u) => VID.test(u) && (!phone || /backgrounds|previews/.test(u))).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
@@ -44,7 +47,7 @@ export async function preloadAll(onProgress) {
   setTimeout(async () => {
     const noop = () => {}, sec = /thumb|\/animation\/|\/modelling\/|\/awards\/|\/projects\//, score = (u) => (hotSet.has(u) ? 2 : sec.test(u) ? 1 : 0);
     const restImgs = [...all].filter((u) => !crit.has(u) && !VID.test(u)).sort((a, b) => score(b) - score(a)); // thumbnails: the opened section first, then the other sections
-    const rest = save || phone ? [] : songs.slice(1, 3); // project videos are no longer prefetched: they stream when opened
+    const rest = save || phone || FOC ? [] : songs.slice(1, 3); // focused link: no extra songs (song 1 still streams by itself) // project videos are no longer prefetched: they stream when opened
     try { await pool(restImgs, 5, async (u) => { await calm(); await imgTask(u, noop); }); await pool(rest, 2, async (u) => { await calm(); await streamTask(u, noop); }); } catch {}
   }, BG_DELAY_MS);
 }
