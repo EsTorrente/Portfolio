@@ -31,7 +31,7 @@ export default function Desktop({ openId, onOpen, ready, introDone }) {
   return (<main className={'desktop' + (openId ? ' has-open' : '') + (ready ? ' ready' : '')} style={{ backgroundImage: `url(${asset('/assets/backgrounds/background.jpg')})` }}>
     <ParallaxBackground dim={!!openId} /><div className="vignette" />
     <Hotspots />
-    <header className="topbar"><img src={asset('/assets/intro/color-logo.webp')} alt="" /><span>{site.name}</span><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>
+    <header className="topbar"><img src={asset('/assets/intro/color-logo.webp')} alt="" /><span className="mar-logo">{site.name}</span><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>
     <nav className="icons" aria-label="Portfolio sections">
       {sections.map((s, i) => (<button key={s.id} className={'icon' + (openId === s.id ? ' active' : '') + (hover === s.id ? ' hov' : '')} data-id={s.id}
         style={{ '--i': i, '--cx': (i % 4) - 1.5, '--r': ((i * 37) % 5) - 2 + 'deg' }} onMouseEnter={() => setHover(s.id)} onMouseLeave={() => setHover(null)}

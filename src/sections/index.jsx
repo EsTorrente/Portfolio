@@ -14,11 +14,21 @@ const Tags = ({ t = [] }) => <div className="tags">{t.map((x, i) => <span key={i
 const n = (k, one, many) => `${k} ${k > 1 ? many : one}`;
 const ctaLabel = (it) => 'VIEW PROJECT' + (it.youtube ? ' · WATCH' : it.videos?.length ? ' · ' + n(it.videos.length, 'VIDEO', 'VIDEOS') : it.images?.length > 1 ? ' · ' + n(it.images.length, 'IMAGE', 'IMAGES') : '');
 
+// Sideways card rows (phones / tablets in landscape): little arrows + an edge fade show there are more cards to scroll to.
+function useRow(key) {
+  const ref = useRef(), [st, setSt] = useState({ l: false, r: false });
+  useEffect(() => { const el = ref.current; if (!el) return; const f = () => setSt({ l: el.scrollLeft > 6, r: el.scrollWidth - el.clientWidth - el.scrollLeft > 6 }); f();
+    el.addEventListener('scroll', f, { passive: true }); const ro = new ResizeObserver(f); ro.observe(el); return () => { el.removeEventListener('scroll', f); ro.disconnect(); }; }, [key]);
+  return [ref, st, (d) => ref.current?.scrollBy({ left: d * Math.max(200, ref.current.clientWidth * 0.8), behavior: 'smooth' })];
+}
+const Row = ({ st, go, children }) => (<div className={'rowwrap' + (st.r ? ' more-r' : '') + (st.l ? ' more-l' : '')}>{children}
+  {st.l && <button className="car-btn prev" data-sfx="tick" aria-label="Scroll back" onClick={() => go(-1)}>‹</button>}
+  {st.r && <button className="car-btn next" data-sfx="tick" aria-label="More projects: scroll right" onClick={() => go(1)}>›</button>}</div>);
 function Grid({ items, cls = '' }) { // cards used by rigging / animation / modelling / projects
-  const [v, setV] = useState(null);
+  const [v, setV] = useState(null), gkey = items.map((i) => i.id).join(), [row, st, go] = useRow(gkey);
   const rich = (it) => !!(it.details || it.videos?.length || it.youtube || it.images?.length); // cards with a write-up open the project pop-up
   const View = v !== null && rich(items[v]) ? ProjectViewer : MediaViewer;
-  return (<><div className={'grid ' + cls} key={items.map((i) => i.id).join()}>{items.map((it, n) => (
+  return (<><Row st={st} go={go}><div className={'grid ' + cls} key={gkey} ref={row}>{items.map((it, n) => (
     <article key={it.id} className={'card' + (rich(it) ? ' clickable' : '')} style={{ '--n': n }} onClick={rich(it) ? () => setV(n) : undefined}>
       <button className="thumb" onClick={(e) => { e.stopPropagation(); setV(n); }} aria-label={`View ${it.title}`}>
         <Media src={THUMB_AT[it.id] != null ? null : it.image} video={it.videos?.[0]?.src} at={THUMB_AT[it.id]} alt={it.title} label={it.title} ratio={1.6} />{it.video && <b className="play">▶</b>}{it.software && <em className="badge"><SwIcon name={it.software} />{it.software}</em>}
@@ -29,7 +39,7 @@ function Grid({ items, cls = '' }) { // cards used by rigging / animation / mode
       <Tags t={it.tags || it.technologies} />
       {rich(it) && <button className="more" onClick={(e) => { e.stopPropagation(); setV(n); }}>OPEN PROJECT <b>→</b></button>}
       {it.link && <a className="ext" href={it.link} target="_blank" rel="noreferrer">↗</a>}
-    </article>))}</div>
+    </article>))}</div></Row>
     {v !== null && <View items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 
@@ -69,9 +79,9 @@ function Gallery({ filter }) { // masonry, no crop, objects keep their own aspec
 }
 
 function Awards() { // collectible paper cards over your drawn base. Click one → the big pop-up with the full text (same as projects).
-  const [v, setV] = useState(null);
+  const [v, setV] = useState(null), [row, st, go] = useRow('awards');
   const items = D.awards.map((a) => ({ ...a, subtitle: `${a.year} · ${a.organization}`, tags: [a.badge], fallback: '/assets/ui/award-card.webp', images: [a.image] })); // pop-up art = your award image, or the card drawing if there isn't one
-  return (<><SecIntro d={D.awardsIntro} /><div className="awards">{D.awards.map((a, n) => (
+  return (<><SecIntro d={D.awardsIntro} /><Row st={st} go={go}><div className="awards" ref={row}>{D.awards.map((a, n) => (
     <article key={a.id} className="award" style={{ '--n': n, '--r': ((n * 41) % 5) - 2 + 'deg', backgroundImage: `url(${asset('/assets/ui/award-card.webp')})` }}>
       <div className="aslot"><Media src={a.image} alt={a.title} label="" ratio={1.4} quiet /></div>
       <span className="year">{a.year}</span>
@@ -79,7 +89,7 @@ function Awards() { // collectible paper cards over your drawn base. Click one �
       <span className="stamp">{a.badge}</span>
       <button className="aopen" onClick={() => setV(n)} aria-label={`Read award: ${a.title}`}><span>READ ✦</span></button>
       {a.certificate && <a className="ext" href={asset(a.certificate)} target="_blank" rel="noreferrer" aria-label="Open certificate">↗</a>}
-    </article>))}</div>
+    </article>))}</div></Row>
     {v !== null && <ProjectViewer items={items} index={v} onIndex={setV} onClose={() => setV(null)} />}</>);
 }
 

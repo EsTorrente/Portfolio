@@ -72,7 +72,7 @@ export default function Intro({ out, loaded, pct, needClick, onEnter, onPlay, fo
   return (<div className={'intro' + (out ? ' out' : '') + (game ? ' game' : '')} onClick={onEnter} role="presentation">
     <div className={'intro-bg' + (bg ? ' on' : '')} style={{ backgroundImage: `url(${asset(BG)})` }} aria-hidden="true" />
     {site.logoVideo ? <video src={asset(site.logoVideo)} autoPlay muted playsInline /> : <img src={asset(site.logo)} alt={site.name} />}
-    {focusRole ? <div className="fid"><h1>{site.name}</h1><p>{focusRole}</p></div> : <div className="story" key={page} aria-live="polite">{STORY[page].map((l, i) => <p key={i} style={{ '--l': i }}>{l}</p>)}</div>}
+    {focusRole ? <div className="fid"><h1 className="mar-logo">{site.name}</h1><p>{focusRole}</p></div> : <div className="story" key={page} aria-live="polite">{STORY[page].map((l, i) => <p key={i} style={{ '--l': i }}>{l}</p>)}</div>}
     <div className={'intro-status' + (loaded ? ' done' : '')}>{burst && <Burst />}<p className="stat" role="status">{status}</p><div className="intro-bar" aria-hidden="true"><i style={{ transform: `scaleX(${loaded ? 1 : pct})` }} /></div></div>
     <div className="snake-wrap" onClick={(e) => e.stopPropagation()}>
       {game ? <Snake onPlay={onPlay} /> : <button className="snake-open" data-sfx="tick" onClick={() => setGame(true)}>◆ PLAY SNAKE WHILE YOU WAIT</button>}</div>
