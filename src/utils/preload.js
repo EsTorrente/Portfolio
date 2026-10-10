@@ -3,14 +3,13 @@ import { site, about } from '../data/siteData';
 import { sections } from '../data/navigationData';
 import { asset, appleVideo } from './assets';
 import * as M from './music';
+import { PREVIEWS } from '../components/PreviewReel';
 // Two-stage loading, so the loading screen stays short:
-//   1) CRITICAL (blocks the intro): backgrounds, UI, logo + section icons and the Rigging thumbnails (the first section most visitors open).
-//   2) BACKGROUND (starts shortly after the desktop appears, never blocks anything): all remaining images, then the rest of the videos
-//      (first video of each project before the second ones), then the other songs. It pauses while a pop-up/viewer is open so it never competes with what the visitor is watching.
+//   1) CRITICAL (blocks the intro): ONLY backgrounds, UI art, logo + section icons and the section PREVIEW videos (components/PreviewReel.jsx).
+//   2) BACKGROUND (starts right after the intro, while the visitor watches a preview): thumbnails (the opened section first), then the other songs. Project videos load when they are opened.
 // URLs are collected automatically from your data files (portfolioData / siteData) — new entries are picked up with no changes here.
 // Missing files are skipped silently. Anything still loading after TIMEOUT_MS keeps loading in the background.
-const TIMEOUT_MS = 60000, BG_DELAY_MS = 700, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
-const EAGER_VIDEO_OF = 'blender-01'; // ✏️ project whose FIRST video is the very first thing loaded in the background stage right after the desktop appears (Eridan). It no longer holds up the loading screen.
+const TIMEOUT_MS = 60000, BG_DELAY_MS = 300, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
 const FOCUSED_ART = /\/focused/.test(location.hash) ? ['/assets/ui/FocusedWindow.webp', '/assets/ui/FocusedLayerTop.webp'] : []; // only the focused versions need these
 const STATIC = [...FOCUSED_ART, '/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp',
   '/assets/ui/back-right.webp', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', ...(appleVideo() ? ['/assets/backgrounds/backgroundApple.webm'] : ['/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'])];
@@ -28,20 +27,19 @@ export async function preloadAll(onProgress) {
   const all = new Set(); walk(D, all); walk(about, all);
   // ---- stage 1: critical ----
   const crit = new Set(STATIC); crit.add(site.logo); sections.forEach((s) => crit.add(`/assets/icons/${s.id}.webp`));
-  D.rigging.forEach((it) => { if (typeof it.image === 'string' && (it.image.startsWith('/assets/') || it.image.startsWith('http'))) crit.add(it.image); }); // Rigging thumbnails only; the other sections' thumbnails load right after the desktop appears (stage 2, first in line)
-  const eager = D.rigging.find((r) => r.id === EAGER_VIDEO_OF)?.videos?.[0]?.src; // (no longer blocks loading)
+  if (!save) Object.values(PREVIEWS).forEach((p) => crit.add(p.src)); // the first-visit preview reels (a missing file is skipped silently). Thumbnails + project videos are NOT waited for any more.
+  const hot = (location.hash.match(/^#\/(\w+)/) || [])[1] || 'rigging', hotSet = new Set(); (Array.isArray(D[hot]) ? D[hot] : D.rigging).forEach((it) => typeof it.image === 'string' && hotSet.add(it.image)); // thumbnails of the section being opened load first
   await M.init(); const songs = M.getState().tracks.map((t) => t.url); // song 1 streams by itself through the player's <audio>; the others load in stage 2
-  const imgs = [...crit].filter((u) => !VID.test(u)), vids = save ? [] : [...crit].filter((u) => VID.test(u) && (!phone || /backgrounds/.test(u))).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
+  const imgs = [...crit].filter((u) => !VID.test(u)), vids = save ? [] : [...crit].filter((u) => VID.test(u) && (!phone || /backgrounds|previews/.test(u))).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
   const total = imgs.length + vids.length || 1, frac = new Map(); let t = 0;
   const rep = (u) => (f) => { frac.set(u, f); const n = performance.now(); if (n - t > 90 || f === 1) { t = n; onProgress?.([...frac.values()].reduce((a, b) => a + b, 0) / total); } };
   const run = Promise.all([pool(imgs, 10, (u) => imgTask(u, rep(u))), pool(vids, 3, (u) => streamTask(u, rep(u)))]);
   await Promise.race([run, new Promise((r) => setTimeout(r, TIMEOUT_MS))]); onProgress?.(1);
   // ---- stage 2: everything else, quietly, after the intro ----
   setTimeout(async () => {
-    const num = (u) => +(/-(\d+)\.\w+$/.exec(u)?.[1] || 0), noop = () => {};
-    const restImgs = [...all].filter((u) => !crit.has(u) && !VID.test(u)).sort((a, b) => /thumb|\/animation\/|\/modelling\/|\/awards\/|\/projects\//.test(b) - /thumb|\/animation\/|\/modelling\/|\/awards\/|\/projects\//.test(a)); // section thumbnails first, then the rest // (crit images are already cached; never fetched twice)
-    const restVids = save ? [] : [...all].filter((u) => !crit.has(u) && VID.test(u) && !phone).sort((a, b) => num(a) - num(b)); // video 01 of every project before video 02, etc.
-    const first = eager && !save && !phone ? [eager] : [], rest = [...first, ...restVids.filter((u) => u !== eager), ...(save || phone ? [] : songs.slice(1, 3))];
+    const noop = () => {}, sec = /thumb|\/animation\/|\/modelling\/|\/awards\/|\/projects\//, score = (u) => (hotSet.has(u) ? 2 : sec.test(u) ? 1 : 0);
+    const restImgs = [...all].filter((u) => !crit.has(u) && !VID.test(u)).sort((a, b) => score(b) - score(a)); // thumbnails: the opened section first, then the other sections
+    const rest = save || phone ? [] : songs.slice(1, 3); // project videos are no longer prefetched: they stream when opened
     try { await pool(restImgs, 5, async (u) => { await calm(); await imgTask(u, noop); }); await pool(rest, 2, async (u) => { await calm(); await streamTask(u, noop); }); } catch {}
   }, BG_DELAY_MS);
 }

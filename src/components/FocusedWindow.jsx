@@ -5,6 +5,7 @@ import { site } from '../data/siteData';
 import { asset } from '../utils/assets';
 import Section from '../sections';
 import SwIcon from './SwIcon';
+import StarField from './StarField';
 import { DockButton } from './MusicDock';
 import { Clock, SfxToggle, FsButton } from './Desktop';
 import '../styles/focused.css';
@@ -35,16 +36,18 @@ export default function FocusedWindow({ id, focusId, onNav }) {
     <div className={'fw-stage' + (shown ? ' shown' : '')}>
       <img className="fw-art" src={asset('/assets/ui/FocusedWindow.webp')} alt="" draggable="false" />
       <img className="fw-art" src={asset('/assets/ui/FocusedLayerTop.webp')} alt="" draggable="false" />
-      <header className="fw-top"><img src={asset('/assets/intro/color-logo.webp')} alt="" draggable="false" /><span>{site.name}</span><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>
+      <StarField />
+      <img className="deco fw-pc" src={asset('/assets/ui/front-left.webp')} alt="" draggable="false" />
+      <header className="fw-top"><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>
       <nav className="fw-nav" aria-label="Sections">
         {F.nav.map((k) => { const s = sec(k); return <button key={k} data-sfx="tick" className={k === id ? 'on' : ''} aria-current={k === id ? 'page' : undefined} onClick={() => (k === id ? setFilter('ALL') : onNav(k))}><Ico id={k} />{s.label}</button>; })}
       </nav>
-      <section className="fw-banner" aria-label={`${site.name} · ${F.role}`}><Ico id={focusId} /><div><h2>{prim.title}</h2><i aria-hidden="true" />{prim.sub.map((l, i) => <p key={i}>{l}</p>)}</div></section>
+      <section className="fw-banner" aria-label={`${site.name} · ${F.role}`}><Ico id={focusId} /><div><h2>{site.name}</h2><p>{F.tagline}</p></div><img className="fw-logo" src={asset('/assets/intro/color-logo.webp')} alt="" draggable="false" /></section>
       <div className="fw-head"><h3><Ico id={id} /><span>{heading}</span></h3>
         {cur.filters && <div className="fw-pills" role="group" aria-label={`${cur.label} categories`}>{cur.filters.map((f) => <button key={f} data-sfx="tick" className={f === filter ? 'on' : ''} aria-pressed={f === filter} onClick={() => setFilter(f)}><SwIcon name={f} />{f}</button>)}</div>}</div>
       <div className="fw-scroll" ref={sc}><div className="content"><Section id={id} filter={cur.filters?.includes(filter) ? filter : 'ALL'} /></div></div>
       <aside className="fw-bring" aria-label="What I bring"><h3>What I bring</h3><ul>{F.bring.map((t) => <li key={t}>{t}</li>)}</ul></aside>
-      <a className="fw-note" href={generalistUrl()} data-sfx="tick" aria-label="Open my generalist portfolio"><span>My generalist portfolio:</span><b>See here</b></a>
+      <a className="fw-note" href={generalistUrl()} data-sfx="tick" aria-label="Open my generalist portfolio"><span>My generalist portfolio:</span><b>Go there</b></a>
     </div>
   </div>);
 }
