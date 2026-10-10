@@ -36,8 +36,8 @@ export default function FocusedWindow({ id, focusId, onNav }) {
     addEventListener('pointermove', h, { passive: true }); return () => removeEventListener('pointermove', h); }, []);
   return (<div className="fw" role="dialog" aria-label={`${site.name} · ${F.role}`}>
     <div className={'fw-stage' + (shown ? ' shown' : '') + (cur.filters ? ' haspills' : '')} ref={stage}>
-      <img className="fw-art" src={asset('/assets/ui/FocusedWindow.webp')} alt="" draggable="false" />
-      <img className="fw-art" src={asset('/assets/ui/FocusedLayerTop.webp')} alt="" draggable="false" />
+      <img className="fw-art fw-win" src={asset('/assets/ui/FocusedWindow.webp')} alt="" draggable="false" />
+      <img className="fw-art fw-toplayer" src={asset('/assets/ui/FocusedLayerTop.webp')} alt="" draggable="false" />
       <StarField />
       <img className="deco fw-pc" src={asset('/assets/ui/front-left.webp')} alt="" draggable="false" />
       <header className="fw-top"><span className="clock"><DockButton /><FsButton /><SfxToggle /><Clock /></span></header>

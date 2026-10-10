@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap'); /* bold, chunky logo lettering for the name */
+@import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap'); /* bold, chunky logo lettering for the name */
 :root{--bg:#120B08;--bg2:#1B100B;--bg3:#24150E;--o:#FF7A00;--o2:#FF8C18;--y:#FFB52E;--y2:#FFD36A;--cr:#F4E7D0;--cr2:#FFF3DD;--ink:#3a2113;
 --disp:'Archivo','Arial Black',sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--hand:'Caveat',cursive;--body:'Lora',Georgia,serif}
 *{box-sizing:border-box;margin:0}html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cr);font-family:var(--mono);-webkit-tap-highlight-color:transparent}

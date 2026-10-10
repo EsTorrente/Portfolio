@@ -4,15 +4,19 @@ import { sections } from '../data/navigationData';
 import { asset, appleVideo } from './assets';
 import * as M from './music';
 import { PREVIEWS } from '../components/PreviewReel';
+import { FOCUS, parseRoute } from '../data/focusData';
 // Two-stage loading, so the loading screen stays short:
 //   1) CRITICAL (blocks the intro): ONLY backgrounds, UI art, logo + section icons and the section PREVIEW videos (components/PreviewReel.jsx).
 //   2) BACKGROUND (starts right after the intro, while the visitor watches a preview): thumbnails (the opened section first), then the other songs. Project videos load when they are opened.
 // URLs are collected automatically from your data files (portfolioData / siteData) — new entries are picked up with no changes here.
 // Missing files are skipped silently. Anything still loading after TIMEOUT_MS keeps loading in the background.
 const TIMEOUT_MS = 60000, BG_DELAY_MS = 300, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
-const FOCUSED_ART = /\/focused/.test(location.hash) ? ['/assets/ui/FocusedWindow.webp', '/assets/ui/FocusedLayerTop.webp'] : []; // only the focused versions need these
-const STATIC = [...FOCUSED_ART, '/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp',
-  '/assets/ui/back-right.webp', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', ...(appleVideo() ? ['/assets/backgrounds/backgroundApple.webm'] : ['/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'])];
+const R = parseRoute(location.hash, sections), FOC = R.focus ? FOCUS[R.focus] : null; // a focused link (#/rigging/focused …) preloads ONLY what that page uses; the normal link preloads the normal portfolio
+const touch = matchMedia('(pointer:coarse)').matches, BG = appleVideo() ? ['/assets/backgrounds/backgroundApple.webm'] : ['/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'];
+const COMMON = ['/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', ...BG];
+const STATIC = FOC
+  ? [...COMMON, '/assets/ui/FocusedWindow.webp', '/assets/ui/FocusedLayerTop.webp', ...(touch ? ['/assets/ui/main-window.webp'] : []), ...(FOC.nav.includes('awards') ? ['/assets/ui/award-card.webp'] : []), ...(FOC.nav.includes('about') ? ['/assets/ui/about-layout.webp'] : [])] // (phones use the normal window frame, bigger screens the focused art)
+  : [...COMMON, '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp', '/assets/ui/back-right.webp'];
 function walk(o, out, seen = new Set()) { if (typeof o === 'string') { if ((o.startsWith('/assets/') || o.startsWith('http')) && (IMG.test(o) || VID.test(o))) out.add(o); return; }
   if (!o || typeof o !== 'object' || seen.has(o)) return; seen.add(o); for (const v of Object.values(o)) walk(v, out, seen); }
 
@@ -24,11 +28,12 @@ const calm = async () => { while (document.querySelector('.viewer')) await new P
 
 export async function preloadAll(onProgress) {
   const save = navigator.connection?.saveData, phone = matchMedia('(pointer:coarse)').matches; // data saver: images only · phones: images + background videos only (the big project videos stream when opened)
-  const all = new Set(); walk(D, all); walk(about, all);
+  const all = new Set(), DATA = { rigging: D.rigging, animation: D.animation, modelling: D.modelling, illustration: D.illustration, awards: D.awards, projects: D.projects, opinions: D.opinions, about };
+  if (FOC) FOC.nav.forEach((id) => walk(DATA[id], all)); else { walk(D, all); walk(about, all); } // focused: only the sections in its navigation
   // ---- stage 1: critical ----
-  const crit = new Set(STATIC); crit.add(site.logo); sections.forEach((s) => crit.add(`/assets/icons/${s.id}.webp`));
-  if (!save) Object.values(PREVIEWS).forEach((p) => crit.add(p.src)); // the first-visit preview reels (a missing file is skipped silently). Thumbnails + project videos are NOT waited for any more.
-  const hot = (location.hash.match(/^#\/(\w+)/) || [])[1] || 'rigging', hotSet = new Set(); (Array.isArray(D[hot]) ? D[hot] : D.rigging).forEach((it) => typeof it.image === 'string' && hotSet.add(it.image)); // thumbnails of the section being opened load first
+  const crit = new Set(STATIC); crit.add(site.logo); (FOC ? FOC.nav : sections.map((s) => s.id)).forEach((id) => crit.add(`/assets/icons/${id}.webp`));
+  if (!save && !FOC) Object.values(PREVIEWS).forEach((p) => crit.add(p.src)); // the first-visit preview reels (a missing file is skipped silently). Thumbnails + project videos are NOT waited for any more.
+  const hot = R.focus || R.id || 'rigging', hotSet = new Set(); (Array.isArray(D[hot]) ? D[hot] : D.rigging).forEach((it) => typeof it.image === 'string' && hotSet.add(it.image)); // thumbnails of the section being opened load first
   await M.init(); const songs = M.getState().tracks.map((t) => t.url); // song 1 streams by itself through the player's <audio>; the others load in stage 2
   const imgs = [...crit].filter((u) => !VID.test(u)), vids = save ? [] : [...crit].filter((u) => VID.test(u) && (!phone || /backgrounds|previews/.test(u))).sort((a, b) => /backgrounds/.test(b) - /backgrounds/.test(a));
   const total = imgs.length + vids.length || 1, frac = new Map(); let t = 0;

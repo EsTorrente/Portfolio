@@ -3,10 +3,13 @@ html.focused .desktop .topbar{visibility:hidden}
 /* ---- desktop / wide-tablet stage: a 16:9 box (scales to the screen). Positions are % of the 3840×2160 art; text sizes use cqw (1cqw = 1% of the stage width) ---- */
 .fw{position:fixed;inset:0;z-index:20;display:grid;place-items:center;pointer-events:none}
 .fw-stage{position:relative;width:min(100vw,210dvh);height:min(100dvh,64.5vw);container-type:size;pointer-events:none;opacity:0;transform:translateY(14px) scale(.985);transition:opacity .6s ease,transform .7s cubic-bezier(.2,1.1,.3,1);--cr-hand:var(--hand,'Caveat',cursive)}
+.fw-stage{--ptx:calc(var(--px,0)*-.55cqw);--pty:calc(var(--py,0)*-.4cqw)}
 .fw-stage.shown{opacity:1;transform:none}
 .fw-stage>*{position:absolute}
 .fw-art{inset:0;width:100%;height:100%;object-fit:fill;user-select:none;filter:drop-shadow(0 1.4cqw 2.4cqw #000a)}
 .fw-top,.fw-nav,.fw-head,.fw-scroll,.fw-bring,.fw-note{pointer-events:auto}
+.fw-art.fw-win{inset:auto;left:13.2%;top:28.6%;width:72%;height:70.3%}
+.fw-toplayer,.fw-banner,.fw-bring,.fw-note{translate:var(--ptx) var(--pty);transition:translate .55s ease-out,transform .25s,opacity .6s} /* header layer + panels drift together (soft parallax) */
 .fw-stars{inset:0;width:100%;height:100%;pointer-events:none}
 .fw-pc{left:0;bottom:0;width:17.6cqw;height:auto;--from:translateX(-60px);animation-delay:.12s;filter:drop-shadow(0 12px 20px #000b);translate:calc(var(--px,0)*-1.6cqw) calc(var(--py,0)*-1.1cqw);transition:translate .45s ease-out,opacity .45s} /* soft parallax: drifts against the pointer */
 html.focused .dock{top:max(14px,2.4vh);left:max(14px,1.2vw)}
@@ -14,26 +17,26 @@ html.focused .dock{top:max(14px,2.4vh);left:max(14px,1.2vw)}
 .fw-top{right:1.1%;top:2.5%;display:flex;align-items:center;pointer-events:none}
 .fw-top .clock{margin-left:auto;pointer-events:auto;font-size:max(11px,.85cqw)}.fw-top .sfxbtn{font-size:max(10px,.8cqw)}
 /* left navigation */
-.fw-nav{left:6.9%;top:19.5%;width:9.6%;display:flex;flex-direction:column;gap:.15cqw}
-.fw-nav button{display:flex;align-items:center;gap:.55cqw;padding:.55cqw .6cqw;text-align:left;font:600 .78cqw/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;border-radius:.3cqw;transition:.2s;color:var(--cr)}
+.fw-nav{left:2.4%;top:29.6%;width:12.9%;display:flex;flex-direction:column;gap:.25cqw;padding:.7cqw;border-radius:1.1cqw;background:linear-gradient(155deg,#ffffff24,#ffffff0a);border:1px solid #ffffff30;backdrop-filter:blur(14px) saturate(1.35);-webkit-backdrop-filter:blur(14px) saturate(1.35);box-shadow:0 1cqw 3cqw #000a,inset 0 1px 0 #ffffff3a}
+.fw-nav button{display:flex;align-items:center;gap:.6cqw;padding:.62cqw .7cqw;text-align:left;font:600 .8cqw/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;border-radius:.65cqw;transition:.2s;color:var(--cr2)}
 .fw-nav img{width:1.7cqw;height:1.7cqw;object-fit:contain;flex:none}
 .fw-nav button:hover{background:var(--o2);color:var(--bg);transform:translateX(.2cqw)}.fw-nav button:hover img{filter:brightness(.25) contrast(1.3)}
-.fw-nav .on{background:#ff8c1822;box-shadow:inset .2cqw 0 0 var(--o2);color:var(--cr2)}
+.fw-nav .on{background:linear-gradient(90deg,#ff8c18cc,#ff8c1844);box-shadow:0 .2cqw .8cqw #ff8c1855,inset 0 1px 0 #ffffff44;color:#fff}
 /* banner = name + role */
-.fw-banner{left:19.6%;top:10.6%;width:65.4%;height:16.8%;display:flex;align-items:center;gap:1.8cqw;transform:rotate(-1.1deg);pointer-events:none}
-.fw-banner>img:first-child{width:4.6cqw;height:4.6cqw;object-fit:contain;align-self:center;margin-top:-1cqh;filter:drop-shadow(0 .4cqw .6cqw #000a)}
+.fw-banner{left:19.6%;top:9.2%;width:65.4%;height:16.6%;display:flex;align-items:center;gap:1.8cqw;transform:rotate(-1.1deg);pointer-events:none}
+.fw-banner>img:first-child{width:4.8cqw;height:4.8cqw;object-fit:contain;align-self:center;filter:drop-shadow(0 .4cqw .6cqw #000a);animation:fwBob 5.5s ease-in-out infinite}
 .fw-banner h2{position:relative;display:inline-block;font:400 2.5cqw/1.05 var(--disp);color:var(--cr2);padding-bottom:.55cqw}
 .fw-banner h2:after{content:"";position:absolute;left:0;right:-1cqw;bottom:0;height:.22cqw;border-radius:.3cqw;background:var(--o2);transform:rotate(-.5deg)}
 .fw-banner p{margin-top:.6cqw;font:600 max(9.5px,.8cqw)/1.35 var(--mono);letter-spacing:.03em;color:var(--cr)}
-.fw-logo{margin-left:auto;margin-right:3cqw;width:5.4cqw;height:auto;object-fit:contain;filter:drop-shadow(0 .4cqw .8cqw #000a)}
+.fw-logo{margin-left:auto;margin-right:2.6cqw;width:7.6cqw;height:auto;object-fit:contain;align-self:center;filter:drop-shadow(0 .4cqw .8cqw #000a);animation:fwSway 7s ease-in-out infinite}
 /* section heading + filters */
-.fw-head{left:18.4%;width:62.2%;top:30.3%;height:4.8%;display:flex;align-items:center;justify-content:flex-start}
+.fw-head{left:18.4%;width:62.2%;top:31.2%;height:4.6%;display:flex;align-items:center;justify-content:flex-start}
 .fw-pills{display:flex;flex-wrap:wrap;gap:.6cqw;justify-content:flex-start}
 .fw-pills button{display:inline-flex;align-items:center;gap:.5em;padding:.45cqw 1cqw;font:500 max(9.5px,.78cqw)/1.2 var(--mono);letter-spacing:.08em;border:1px solid #ff8c1877;border-radius:99px;transition:.2s}
 .fw-pills button:hover{background:#ff8c1833}.fw-pills button.on{background:var(--o2);color:var(--bg);border-color:var(--o2);font-weight:600}.fw-pills .swi{margin:0}
 /* scrolling content = the existing sections, untouched */
-.fw-scroll{left:18.4%;width:62.2%;top:31.6%;bottom:4.6%;overflow:auto;overflow-x:hidden;padding:.4cqw .8cqw 2cqw .2cqw;scrollbar-color:var(--o) transparent;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.fw-stage.haspills .fw-scroll{top:35.8%}
+.fw-scroll{left:18.4%;width:62.2%;top:32.4%;bottom:4.6%;overflow:auto;overflow-x:hidden;padding:.4cqw .8cqw 2cqw .2cqw;scrollbar-color:var(--o) transparent;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.fw-stage.haspills .fw-scroll{top:36.6%}
 /* what I bring (rotated to match the drawn panel) */
 .fw-bring{left:83.1%;top:29.6%;width:14.6%;height:41%;transform:rotate(-4.2deg);padding:9cqh .8cqw 0 1.2cqw;color:var(--cr)}
 .fw-bring h3{position:absolute;left:1.3cqw;top:2.1cqh;font:700 1.3cqw/1 var(--hand);letter-spacing:.07em;text-transform:uppercase;color:var(--cr2);white-space:nowrap}
@@ -74,18 +77,16 @@ html.compact .fw .fw-scroll .card p{display:block;-webkit-line-clamp:unset;overf
 /* smaller sub-headings inside the focused window (Recognition…, category intros) */
 .fw-scroll .sec-intro h3{font-size:max(12px,1.1cqw)}.fw-scroll .sec-intro p{font-size:max(10px,.8cqw);line-height:1.5}
 
-/* ---- the name as a LOGO (loaded font: Lilita One) ---- */
-:root{--logo:'Lilita One','Archivo Black',Impact,'Arial Black',sans-serif}
-.mar-logo{font-family:var(--logo)!important;font-weight:400!important;font-synthesis:none;letter-spacing:.06em!important;color:var(--cr2);text-shadow:.045em .06em 0 #c4540a,.08em .15em .14em #0009;-webkit-text-stroke:.014em #4a1f06;paint-order:stroke fill}
-.fid h1.mar-logo{letter-spacing:.1em!important}
+/* ---- the name as a LOGO (loaded font: Tilt Warp) ---- */
+:root{--logo:'Tilt Warp','Archivo Black',Impact,'Arial Black',sans-serif}
+.mar-logo{font-family:var(--logo)!important;font-weight:400!important;font-synthesis:none;letter-spacing:.035em!important;color:var(--cr2);text-shadow:.04em .055em 0 #c4540a,.07em .14em .12em #0009}
+.fid h1.mar-logo{letter-spacing:.07em!important}
 
 /* ---- phones / portrait tablets, focused: music + SFX + fullscreen in the window's top bar; the title block folds away while you scroll ---- */
 html.compact .win.focus .wctl{gap:6px;align-items:center}
-html.compact .win.focus .wctl button{display:inline-grid;place-items:center;width:auto;min-width:40px;height:26px;padding:0 8px;border:2px solid var(--brown);border-radius:3px;background:var(--y2);color:var(--bg);font:700 10px/1 var(--mono);letter-spacing:.08em}
+html.compact .win.focus .wctl button{display:inline-grid;place-items:center;width:50px;min-width:0;height:28px;padding:0;border:2px solid var(--brown);border-radius:3px;background:var(--y2);color:var(--bg);font:700 9.5px/1 var(--mono);letter-spacing:.03em}
 html.compact .win.focus .wctl .sfxbtn[aria-pressed=false]{opacity:.75}
 html.compact .win.focus .wctl .fs-btn svg{width:15px;height:15px}
-html.compact .win.focus .whead{max-height:90px;overflow:hidden;transition:max-height .3s ease,opacity .25s ease,padding .3s ease}
-html.compact .win.focus .wbody.hcol .whead{max-height:0;opacity:0;padding-top:0;padding-bottom:0}
 
 /* ---- sideways rows (phones / landscape tablets): "there's more →" arrows + edge fade ---- */
 .rowwrap{display:contents}.car-btn{display:none}
@@ -96,3 +97,18 @@ html.compact:not(.portrait) .rowwrap.more-r:after,html.compact:not(.portrait) .r
 html.compact:not(.portrait) .rowwrap.more-r:after{right:0;background:linear-gradient(90deg,#0000,#120b08e6)}html.compact:not(.portrait) .rowwrap.more-l:before{left:0;background:linear-gradient(270deg,#0000,#120b08e6)}
 @keyframes carNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
 html.compact .fw .rowwrap{display:contents}html.compact .fw .car-btn{display:none!important}
+
+/* phones, focused: the title block scrolls away WITH the content (native scrolling = smooth); the category buttons stay stuck at the top */
+html.compact .win.focus .whead{margin:0 0 4px;padding:2px 0 6px}
+html.compact .win.focus .pills{position:sticky;top:-4px;z-index:6;margin:0 -14px 8px;padding:8px 14px;background:linear-gradient(#120b08f4,#120b08ea);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1px solid #ff8c1833}
+
+/* ---- idle life: everything breathes a little (all off for reduced-motion) ---- */
+@keyframes fwBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-.45cqw)}}
+@keyframes fwSway{0%,100%{rotate:-1.2deg}50%{rotate:1.4deg}}
+@keyframes fwNote{0%,100%{rotate:0deg}50%{rotate:1.1deg}}
+@keyframes fwTwinkle{0%,100%{opacity:1;scale:1}50%{opacity:.45;scale:.7}}
+.fw-bring{animation:fwNote 8s ease-in-out infinite}
+.fw-note{animation:fwNote 6.5s ease-in-out -2s infinite}
+.fw-note b:after{animation:fwTwinkle 2.4s ease-in-out infinite}
+.fw-nav .on img{animation:fwBob 3.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.fw-banner>img:first-child,.fw-logo,.fw-bring,.fw-note,.fw-note b:after,.fw-nav .on img{animation:none}.fw-toplayer,.fw-banner,.fw-bring,.fw-note,.fw-pc{translate:none}}
