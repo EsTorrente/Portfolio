@@ -27,10 +27,12 @@ export function FocusIntro({ focusId }) {
 
 // Desktop / wide tablets: header banner + left navigation + "what I bring" + sticky note drawn over FocusedWindow.webp / FocusedLayerTop.webp (a 16:9 stage that scales with the screen).
 export default function FocusedWindow({ id, focusId, onNav }) {
-  const F = FOCUS[focusId], cur = sec(id), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), sc = useRef(), stage = useRef();
+  const F = FOCUS[focusId], cur = sec(id), [filter, setFilter] = useState('ALL'), [shown, setShown] = useState(false), sc = useRef(), stage = useRef(), [more, setMore] = useState(false); // more = there is content below the visible part → show the "MORE" button
   useEffect(() => { const r = requestAnimationFrame(() => setShown(true)); return () => cancelAnimationFrame(r); }, []);
   useEffect(() => { setFilter('ALL'); }, [id]);
   useEffect(() => { const n = sc.current; if (n) try { n.scrollTo({ top: 0, left: 0, behavior: 'instant' }); } catch { n.scrollTop = 0; } }, [id, filter]);
+  useEffect(() => { const n = sc.current; if (!n) return; const f = () => setMore(n.scrollHeight - n.clientHeight - n.scrollTop > 8); f(); n.addEventListener('scroll', f, { passive: true });
+    const ro = new ResizeObserver(f); ro.observe(n); if (n.firstElementChild) ro.observe(n.firstElementChild); return () => { n.removeEventListener('scroll', f); ro.disconnect(); }; }, [id, filter]);
   // soft parallax: the laptop/desk art in the corner drifts a little against the pointer (CSS reads --px / --py, each -0.5…0.5)
   useEffect(() => { if (!matchMedia('(hover:hover)').matches) return; const h = (e) => { const s = stage.current; if (!s) return; s.style.setProperty('--px', (e.clientX / innerWidth - 0.5).toFixed(3)); s.style.setProperty('--py', (e.clientY / innerHeight - 0.5).toFixed(3)); };
     addEventListener('pointermove', h, { passive: true }); return () => removeEventListener('pointermove', h); }, []);
@@ -47,6 +49,8 @@ export default function FocusedWindow({ id, focusId, onNav }) {
       <section className="fw-banner" aria-label={`${site.name} · ${F.role}`}><Ico id={focusId} /><div><h2 className="mar-logo">{site.name}</h2><p>{F.tagline}</p></div><img className="fw-logo" src={asset('/assets/intro/color-logo.webp')} alt="" draggable="false" /></section>
       {cur.filters && <div className="fw-head"><div className="fw-pills" role="group" aria-label={`${cur.label} categories`}>{cur.filters.map((f) => <button key={f} data-sfx="tick" className={f === filter ? 'on' : ''} aria-pressed={f === filter} onClick={() => setFilter(f)}><SwIcon name={f} />{f}</button>)}</div></div>}
       <div className="fw-scroll" ref={sc}><div className="content"><Section id={id} filter={cur.filters?.includes(filter) ? filter : 'ALL'} /></div></div>
+      <div className={'fw-fade' + (more ? ' on' : '')} aria-hidden="true" />
+      <button className={'fw-more' + (more ? ' on' : '')} data-sfx="tick" tabIndex={more ? 0 : -1} aria-label="Scroll down for more" onClick={() => sc.current?.scrollBy({ top: sc.current.clientHeight * 0.8, behavior: 'smooth' })}>▼ <span>MORE</span></button>
       <aside className="fw-bring" aria-label="What I bring"><h3>What I bring</h3><ul>{F.bring.map((t) => <li key={t}>{t}</li>)}</ul></aside>
       <a className="fw-note" href={generalistUrl()} data-sfx="tick" aria-label="Open my generalist portfolio"><span>My generalist portfolio:</span><b>Go there</b></a>
     </div>

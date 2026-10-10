@@ -3,12 +3,13 @@ html.focused .desktop .topbar{visibility:hidden}
 /* ---- desktop / wide-tablet stage: a 16:9 box (scales to the screen). Positions are % of the 3840×2160 art; text sizes use cqw (1cqw = 1% of the stage width) ---- */
 .fw{position:fixed;inset:0;z-index:20;display:grid;place-items:center;pointer-events:none}
 .fw-stage{position:relative;width:min(100vw,210dvh);height:min(100dvh,64.5vw);container-type:size;pointer-events:none;opacity:0;transform:translateY(14px) scale(.985);transition:opacity .6s ease,transform .7s cubic-bezier(.2,1.1,.3,1);--cr-hand:var(--hand,'Caveat',cursive)}
-.fw-stage{--ptx:calc(var(--px,0)*-.55cqw);--pty:calc(var(--py,0)*-.4cqw)}
+.fw-stage{--lift:3.8%;--ptx:calc(var(--px,0)*-.55cqw);--pty:calc(var(--py,0)*-.4cqw)}
 .fw-stage.shown{opacity:1;transform:none}
 .fw-stage>*{position:absolute}
 .fw-art{inset:0;width:100%;height:100%;object-fit:fill;user-select:none;filter:drop-shadow(0 1.4cqw 2.4cqw #000a)}
 .fw-top,.fw-nav,.fw-head,.fw-scroll,.fw-bring,.fw-note{pointer-events:auto}
-.fw-art.fw-win{inset:auto;left:13.2%;top:28.6%;width:72%;height:70.3%}
+.fw-art.fw-win{inset:auto;left:13.2%;top:calc(28.6% - var(--lift));width:72%;height:calc(70.3% + var(--lift))}
+.fw-art.fw-toplayer{inset:auto;left:0;top:calc(var(--lift)*-1);width:100%;height:100%}
 .fw-toplayer,.fw-banner,.fw-bring,.fw-note{translate:var(--ptx) var(--pty);transition:translate .55s ease-out,transform .25s,opacity .6s} /* header layer + panels drift together (soft parallax) */
 .fw-stars{inset:0;width:100%;height:100%;pointer-events:none}
 .fw-pc{left:0;bottom:0;width:17.6cqw;height:auto;--from:translateX(-60px);animation-delay:.12s;filter:drop-shadow(0 12px 20px #000b);translate:calc(var(--px,0)*-1.6cqw) calc(var(--py,0)*-1.1cqw);transition:translate .45s ease-out,opacity .45s} /* soft parallax: drifts against the pointer */
@@ -17,34 +18,34 @@ html.focused .dock{top:max(14px,2.4vh);left:max(14px,1.2vw)}
 .fw-top{right:1.1%;top:2.5%;display:flex;align-items:center;pointer-events:none}
 .fw-top .clock{margin-left:auto;pointer-events:auto;font-size:max(11px,.85cqw)}.fw-top .sfxbtn{font-size:max(10px,.8cqw)}
 /* left navigation */
-.fw-nav{left:2.4%;top:29.6%;width:12.9%;display:flex;flex-direction:column;gap:.25cqw;padding:.7cqw;border-radius:1.1cqw;background:linear-gradient(155deg,#ffffff24,#ffffff0a);border:1px solid #ffffff30;backdrop-filter:blur(14px) saturate(1.35);-webkit-backdrop-filter:blur(14px) saturate(1.35);box-shadow:0 1cqw 3cqw #000a,inset 0 1px 0 #ffffff3a}
-.fw-nav button{display:flex;align-items:center;gap:.6cqw;padding:.62cqw .7cqw;text-align:left;font:600 .8cqw/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;border-radius:.65cqw;transition:.2s;color:var(--cr2)}
-.fw-nav img{width:1.7cqw;height:1.7cqw;object-fit:contain;flex:none}
+.fw-nav{left:calc(-1*max(0px,calc((100vw - 100cqw)/2)));top:calc(19% - var(--lift));width:calc(15.6cqw + max(0px,calc((100vw - 100cqw)/2)));display:flex;flex-direction:column;gap:.3cqw;padding:1cqw 1cqw 1cqw calc(.9cqw + max(0px,calc((100vw - 100cqw)/2)));border-radius:0 1.5cqw 1.5cqw 0;background:linear-gradient(160deg,#4a2a63d9,#25122fe6 55%,#1c0d26ee);border:1px solid #c79bff2e;border-left:0;backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);box-shadow:0 1.2cqw 3.4cqw #000b,inset 0 1px 0 #ffffff2e,inset -1px 0 0 #ff8c1822;animation:fwSlide .8s cubic-bezier(.2,1,.3,1) .2s both}
+.fw-nav button{display:flex;align-items:center;gap:.75cqw;padding:.8cqw .8cqw;text-align:left;font:600 .86cqw/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;border-radius:.7cqw;transition:.2s;color:var(--cr2)}
+.fw-nav img{width:2cqw;height:2cqw;object-fit:contain;flex:none}
 .fw-nav button:hover{background:var(--o2);color:var(--bg);transform:translateX(.2cqw)}.fw-nav button:hover img{filter:brightness(.25) contrast(1.3)}
 .fw-nav .on{background:linear-gradient(90deg,#ff8c18cc,#ff8c1844);box-shadow:0 .2cqw .8cqw #ff8c1855,inset 0 1px 0 #ffffff44;color:#fff}
 /* banner = name + role */
-.fw-banner{left:19.6%;top:9.2%;width:65.4%;height:16.6%;display:flex;align-items:center;gap:1.8cqw;transform:rotate(-1.1deg);pointer-events:none}
+.fw-banner{left:19.6%;top:calc(9.2% - var(--lift));width:65.4%;height:16.6%;display:flex;align-items:center;gap:1.8cqw;transform:rotate(-1.1deg);pointer-events:none}
 .fw-banner>img:first-child{width:4.8cqw;height:4.8cqw;object-fit:contain;align-self:center;filter:drop-shadow(0 .4cqw .6cqw #000a);animation:fwBob 5.5s ease-in-out infinite}
 .fw-banner h2{position:relative;display:inline-block;font:400 2.5cqw/1.05 var(--disp);color:var(--cr2);padding-bottom:.55cqw}
 .fw-banner h2:after{content:"";position:absolute;left:0;right:-1cqw;bottom:0;height:.22cqw;border-radius:.3cqw;background:var(--o2);transform:rotate(-.5deg)}
 .fw-banner p{margin-top:.6cqw;font:600 max(9.5px,.8cqw)/1.35 var(--mono);letter-spacing:.03em;color:var(--cr)}
 .fw-logo{margin-left:auto;margin-right:2.6cqw;width:7.6cqw;height:auto;object-fit:contain;align-self:center;filter:drop-shadow(0 .4cqw .8cqw #000a);animation:fwSway 7s ease-in-out infinite}
 /* section heading + filters */
-.fw-head{left:18.4%;width:62.2%;top:31.2%;height:4.6%;display:flex;align-items:center;justify-content:flex-start}
+.fw-head{left:18.4%;width:62.2%;top:calc(31.2% - var(--lift));height:4.6%;display:flex;align-items:center;justify-content:flex-start}
 .fw-pills{display:flex;flex-wrap:wrap;gap:.6cqw;justify-content:flex-start}
 .fw-pills button{display:inline-flex;align-items:center;gap:.5em;padding:.45cqw 1cqw;font:500 max(9.5px,.78cqw)/1.2 var(--mono);letter-spacing:.08em;border:1px solid #ff8c1877;border-radius:99px;transition:.2s}
 .fw-pills button:hover{background:#ff8c1833}.fw-pills button.on{background:var(--o2);color:var(--bg);border-color:var(--o2);font-weight:600}.fw-pills .swi{margin:0}
 /* scrolling content = the existing sections, untouched */
-.fw-scroll{left:18.4%;width:62.2%;top:32.4%;bottom:4.6%;overflow:auto;overflow-x:hidden;padding:.4cqw .8cqw 2cqw .2cqw;scrollbar-color:var(--o) transparent;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.fw-stage.haspills .fw-scroll{top:36.6%}
+.fw-scroll{left:18.4%;width:62.2%;top:calc(32.4% - var(--lift));bottom:4.6%;overflow:auto;overflow-x:hidden;padding:.4cqw .8cqw 2cqw .2cqw;scrollbar-color:var(--o) transparent;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.fw-stage.haspills .fw-scroll{top:calc(36.6% - var(--lift))}
 /* what I bring (rotated to match the drawn panel) */
-.fw-bring{left:83.1%;top:29.6%;width:14.6%;height:41%;transform:rotate(-4.2deg);padding:9cqh .8cqw 0 1.2cqw;color:var(--cr)}
+.fw-bring{left:83.1%;top:calc(29.6% - var(--lift));width:14.6%;height:41%;transform:rotate(-4.2deg);padding:9cqh .8cqw 0 1.2cqw;color:var(--cr)}
 .fw-bring h3{position:absolute;left:1.3cqw;top:2.1cqh;font:700 1.3cqw/1 var(--hand);letter-spacing:.07em;text-transform:uppercase;color:var(--cr2);white-space:nowrap}
 .fw-bring ul{list-style:none;padding:0;height:100%;overflow:hidden auto;scrollbar-width:none}.fw-bring ul::-webkit-scrollbar{display:none}
 .fw-bring li{display:flex;gap:.5cqw;margin-bottom:.6cqw;font:600 1.02cqw/1.06 var(--hand)}.fw-bring li:before{content:"✦";color:var(--o2);font-size:.95em;flex:none;line-height:1.1}
 /* sticky note → generalist portfolio (a real link) */
 .fw-note,.fw-note:hover,.fw-note:focus,.fi-note,.fi-note:hover{text-decoration:none}
-.fw-note{left:84.6%;top:74%;width:10.8%;height:15.4%;display:grid;place-content:center;gap:.7cqw;text-align:center;color:#3a2113;font-family:var(--hand);transform:rotate(-4deg);transition:transform .25s}
+.fw-note{left:84.6%;top:calc(74% - var(--lift));width:10.8%;height:15.4%;display:grid;place-content:center;gap:.7cqw;text-align:center;color:#3a2113;font-family:var(--hand);transform:rotate(-4deg);transition:transform .25s}
 .fw-note span{font:700 1.1cqw/1.05 var(--hand);letter-spacing:.04em;text-transform:uppercase;opacity:.8}
 .fw-note b{position:relative;justify-self:center;font:700 1.05cqw/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:.5cqw 1.2cqw;border-radius:99px;background:var(--o2);color:var(--bg);box-shadow:0 .2cqw .5cqw #0006;transition:.2s}
 .fw-note b:after{content:"✦";position:absolute;right:-.5cqw;top:-.7cqw;font-size:1.1cqw;color:var(--y2)}
@@ -112,3 +113,22 @@ html.compact .win.focus .pills{position:sticky;top:-4px;z-index:6;margin:0 -14px
 .fw-note b:after{animation:fwTwinkle 2.4s ease-in-out infinite}
 .fw-nav .on img{animation:fwBob 3.2s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.fw-banner>img:first-child,.fw-logo,.fw-bring,.fw-note,.fw-note b:after,.fw-nav .on img{animation:none}.fw-toplayer,.fw-banner,.fw-bring,.fw-note,.fw-pc{translate:none}}
+
+@keyframes fwSlide{from{transform:translateX(-105%);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.fw-nav{animation:none}}
+
+/* ---- "there's more below" button + fade for the scrolling content ---- */
+.fw-more{left:49.5%;bottom:5.6%;translate:-50% 0;display:inline-flex;align-items:center;gap:.5cqw;padding:.5cqw 1.5cqw;border:0;border-radius:99px;background:var(--o2);color:var(--bg);font:700 max(10px,.85cqw) var(--mono);letter-spacing:.12em;box-shadow:0 .25cqw .9cqw #000a;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s,background .2s;z-index:3}
+.fw-more.on{opacity:1;pointer-events:auto;animation:fwMore 1.5s ease-in-out infinite}.fw-more:hover{background:var(--y2)}
+@keyframes fwMore{0%,100%{transform:translateY(0)}50%{transform:translateY(.4cqw)}}
+.fw-fade{left:18.4%;width:62.2%;bottom:4.6%;height:7cqh;background:linear-gradient(#0c071000,#0c0710f0);pointer-events:none;opacity:0;transition:opacity .3s;z-index:2}.fw-fade.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.fw-more.on{animation:none}}
+
+/* ---- phones, focused: the three top buttons really are the same size; floating "scroll down" button ---- */
+html.compact .win.focus .wctl>*{box-sizing:border-box;width:50px!important;height:28px!important;min-width:0!important;min-height:0!important;padding:0!important;border-radius:3px!important;margin:0}
+html.compact .win.focus .wctl .sfxbtn{font-size:9.5px!important;letter-spacing:.02em!important;border:2px solid var(--brown)!important;background:var(--y2)!important;color:var(--bg)!important}
+html.compact .win.focus .wctl .fs-btn{border:2px solid var(--brown)!important;background:var(--y2)!important;color:var(--bg)!important}
+.scroll-dn{display:none}
+html.compact .win.focus .scroll-dn{display:grid;place-items:center;position:absolute;right:calc(14px + env(safe-area-inset-right));bottom:calc(12px + env(safe-area-inset-bottom));z-index:8;width:44px;height:44px;border-radius:50%;border:2px solid var(--bg);background:var(--o2);color:var(--bg);font:700 18px/1 var(--mono);box-shadow:0 3px 10px #000a;opacity:0;pointer-events:none;transition:opacity .25s}
+html.compact .win.focus .scroll-dn.on{opacity:1;pointer-events:auto;animation:carNudgeY 1.4s ease-in-out infinite}
+@keyframes carNudgeY{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}

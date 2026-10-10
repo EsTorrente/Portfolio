@@ -3,25 +3,25 @@
 //   role  = subtitle shown on the loading screen and in the browser tab
 //   tagline = line under MAR TORRENTE in the header banner
 //   nav   = which sections appear in the focused navigation (first one = the focus; every focus keeps Projects, Awards, About Me and Opinions)
-//   bring = the "WHAT I BRING" list (short lines; 4 fit best)
+//   bring = the "WHAT I BRING" list: what makes you different + proof (short lines, max ~50 characters each; 5 fit)
 export const FOCUS = {
   rigging: {
     role: 'CHARACTER RIGGING',
     tagline: 'Digital Entertainment Design Engineer, Technical Artist, generalist.', // subtitle under the name in the header banner
     nav: ['rigging', 'awards', 'projects', 'about', 'opinions'],
-    bring: ['Clean and efficient rigs for animation and games', 'Facial, cloth and prop setup', 'Custom tools and workflows', 'Problem solving & optimization'],
+    bring: ['Procedural animation systems', 'Fully custom rigs and tools', 'Design with animators in mind', 'Expressive and intuitive controls', 'Game ready rigs'],
   },
   animation: {
     role: '3D ANIMATION',
     tagline: 'Digital Entertainment Design Engineer, 3D Animator, generalist.',
     nav: ['animation', 'awards', 'projects', 'about', 'opinions'],
-    bring: ['3D animation for shorts and moving artworks', 'Emotional storytelling and performance', 'Animator-friendly custom rigs', 'Creative direction and project management'],
+    bring: ['Technical knowledge about rigs and animation tools', 'Expressive acting with squash & stretch', 'Ambitious projects: 13-min Platillo, Regret (1M+ views)', 'Storyboard to compositing, solo or in a team', 'Picks up any tool a project demands'],
   },
   projects: {
     role: 'CREATIVE DIRECTION & PRODUCTION',
     tagline: 'Digital Entertainment Design Engineer, Creative Director, generalist.',
     nav: ['projects', 'awards', 'about', 'opinions'],
-    bring: ['Project management and creative direction', 'Experience design and storytelling', 'Multidisciplinary 2D / 3D production', 'Leading and mentoring small teams'],
+    bring: ['Idea to finished experience, start to end', 'Led teams through real deadlines', 'Technical to prototype, artistic to direct', 'Solo-made Regret at 17: 1M+ views on YouTube', 'Best DEX Project ×3 + Social & Cultural Impact'],
   },
 };
 
