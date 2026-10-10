@@ -11,7 +11,8 @@ import * as M from './music';
 // Missing files are skipped silently. Anything still loading after TIMEOUT_MS keeps loading in the background.
 const TIMEOUT_MS = 60000, BG_DELAY_MS = 700, IMG = /\.(webp|png|jpe?g|gif|avif|svg)(\?|$)/i, VID = /\.(webm|mp4)(\?|$)/i;
 const EAGER_VIDEO_OF = 'blender-01'; // ✏️ project whose FIRST video is the very first thing loaded in the background stage right after the desktop appears (Eridan). It no longer holds up the loading screen.
-const STATIC = ['/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp',
+const FOCUSED_ART = /\/focused/.test(location.hash) ? ['/assets/ui/FocusedWindow.webp', '/assets/ui/FocusedLayerTop.webp'] : []; // only the focused versions need these
+const STATIC = [...FOCUSED_ART, '/assets/intro/color-logo.webp', '/assets/backgrounds/background.jpg', '/assets/ui/main-window.webp', '/assets/ui/small-window.webp', '/assets/ui/award-card.webp', '/assets/ui/about-layout.webp',
   '/assets/ui/back-right.webp', '/assets/ui/front-left.webp', '/assets/audio/PlayerIcon.webp', ...(appleVideo() ? ['/assets/backgrounds/backgroundApple.webm'] : ['/assets/backgrounds/background.webm', '/assets/backgrounds/foreground.webm'])];
 function walk(o, out, seen = new Set()) { if (typeof o === 'string') { if ((o.startsWith('/assets/') || o.startsWith('http')) && (IMG.test(o) || VID.test(o))) out.add(o); return; }
   if (!o || typeof o !== 'object' || seen.has(o)) return; seen.add(o); for (const v of Object.values(o)) walk(v, out, seen); }

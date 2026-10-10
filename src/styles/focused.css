@@ -1,0 +1,68 @@
+/* ===== Role-focused portfolio (#/rigging/focused …) — everything here only applies to the focused versions ===== */
+html.focused .desktop .topbar{visibility:hidden}
+/* ---- desktop / wide-tablet stage: a 16:9 box (scales to the screen). Positions are % of the 3840×2160 art; text sizes use cqw (1cqw = 1% of the stage width) ---- */
+.fw{position:fixed;inset:0;z-index:20;display:grid;place-items:center;pointer-events:none}
+.fw-stage{position:relative;width:min(100vw,177.7778dvh);height:min(56.25vw,100dvh);container-type:size;pointer-events:none;opacity:0;transform:translateY(14px) scale(.985);transition:opacity .6s ease,transform .7s cubic-bezier(.2,1.1,.3,1);--cr-hand:var(--hand,'Caveat',cursive)}
+.fw-stage.shown{opacity:1;transform:none}
+.fw-stage>*{position:absolute}
+.fw-art{inset:0;width:100%;height:100%;object-fit:fill;user-select:none;filter:drop-shadow(0 1.4cqw 2.4cqw #000a)}
+.fw-top,.fw-nav,.fw-head,.fw-scroll,.fw-bring,.fw-note{pointer-events:auto}
+/* header: logo, name, clock */
+.fw-top{left:3%;right:2.6%;top:2.4%;display:flex;align-items:center;gap:1.1cqw;font:700 1.55cqw/1 var(--disp);letter-spacing:.12em;color:var(--cr);pointer-events:none}
+.fw-top img{width:4.2cqw;filter:drop-shadow(0 4px 8px #000a)}.fw-top .clock{margin-left:auto;pointer-events:auto;font-size:max(11px,.85cqw)}.fw-top .sfxbtn{font-size:max(10px,.8cqw)}
+/* left navigation */
+.fw-nav{left:6.9%;top:19.5%;width:11.4%;display:flex;flex-direction:column;gap:.35cqw}
+.fw-nav button{display:flex;align-items:center;gap:.8cqw;padding:.85cqw .9cqw;text-align:left;font:600 .98cqw/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;border-radius:.3cqw;transition:.2s;color:var(--cr)}
+.fw-nav img{width:2.3cqw;height:2.3cqw;object-fit:contain;flex:none}
+.fw-nav button:hover{background:var(--o2);color:var(--bg);transform:translateX(.25cqw)}.fw-nav button:hover img{filter:brightness(.25) contrast(1.3)}
+.fw-nav .on{background:#ff8c1822;box-shadow:inset .22cqw 0 0 var(--o2);color:var(--cr2)}
+/* banner = the professional focus */
+.fw-banner{left:19.6%;top:10.6%;width:65%;height:16.6%;display:flex;align-items:center;gap:2.2cqw;transform:rotate(-1.1deg);pointer-events:none}
+.fw-banner>img{width:6.6cqw;height:6.6cqw;object-fit:contain;filter:drop-shadow(0 .4cqw .6cqw #000a)}
+.fw-banner h2{font:900 3.4cqw/1 var(--disp);letter-spacing:.02em;color:var(--cr2)}
+.fw-banner i{display:block;width:16cqw;height:.32cqw;margin:.7cqw 0 .9cqw;border-radius:.3cqw;background:var(--o2);transform:rotate(-.6deg)}
+.fw-banner p{font-size:max(10px,.98cqw);line-height:1.45;letter-spacing:.04em;color:var(--cr);opacity:.92}
+/* section heading + filters */
+.fw-head{left:19.6%;width:61%;top:30.6%;height:6.4%;display:flex;align-items:center;justify-content:space-between;gap:1.4cqw}
+.fw-head h3{display:flex;align-items:center;gap:1cqw;font:600 1.35cqw/1 var(--mono);letter-spacing:.14em;color:var(--cr2);position:relative;padding-bottom:.6cqw}
+.fw-head h3 img{width:2.8cqw;height:2.8cqw;object-fit:contain}.fw-head h3:after{content:"";position:absolute;left:3.6cqw;right:0;bottom:0;height:.26cqw;border-radius:.3cqw;background:var(--o2);transform:rotate(-.5deg)}
+.fw-pills{display:flex;flex-wrap:wrap;gap:.6cqw;justify-content:flex-end}
+.fw-pills button{display:inline-flex;align-items:center;gap:.5em;padding:.45cqw 1cqw;font:500 max(9.5px,.78cqw)/1.2 var(--mono);letter-spacing:.08em;border:1px solid #ff8c1877;border-radius:99px;transition:.2s}
+.fw-pills button:hover{background:#ff8c1833}.fw-pills button.on{background:var(--o2);color:var(--bg);border-color:var(--o2);font-weight:600}.fw-pills .swi{margin:0}
+/* scrolling content = the existing sections, untouched */
+.fw-scroll{left:19.6%;width:61%;top:38.4%;bottom:4.6%;overflow:auto;overflow-x:hidden;padding:.4cqw .8cqw 2cqw .2cqw;scrollbar-color:var(--o) transparent;scrollbar-width:thin;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+/* what I bring */
+.fw-bring{left:82.4%;top:29%;width:14.4%;height:37.5%;transform:rotate(-3.3deg);padding:5.7cqw .9cqw 0 1.3cqw;color:var(--cr)}
+.fw-bring h3{position:absolute;left:1.5cqw;top:.55cqw;font:700 1.7cqw/1 var(--hand);letter-spacing:.07em;text-transform:uppercase;color:var(--cr2);white-space:nowrap}
+.fw-bring ul{list-style:none;padding:0;height:100%;overflow:hidden auto;scrollbar-width:none}.fw-bring ul::-webkit-scrollbar{display:none}
+.fw-bring li{display:flex;gap:.55cqw;margin-bottom:.7cqw;font:600 1.12cqw/1.06 var(--hand)}.fw-bring li:before{content:"✦";color:var(--o2);font-size:.95em;flex:none;line-height:1.1}
+/* sticky note → generalist portfolio (a real link) */
+.fw-note{left:83.7%;top:75.3%;width:10.4%;height:13.6%;display:grid;place-content:center;gap:.5cqw;text-align:center;color:#3a2113;font-family:var(--hand);transform:rotate(-5deg);transition:transform .25s}
+.fw-note span{font:700 1.5cqw/1 var(--hand);letter-spacing:.04em;text-transform:uppercase}.fw-note b{justify-self:center;font:700 1.35cqw/1 var(--hand);letter-spacing:.06em;text-transform:uppercase;padding:.35cqw .8cqw;border:.2cqw solid #3a2113;border-radius:.5cqw;transition:.2s}
+.fw-note:hover,.fw-note:focus-visible{transform:rotate(-2deg) scale(1.05)}.fw-note:hover b,.fw-note:focus-visible b{background:#3a2113;color:#ffd36a}
+
+/* ---- phones / portrait tablets: the existing full-screen window + a compact focus header at the top of the content ---- */
+.fi{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:0 0 14px;padding:10px 12px;border:1px solid #ff8c1866;border-radius:10px;background:linear-gradient(#24150e,#1b100b)}
+.fi-id{display:flex;align-items:center;gap:10px;flex:1 1 200px;min-width:0}.fi-id img{width:38px;height:38px;object-fit:contain;flex:none}
+.fi-id b{display:block;font:900 clamp(15px,4.4vw,19px)/1.1 var(--disp);letter-spacing:.1em;color:var(--cr2)}.fi-id span{display:block;margin-top:4px;font-size:10px;letter-spacing:.16em;color:var(--y2)}
+.fi-bring{flex:1 1 220px;align-self:center;font-size:12px}.fi-bring summary{cursor:pointer;list-style:none;min-height:40px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px dashed #ff8c18aa;border-radius:99px;font:700 15px var(--hand);letter-spacing:.08em;text-transform:uppercase;color:var(--cr2)}
+.fi-bring summary::-webkit-details-marker{display:none}.fi-bring summary:before{content:"✦";color:var(--o2)}.fi-bring summary:after{content:"▾";margin-left:auto;color:var(--y2);transition:transform .2s}.fi-bring[open] summary:after{transform:rotate(180deg)}
+.fi-bring ul{list-style:none;padding:8px 4px 2px;display:grid;gap:6px}.fi-bring li{display:flex;gap:8px;font:600 17px/1.15 var(--hand);color:var(--cr)}.fi-bring li:before{content:"✦";color:var(--o2);flex:none}
+.fi-note{flex:0 0 auto;align-self:center;display:grid;gap:4px;text-align:center;padding:9px 14px;min-height:44px;border-radius:4px;color:#3a2113;background:linear-gradient(135deg,#e9a870,#cf8a52);box-shadow:0 3px 8px #0008;transform:rotate(-2deg);font-family:var(--hand)}
+.fi-note span{font:700 14px/1 var(--hand);letter-spacing:.04em;text-transform:uppercase}.fi-note b{font:700 15px/1 var(--hand);letter-spacing:.06em;text-transform:uppercase}.fi-note:active{transform:rotate(-2deg) scale(.96)}
+html.compact .win.focus .wctl .gen{display:flex;align-items:center;width:auto;padding:0 10px;height:26px;border-radius:3px;border:2px solid var(--brown);background:var(--y2);color:var(--bg);font:700 10px/1 var(--mono);letter-spacing:.08em;white-space:nowrap}
+html.compact .win.focus .wctl .gen:active{transform:translateY(2px)}
+
+/* ---- loading screen of the focused versions: name + role instead of the cat's story ---- */
+.fid{display:grid;gap:10px;text-align:center;justify-items:center}
+.fid h1{font:900 clamp(26px,6vw,52px)/1 var(--disp);letter-spacing:.14em;color:var(--cr2);opacity:0;animation:fidIn .9s ease .35s forwards}
+.fid p{margin:0;font-size:clamp(11px,1.6vw,15px);letter-spacing:.32em;color:var(--y2);opacity:0;animation:fidIn .9s ease .75s forwards}
+@keyframes fidIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+html.compact:not(.portrait) .intro.game .fid{display:none}
+@media (prefers-reduced-motion:reduce){.fw-stage{transition:none}}
+
+/* wide tablets use the desktop stage but are "compact" (touch): keep the normal wrapping card grid instead of the sideways phone carousel */
+html.compact .fw .fw-scroll .grid{display:grid;overflow:visible;padding:0;scroll-snap-type:none}
+html.compact .fw .fw-scroll .awards{display:grid;overflow:visible;padding:0;scroll-snap-type:none}
+html.compact .fw .fw-scroll .grid>.card,html.compact .fw .fw-scroll .award{flex:initial}
+html.compact .fw .fw-scroll .card p{display:block;-webkit-line-clamp:unset;overflow:visible}

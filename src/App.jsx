@@ -11,6 +11,8 @@ import Intro from './components/Intro';
 import RotateHint from './components/RotateHint';
 import Boot from './components/Boot';
 import PreviewReel, { PREVIEWS, seenPreview } from './components/PreviewReel';
+import FocusedWindow from './components/FocusedWindow';
+import { FOCUS, parseRoute, routeHash } from './data/focusData';
 import { canFullscreen, enterFullscreen } from './utils/fullscreen';
 import * as M from './utils/music';
 // If the browser blocks autoplay, the intro waits for ONE click/tap ("click to enter") so the music can start by itself afterwards. Set to false to never wait.
@@ -18,7 +20,8 @@ const WAIT_FOR_CLICK_IF_MUSIC_BLOCKED = true;
 // Phones: the first tap puts the site into fullscreen (and locks landscape where the browser allows it). The ⛶ button in the top bar toggles it. Set to false to only use the button.
 const AUTO_FULLSCREEN_ON_PHONES = true;
 
-const fromHash = () => { const id = location.hash.replace(/^#\/?/, ''); return sections.some((s) => s.id === id) ? id : null; };
+const route = () => parseRoute(location.hash, sections); // { focus, id }: '#/rigging' → normal portfolio · '#/rigging/focused[/awards]' → role-focused version
+const fromHash = () => route().id;
 
 function Cursor() { // custom cursor on fine pointers only. Dot and ring move together instantly (no trailing).
   useEffect(() => { if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return; const d = document.getElementById('cur'), r = document.getElementById('ring');
@@ -42,21 +45,25 @@ function useLayoutClass() {
 }
 
 export default function App() {
-  const [open, setOpen] = useState(fromHash()), [origin, setOrigin] = useState(null);
+  const [open, setOpen] = useState(fromHash()), [focus, setFocus] = useState(route().focus), [origin, setOrigin] = useState(null);
   const [boot, setBoot] = useState(false); // the little "boot-up" terminal scene that plays once, right after the loading screen (components/Boot.jsx)
-  const [phase, setPhase] = useState(fromHash() || reducedMotion() ? 'done' : 'intro'); // intro → reveal → done
+  const [phase, setPhase] = useState(reducedMotion() || (fromHash() && !route().focus) ? 'done' : 'intro'); // intro → reveal → done (a focused link still shows the loading screen, but never the boot story)
   const [gamePlayed, setGamePlayed] = useState(false), [pct, setPct] = useState(0), [loaded, setLoaded] = useState(false), [minTime, setMinTime] = useState(false), [music, setMusic] = useState(M.getState());
   useEffect(() => { preloadAll(setPct).then(() => setLoaded(true)); return M.subscribe(setMusic); }, []); // everything loads behind the intro logo
   useEffect(() => { if (phase === 'intro') { const t = setTimeout(() => setMinTime(true), 3200); return () => clearTimeout(t); }
-    if (phase === 'reveal') { setBoot(true); const t = setTimeout(() => setPhase('done'), 1800); return () => clearTimeout(t); } }, [phase]);
+    if (phase === 'reveal') { if (!focus) setBoot(true); const t = setTimeout(() => setPhase('done'), 1800); return () => clearTimeout(t); } }, [phase]);
   // wait for a click if the browser blocked the music, or if the visitor is mid-snake-game (so it never yanks the screen away)
   const needClick = gamePlayed || (WAIT_FOR_CLICK_IF_MUSIC_BLOCKED && music.tracks.length > 0 && !music.playing && !music.muted);
   useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick) setPhase('reveal'); }, [phase, minTime, loaded, needClick]);
-  useEffect(() => { const h = () => { setOpen(fromHash()); if (!fromHash()) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
+  useEffect(() => { const h = () => { const r = route(); setOpen(r.id); setFocus(r.focus); if (!r.id) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
   const [preview, setPreview] = useState(null); // first time a section (rigging / animation / projects) is opened → short reel popup (components/PreviewReel.jsx)
   useEffect(() => { if (!open || !PREVIEWS[open] || boot || phase !== 'done' || seenPreview(open)) return; const t = setTimeout(() => setPreview(open), 500); return () => clearTimeout(t); }, [open, boot, phase]);
   useEffect(() => { if (!open) setPreview(null); }, [open]);
-  const compact = useLayoutClass();
+  const compact = useLayoutClass(), [wide, setWide] = useState(false); // wide = iPad-sized landscape tablet → gets the desktop layout
+  useEffect(() => { const f = () => requestAnimationFrame(() => setWide(document.documentElement.classList.contains('wideabout'))); f(); addEventListener('resize', f); addEventListener('orientationchange', f); return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); }; }, [compact]);
+  const stage = !!focus && (!compact || wide); // focused desktop layout (FocusedWindow) vs. the compact window (phones / portrait tablets)
+  useEffect(() => { document.documentElement.classList.toggle('focused', stage); return () => document.documentElement.classList.remove('focused'); }, [stage]);
+  useEffect(() => { const t = document.title; if (focus) document.title = `${site.name} · ${FOCUS[focus].role}`; return () => { document.title = t; }; }, [focus]);
   useEffect(() => { if (!AUTO_FULLSCREEN_ON_PHONES || !compact || document.documentElement.classList.contains('tablet') || !canFullscreen() || !matchMedia('(pointer:coarse)').matches) return;
     const go = () => { enterFullscreen(); off(); }, off = () => removeEventListener('pointerup', go, true); addEventListener('pointerup', go, true); return off; }, [compact]);
   useEffect(() => { document.documentElement.dataset.phase = phase; }, [phase]); // the FPS guard waits for 'done'
@@ -67,12 +74,13 @@ export default function App() {
     const click = (e) => { if (armed && ph() !== 'intro' && performance.now() - armed < 1500) { e.stopImmediatePropagation(); e.preventDefault(); } armed = 0; };
     addEventListener('pointerdown', down, true); addEventListener('click', click, true); return () => { removeEventListener('pointerdown', down, true); removeEventListener('click', click, true); }; }, []);
   useEffect(() => initSfx(), []);
-  const openSec = useCallback((id, rect) => { if (rect) play('open'),  setOrigin(rect); location.hash = '/' + id; }, []);
+  const openSec = useCallback((id, rect) => { if (rect) play('open'), setOrigin(rect); location.hash = routeHash(focus, id); }, [focus]);
   const closed = useCallback(() => { history.pushState('', document.title, location.pathname + location.search); setOpen(null); setOrigin(null); }, []);
   return (<>
     <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro'} introDone={phase === 'done'} />
-    {open && <PortfolioWindow key="win" id={open} origin={origin} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />}
-    {phase !== 'done' && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} />}
+    {open && !focus && <PortfolioWindow key="win" id={open} origin={origin} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />}
+    {open && focus && phase !== 'intro' && (stage ? <FocusedWindow key="fwin" id={open} focusId={focus} onNav={(id) => openSec(id)} /> : <PortfolioWindow key="win" id={open} focus={focus} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />)}
+    {phase !== 'done' && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} focusRole={focus ? FOCUS[focus].role : null} />}
     {preview && open === preview && <PreviewReel key={preview} id={preview} onClose={() => setPreview(null)} />}
     {boot && <Boot onDone={() => setBoot(false)} />}
     <MusicDock open={!!open} compact={compact} />

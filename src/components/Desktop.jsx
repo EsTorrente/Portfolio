@@ -8,13 +8,13 @@ import { isMuted, setMuted, onMuteChange, play } from '../utils/sfx';
 import { DockButton } from './MusicDock';
 import { canFullscreen, isFullscreen, toggleFullscreen, onFullscreenChange } from '../utils/fullscreen';
 
-function Clock() { const f = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }); const [t, s] = useState(f);
+export function Clock() { const f = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }); const [t, s] = useState(f);
   useEffect(() => { const i = setInterval(() => s(f()), 20000); return () => clearInterval(i); }, []); return <span>{t}</span>; }
 
-function SfxToggle() { const [m, setM] = useState(isMuted()); useEffect(() => onMuteChange(setM), []);
+export function SfxToggle() { const [m, setM] = useState(isMuted()); useEffect(() => onMuteChange(setM), []);
   return <button className="sfxbtn" data-sfx="none" aria-pressed={!m} aria-label={m ? 'Turn sound effects on' : 'Turn sound effects off'} onClick={() => { setMuted(!m); if (m) play('click'); }}>SFX {m ? 'OFF' : 'ON'}</button>; }
 
-function FsButton() { const [on, setOn] = useState(isFullscreen()); useEffect(() => onFullscreenChange(setOn), []);
+export function FsButton() { const [on, setOn] = useState(isFullscreen()); useEffect(() => onFullscreenChange(setOn), []);
   if (!canFullscreen()) return null;
   return <button className="tb-btn fs-btn" data-sfx="tick" aria-pressed={on} aria-label={on ? 'Exit fullscreen' : 'Enter fullscreen'} onClick={toggleFullscreen}>
     <svg viewBox="0 0 24 24" aria-hidden="true">{on ? <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" /> : <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />}</svg></button>; }

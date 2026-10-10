@@ -63,7 +63,7 @@ function Burst() {
 }
 
 // Loading screen: logo, a little story (new page every few seconds), progress bar, and an optional snake game.
-export default function Intro({ out, loaded, pct, needClick, onEnter, onPlay }) {
+export default function Intro({ out, loaded, pct, needClick, onEnter, onPlay, focusRole }) { // focusRole (focused versions only): show name + role instead of the cat's story
   const [game, setGame] = useState(false), [page, setPage] = useState(0), [bg, setBg] = useState(false), [burst, setBurst] = useState(false);
   useEffect(() => { const i = new Image(); i.onload = () => setBg(true); i.src = asset(BG); }, []); // background fades in once it has loaded (no pop-in)
   useEffect(() => { const t0 = performance.now(), i = setInterval(() => setPage(Math.min(STORY.length - 1, Math.floor((performance.now() - t0) / (STORY_STEP_SECONDS * 1000)))), 500); return () => clearInterval(i); }, []);
@@ -72,7 +72,7 @@ export default function Intro({ out, loaded, pct, needClick, onEnter, onPlay }) 
   return (<div className={'intro' + (out ? ' out' : '') + (game ? ' game' : '')} onClick={onEnter} role="presentation">
     <div className={'intro-bg' + (bg ? ' on' : '')} style={{ backgroundImage: `url(${asset(BG)})` }} aria-hidden="true" />
     {site.logoVideo ? <video src={asset(site.logoVideo)} autoPlay muted playsInline /> : <img src={asset(site.logo)} alt={site.name} />}
-    <div className="story" key={page} aria-live="polite">{STORY[page].map((l, i) => <p key={i} style={{ '--l': i }}>{l}</p>)}</div>
+    {focusRole ? <div className="fid"><h1>{site.name}</h1><p>{focusRole}</p></div> : <div className="story" key={page} aria-live="polite">{STORY[page].map((l, i) => <p key={i} style={{ '--l': i }}>{l}</p>)}</div>}
     <div className={'intro-status' + (loaded ? ' done' : '')}>{burst && <Burst />}<p className="stat" role="status">{status}</p><div className="intro-bar" aria-hidden="true"><i style={{ transform: `scaleX(${loaded ? 1 : pct})` }} /></div></div>
     <div className="snake-wrap" onClick={(e) => e.stopPropagation()}>
       {game ? <Snake onPlay={onPlay} /> : <button className="snake-open" data-sfx="tick" onClick={() => setGame(true)}>◆ PLAY SNAKE WHILE YOU WAIT</button>}</div>
