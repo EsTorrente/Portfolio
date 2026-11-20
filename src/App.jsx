@@ -8,6 +8,7 @@ import MusicDock from './components/MusicDock';
 import { initSfx, play } from './utils/sfx';
 import { preloadAll } from './utils/preload';
 import Intro from './components/Intro';
+import Opening from './components/Opening';
 import RotateHint from './components/RotateHint';
 import Boot from './components/Boot';
 import PreviewReel, { PREVIEWS, seenPreview } from './components/PreviewReel';
@@ -48,14 +49,22 @@ export default function App() {
   const [open, setOpen] = useState(fromHash()), [focus, setFocus] = useState(route().focus), [origin, setOrigin] = useState(null);
   const [boot, setBoot] = useState(false); // the little "boot-up" terminal scene that plays once, right after the loading screen (components/Boot.jsx)
   const [phase, setPhase] = useState(reducedMotion() || (fromHash() && !route().focus) ? 'done' : 'intro'); // intro → reveal → done (a focused link still shows the loading screen, but never the boot story)
+  // NEW desktop opening (console → flash → intro → scroll into the real desktop). Only on a desktop-class screen, for the plain portfolio link (no #/section, no focused version, no reduced motion).
+  // Phones, tablets, focused links and deep links keep the loading screen below, exactly as before.
+  const [opening, setOpening] = useState(() => !reducedMotion() && !route().id && !route().focus && matchMedia('(pointer:fine) and (min-width:761px)').matches);
+  const [reenter, setReenter] = useState(false); // true while the opening is replaying from the desktop (scroll up on the desktop → fly back out of the window)
   const [gamePlayed, setGamePlayed] = useState(false), [pct, setPct] = useState(0), [loaded, setLoaded] = useState(false), [minTime, setMinTime] = useState(false), [music, setMusic] = useState(M.getState());
   useEffect(() => { preloadAll(setPct).then(() => setLoaded(true)); return M.subscribe(setMusic); }, []); // everything loads behind the intro logo
   useEffect(() => { if (phase === 'intro') { const t = setTimeout(() => setMinTime(true), 3200); return () => clearTimeout(t); }
     if (phase === 'reveal') { if (!focus) setBoot(true); const t = setTimeout(() => setPhase('done'), 1800); return () => clearTimeout(t); } }, [phase]);
   // wait for a click if the browser blocked the music, or if the visitor is mid-snake-game (so it never yanks the screen away)
   const needClick = gamePlayed || (WAIT_FOR_CLICK_IF_MUSIC_BLOCKED && music.tracks.length > 0 && !music.playing && !music.muted);
-  useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick) setPhase('reveal'); }, [phase, minTime, loaded, needClick]);
+  useEffect(() => { if (phase === 'intro' && minTime && loaded && !needClick && !opening) setPhase('reveal'); }, [phase, minTime, loaded, needClick, opening]);
   useEffect(() => { const h = () => { const r = route(); setOpen(r.id); setFocus(r.focus); if (!r.id) setOrigin(null); }; addEventListener('hashchange', h); return () => removeEventListener('hashchange', h); }, []);
+  // Scroll UP on the plain desktop (no window / pop-up / game open) → the opening plays backwards: out of the window and back to the intro. Desktop-class screens only.
+  useEffect(() => { if (opening || phase !== 'done' || open || focus || boot || reducedMotion() || !matchMedia('(pointer:fine) and (min-width:761px)').matches) return;
+    let acc = 0, t = 0; const w = (e) => { if (e.deltaY >= 0) { acc = 0; return; } if (e.target.closest?.('[role="dialog"],.arc,.viewer,.pv')) return; const n = performance.now(); if (n - t > 500) acc = 0; t = n; acc += e.deltaY; if (acc < -160) { acc = 0; setReenter(true); setOpening(true); } };
+    addEventListener('wheel', w, { passive: true }); return () => removeEventListener('wheel', w); }, [opening, phase, open, focus, boot]);
   const [preview, setPreview] = useState(null); // first time a section (rigging / animation / projects) is opened → short reel popup (components/PreviewReel.jsx)
   useEffect(() => { if (!open || !PREVIEWS[open] || boot || phase !== 'done' || seenPreview(open)) return; const t = setTimeout(() => setPreview(open), 500); return () => clearTimeout(t); }, [open, boot, phase]);
   useEffect(() => { if (!open) setPreview(null); }, [open]);
@@ -77,13 +86,17 @@ export default function App() {
   const openSec = useCallback((id, rect) => { if (rect) play('open'), setOrigin(rect); location.hash = routeHash(focus, id); }, [focus]);
   const closed = useCallback(() => { history.pushState('', document.title, location.pathname + location.search); setOpen(null); setOrigin(null); }, []);
   return (<>
-    <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro'} introDone={phase === 'done'} />
+    <Opening active={opening} reenter={reenter} loaded={loaded} onDone={() => { setOpening(false); setReenter(false); setPhase('done'); }}>
+      <Desktop openId={open} onOpen={openSec} ready={phase !== 'intro' || opening} introDone={phase === 'done'} />
+    </Opening>
     {open && !focus && <PortfolioWindow key="win" id={open} origin={origin} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />}
     {open && focus && phase !== 'intro' && (stage ? <FocusedWindow key="fwin" id={open} focusId={focus} onNav={(id) => openSec(id)} /> : <PortfolioWindow key="win" id={open} focus={focus} onNav={(id) => { setOrigin(null); openSec(id); }} onClosed={closed} />)}
-    {phase !== 'done' && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} focusRole={focus ? FOCUS[focus].role : null} />}
+    {phase !== 'done' && !opening && <Intro out={phase === 'reveal'} loaded={loaded} pct={pct} needClick={needClick && (minTime || gamePlayed)} onEnter={() => setPhase('reveal')} onPlay={() => setGamePlayed(true)} focusRole={focus ? FOCUS[focus].role : null} />}
     {preview && open === preview && <PreviewReel key={preview} id={preview} onClose={() => setPreview(null)} />}
     {boot && <Boot onDone={() => setBoot(false)} />}
-    <MusicDock open={!!open} compact={compact} />
+    {!opening && phase === 'done' && !open && !focus && !boot && !reducedMotion() && matchMedia('(pointer:fine) and (min-width:761px)').matches && (
+      <button className="op-back-desk" onClick={() => { setReenter('auto'); setOpening(true); }} aria-label="Go back to the intro screen"><i /><span>BACK TO INTRO</span></button>)}
+    <MusicDock open={!!open || opening} compact={compact} />
     <RotateHint />
     <Cursor />
   </>);

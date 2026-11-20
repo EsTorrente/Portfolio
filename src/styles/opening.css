@@ -1,0 +1,72 @@
+/* ===== Desktop opening (components/Opening.jsx). Everything is scoped to .ow / .op-*  — no global changes. ===== */
+.ow.on{position:fixed;inset:0;z-index:5;perspective:1400px;perspective-origin:50% 50%;background:#000;overflow:hidden;color:var(--cr,#F4E7D0)}
+/* when the opening is over the wrappers vanish (display:contents) → the real desktop is exactly where it always was */
+.ow:not(.on),.ow:not(.on) .ow-win,.ow:not(.on) .ow-clip,.ow:not(.on) .ow-desk{display:contents}
+.ow.on .ow-win{position:absolute;z-index:1}
+.ow.on .ow-clip{position:absolute;overflow:hidden;background:#0a0604}
+.ow.on .ow-desk{position:absolute;left:50%;top:50%;width:100vw;height:100vh;transform:translate(-50%,-50%) scale(var(--ds,.4));transform-origin:50% 50%;pointer-events:none} /* the miniature desktop is not interactive */
+.ow.on .ow-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;user-select:none;filter:drop-shadow(0 30px 60px #000c)}
+.op-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 42%,#1c0f08 0%,#070403 62%,#000 100%)}
+.op-bg canvas,.op-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover} /* ← a showreel <video className="op-reel"> can take the canvas' place */
+/* console */
+.op-console{position:absolute;inset:0;z-index:4;display:grid;place-items:center;background:#000;padding:0 8vw}
+.op-console p{max-width:min(1100px,86vw);font:500 clamp(15px,1.7vw,26px)/1.6 var(--mono,'JetBrains Mono',monospace);letter-spacing:.02em;color:#FF8C18;text-shadow:0 0 6px #FF7A00,0 0 22px #FF7A0099,0 0 48px #FF7A0044}
+.op-caret{display:inline-block;width:.55em;height:1.05em;margin-left:.2em;vertical-align:-.15em;background:#FF8C18;box-shadow:0 0 10px #FF7A00;animation:opBlink 1s steps(2) infinite}
+@keyframes opBlink{50%{opacity:0}}
+/* flash */
+.op-flash{position:absolute;inset:0;z-index:6;background:#fff;opacity:0;pointer-events:none}
+.op-flash.go{animation:opFlash 2.6s cubic-bezier(.45,0,.25,1) forwards} /* fade up to white (~0.6 s), hold, then a long soft fade out */
+@keyframes opFlash{0%{opacity:0}23%{opacity:1}32%{opacity:1}100%{opacity:0}}
+/* hero */
+.op-hero{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,2.2vh,24px);padding:0 6vw 6vh;text-align:center}
+.op-hero>*{opacity:0;animation:opIn 1.1s cubic-bezier(.2,.8,.2,1) forwards}
+.op-hero>:nth-child(1){animation-delay:.8s}.op-hero>:nth-child(2){animation-delay:1.05s}.op-hero>:nth-child(3){animation-delay:1.35s}.op-hero>:nth-child(4){animation-delay:1.65s}.op-hero>:nth-child(5){animation-delay:1.95s}
+@keyframes opIn{from{opacity:0;transform:translateY(22px) scale(.98);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.op-logo{width:clamp(84px,10vh,130px);filter:drop-shadow(0 0 22px #ff7a0066)}
+.op-name{font:400 clamp(58px,8.8vw,150px)/.95 'Zaslia','Archivo Black',Georgia,serif;letter-spacing:.07em;color:#FFF3DD;text-shadow:0 0 28px #FF7A0055,0 0 70px #FF7A0033;margin:0}
+.op-role{font:500 clamp(12px,1.25vw,19px)/1.5 var(--mono,monospace);letter-spacing:.2em;text-transform:uppercase;color:#FFD36A;margin:0}.op-role span{color:#FF8C18;margin:0 .5em}
+.op-contact{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(4px,1.2vh,14px)}
+.op-contact a,.op-contact button{cursor:pointer;display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border:1px solid #FF8C1899;border-radius:99px;background:#FF7A0014;color:#FFF3DD;font:600 clamp(11px,.95vw,14px) var(--mono,monospace);letter-spacing:.06em;text-decoration:none;transition:background .2s,color .2s,transform .2s,box-shadow .2s}
+.op-contact svg{width:18px;height:18px;fill:currentColor;flex:none}
+.op-contact a:hover,.op-contact a:focus-visible,.op-contact button:hover,.op-contact button:focus-visible{background:#FF8C18;color:#120B08;transform:translateY(-2px);box-shadow:0 8px 24px #FF7A0055}
+.op-tools{display:flex;align-items:center;gap:clamp(8px,.9vw,14px);margin-top:clamp(2px,.8vh,10px);padding:10px 20px;border:1px solid #FF8C1844;border-radius:99px;background:#ffffff08;backdrop-filter:blur(4px)}
+.op-tools small{font:600 10px var(--mono,monospace);letter-spacing:.26em;color:#FFD36A;opacity:.85;margin-right:4px}
+.op-tools img{width:clamp(24px,2.3vw,34px);height:clamp(24px,2.3vw,34px);object-fit:contain;filter:drop-shadow(0 2px 6px #0008);transition:transform .2s}.op-tool:hover img,.op-tool:focus-visible img{transform:translateY(-3px) scale(1.12)}
+/* scroll indicator + skip */
+.op-scroll{position:absolute;left:0;right:0;margin-inline:auto;width:max-content;bottom:3.5vh;z-index:3;display:grid;justify-items:center;gap:10px;background:none;border:0;color:#FFD36A;font:600 11px var(--mono,monospace);letter-spacing:.34em;opacity:0;animation:opIn 1s ease 3s backwards}
+.op-scroll i{display:block;width:22px;height:36px;border:2px solid #FF8C18;border-radius:12px;position:relative}.op-scroll i:after{content:"";position:absolute;left:50%;top:6px;width:4px;height:8px;margin-left:-2px;border-radius:3px;background:#FF8C18;animation:opWheel 1.6s ease-in-out infinite}
+@keyframes opWheel{0%{transform:translateY(0);opacity:1}70%{transform:translateY(12px);opacity:0}100%{opacity:0}}
+.op-skip{position:absolute;right:2.2vw;top:2.4vh;z-index:3;background:none;border:0;color:#FFD36A;font:600 11px var(--mono,monospace);letter-spacing:.2em;opacity:.7;padding:10px;transition:opacity .2s}.op-skip:hover,.op-skip:focus-visible{opacity:1}
+@media (prefers-reduced-motion:reduce){.op-hero>*,.op-scroll{animation-duration:.01ms;animation-delay:0s}}
+
+/* ===== Milestone 2: tool tooltips · scatter letters · copy-to-clipboard chips ===== */
+.op-tool{position:relative;display:inline-grid;place-items:center;border-radius:8px;outline-offset:6px;cursor:default}
+.op-tool::after{content:attr(data-name);position:absolute;left:50%;top:calc(100% + 14px);transform:translate(-50%,-8px) scale(.9);padding:6px 12px;border:1px solid #FF8C18aa;border-radius:8px;background:#150c08f2;color:#FFF3DD;font:600 11px var(--mono,monospace);letter-spacing:.09em;white-space:nowrap;opacity:0;pointer-events:none;z-index:6;box-shadow:0 8px 22px #000a;transition:opacity .16s,transform .24s cubic-bezier(.2,1.5,.4,1)}
+.op-tool::before{content:"";position:absolute;left:50%;top:calc(100% + 9px);width:9px;height:9px;background:#150c08;border:solid #FF8C18aa;border-width:1px 0 0 1px;transform:translate(-50%,-8px) rotate(45deg);opacity:0;pointer-events:none;z-index:7;transition:opacity .16s,transform .24s cubic-bezier(.2,1.5,.4,1)}
+.op-tool:hover::after,.op-tool:focus-visible::after{opacity:1;transform:translate(-50%,0) scale(1)}
+.op-tool:hover::before,.op-tool:focus-visible::before{opacity:1;transform:translate(-50%,0) rotate(45deg)}
+.op-name{padding:.08em .3em;margin:-.08em -.3em;cursor:default}
+.op-ch{display:inline-block;will-change:transform;text-shadow:0 0 28px #FF7A0055,0 0 70px #FF7A0033,0 0 calc(var(--g,0) * 22px) #FF8C1899}
+.op-ch.sp{width:.26em}
+.op-ic,.op-lbl{display:inline-grid}.op-ic>*,.op-lbl>*{grid-area:1/1;transition:opacity .22s,transform .28s cubic-bezier(.2,1.4,.4,1)}
+.op-ic .chk,.op-lbl .ok{opacity:0;transform:scale(.4) rotate(-30deg)}.op-lbl .ok{transform:translateY(8px);font-weight:700;justify-self:center}
+.op-contact .copied{background:#FFB52E;border-color:#FFB52E;color:#120B08;box-shadow:0 8px 26px #FFB52E55}
+.op-contact .copied .op-ic svg:first-child{opacity:0;transform:scale(.4)}.op-contact .copied .op-ic .chk{opacity:1;transform:none}
+.op-contact .copied .op-lbl .t{opacity:0;transform:translateY(-8px)}.op-contact .copied .op-lbl .ok{opacity:1;transform:none}
+.op-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.op-ch{transition:none}.op-tool::after,.op-tool::before{transition:none}}
+.op-hero,.op-bg{will-change:transform,opacity}
+.op-scroll span,.op-back span{margin-right:-.34em} /* cancels the trailing letter-spacing so the text is truly centred */
+.op-back{position:absolute;left:0;right:0;margin-inline:auto;width:max-content;top:3.2vh;z-index:3;display:grid;justify-items:center;gap:9px;background:none;border:0;color:#FFD36A;font:600 11px var(--mono,monospace);letter-spacing:.34em;padding:8px 14px}
+.op-back i{display:block;width:11px;height:11px;border:solid #FF8C18;border-width:2px 0 0 2px;transform:rotate(45deg);animation:opBob 1.8s ease-in-out infinite}
+@keyframes opBob{0%,100%{transform:translateY(2px) rotate(45deg);opacity:.55}50%{transform:translateY(-3px) rotate(45deg);opacity:1}}
+.op-back:hover,.op-back:focus-visible{color:#FFF3DD}
+
+/* ===== Milestone 3b: LoadingBG behind the window · BACK TO INTRO on the desktop ===== */
+.op-art{position:absolute;inset:0;z-index:0;background:#000 center/cover no-repeat;will-change:transform,opacity;pointer-events:none}
+.op-art::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,transparent 30%,#000c 100%),linear-gradient(#00000055,#00000055)}
+.op-back-desk{position:fixed;left:0;right:0;margin-inline:auto;width:max-content;top:12px;z-index:4;display:grid;justify-items:center;gap:6px;padding:7px 18px 8px;border:1px solid #FF8C1855;border-radius:99px;background:#150c08b3;backdrop-filter:blur(4px);color:#FFD36A;font:600 10px var(--mono,monospace);letter-spacing:.3em;opacity:.78;cursor:pointer;animation:opIn .9s ease 1.4s backwards;transition:opacity .2s,background .2s,color .2s,transform .2s}
+.op-back-desk i{display:block;width:9px;height:9px;border:solid #FF8C18;border-width:2px 0 0 2px;transform:rotate(45deg);animation:opBob 1.8s ease-in-out infinite}
+.op-back-desk span{margin-right:-.3em}
+.op-back-desk:hover,.op-back-desk:focus-visible{opacity:1;color:#FFF3DD;background:#FF7A0033;transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.op-back-desk i{animation:none}}
